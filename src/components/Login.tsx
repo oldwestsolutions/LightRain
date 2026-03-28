@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { LoginFooter } from "./LoginFooter";
+import { RainBackground } from "./RainBackground";
 
 const GUEST_EMAIL = "guest@lightrain.in";
 
@@ -30,11 +31,17 @@ export function Login() {
   };
 
   const inputClass =
-    "min-h-[48px] w-full rounded-xl border border-neutral-200 bg-white py-3 pl-10 pr-3 text-base text-neutral-900 outline-none transition-colors focus:border-accent/50 focus:ring-2 focus:ring-accent/10 sm:text-sm";
+    "min-h-[48px] w-full rounded-xl border border-neutral-200/90 bg-white py-3 pl-10 pr-3 text-base text-neutral-900 outline-none transition-colors focus:border-accent/50 focus:ring-2 focus:ring-accent/10 sm:text-sm";
 
   return (
     <>
       <div className="relative flex min-h-screen min-h-[100dvh] flex-col bg-canvas safe-pt">
+        <RainBackground />
+        <div
+          className="pointer-events-none fixed inset-0 z-[2] bg-gradient-to-b from-canvas/85 via-canvas/35 to-canvas/75"
+          aria-hidden
+        />
+
         {loading && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 backdrop-blur-sm transition-opacity duration-300"
@@ -48,9 +55,9 @@ export function Login() {
           </div>
         )}
 
-        <div className="flex flex-1 flex-col items-center justify-center px-4 py-6 sm:px-6 sm:py-12">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-start px-4 pb-6 pt-[6vh] sm:px-6 sm:pb-10 sm:pt-[10vh] md:pt-[12vh]">
           <div className="flex w-full max-w-md flex-col items-center">
-            <div className="relative z-[1] w-full rounded-2xl border border-neutral-200/80 bg-surface p-5 shadow-card transition-shadow duration-500 sm:rounded-3xl sm:p-8 sm:hover:shadow-soft">
+            <div className="relative z-[1] w-full rounded-2xl border border-neutral-200/90 bg-white/92 p-5 shadow-card backdrop-blur-md transition-shadow duration-500 sm:rounded-3xl sm:p-8 sm:hover:shadow-soft">
               <header className="mb-6 text-center sm:mb-8">
                 <h1 className="font-display text-[1.85rem] font-normal leading-tight tracking-[0.12em] text-neutral-900 sm:text-4xl sm:tracking-[0.14em]">
                   Light<span className="text-accent">Rain</span>
@@ -107,7 +114,7 @@ export function Login() {
                   type="button"
                   onClick={handleLoginClick}
                   disabled={loading}
-                  className="min-h-[48px] w-full touch-manipulation rounded-xl border border-neutral-200 bg-white py-3 text-base font-semibold text-neutral-800 transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50 active:bg-neutral-100 disabled:opacity-50 sm:text-sm"
+                  className="min-h-[48px] w-full touch-manipulation rounded-xl border border-neutral-200 bg-white/95 py-3 text-base font-semibold text-neutral-800 transition-all duration-300 hover:border-neutral-300 hover:bg-white active:bg-neutral-50 disabled:opacity-50 sm:text-sm"
                 >
                   Login
                 </button>
