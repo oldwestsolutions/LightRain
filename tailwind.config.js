@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        mint: "#00FFAA",
-        surface: "#0A0A0A",
-        muted: "#CCCCCC",
+        accent: "#3D3D3D",
+        canvas: "#F3F3F5",
+        surface: "#FFFFFF",
+        muted: "#6B7280",
       },
       fontFamily: {
         sans: [
@@ -23,13 +24,12 @@ module.exports = {
       },
       backgroundImage: {
         "grid-faint":
-          "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
-      },
-      animation: {
-        "spin-slow": "spin 0.8s linear infinite",
+          "linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px)",
       },
       boxShadow: {
-        mint: "0 0 24px rgba(0, 255, 170, 0.15)",
+        soft: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)",
+        card: "0 1px 2px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.06)",
+        nav: "0 1px 0 rgba(0,0,0,0.06)",
       },
     },
   },

@@ -35,14 +35,14 @@ export function Dashboard() {
       await navigator.clipboard.writeText(WALLET);
       showToast("Address copied!");
     } catch {
-      showToast("Copied (mock)");
+      showToast("Copied");
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-black scanlines">
+    <div className="relative min-h-screen bg-[#ECECEF]">
       <div
-        className="pointer-events-none fixed inset-0 z-0 bg-grid-faint bg-[length:32px_32px] opacity-[0.35]"
+        className="pointer-events-none fixed inset-0 z-0 bg-grid-faint bg-[length:40px_40px] opacity-30"
         aria-hidden
       />
 
@@ -53,53 +53,70 @@ export function Dashboard() {
         onLogout={logout}
       />
 
-      <main className="relative z-[2] mx-auto max-w-7xl px-4 pb-20 pt-24 lg:px-8 lg:pt-28">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <main className="relative z-[2] mx-auto max-w-6xl px-4 pb-24 pt-24 lg:px-8 lg:pt-32">
+        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-              Welcome back, {user.name}
+            <p className="mb-1 text-sm font-medium text-muted">Account overview</p>
+            <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 md:text-[2rem] md:leading-tight">
+              Welcome back, {user.name.split(" ")[0] ?? user.name}
             </h1>
-            <p className="mt-1 text-sm text-muted">Settlement dashboard · Stellar federation</p>
+            <p className="mt-2 max-w-md text-[15px] leading-relaxed text-muted">
+              Your settlement address is ready. Send and receive crypto with the clarity of a modern
+              bank—built for regulated commerce.
+            </p>
           </div>
           <button
             type="button"
             onClick={() => setSendOpen(true)}
-            className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-mint/40 bg-mint/10 px-5 py-2.5 text-sm font-semibold text-mint transition-all duration-300 hover:bg-mint/20 hover:shadow-mint sm:self-auto"
+            className="inline-flex h-12 items-center justify-center gap-2 self-start rounded-full bg-accent px-7 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 sm:self-auto"
           >
             <Send className="h-4 w-4" />
-            Send Payment
+            Send payment
           </button>
         </div>
 
-        <section className="mb-12 rounded-2xl border border-white/12 bg-gradient-to-br from-white/[0.06] via-transparent to-mint/[0.03] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] md:p-8">
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted">
-            Your Stellar Federation Address
-          </p>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="break-all font-mono text-xl font-medium tracking-tight text-white md:text-2xl">
-              {WALLET}
-            </p>
+        <section className="mb-14 overflow-hidden rounded-[28px] border border-neutral-200/80 bg-white p-8 shadow-card md:p-10">
+          <div className="mb-8 flex flex-col gap-2 border-b border-neutral-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+                Federation address
+              </p>
+              <p className="mt-1 text-sm text-neutral-600">Instant settlement · Stellar network</p>
+            </div>
+            <span className="inline-flex w-fit items-center rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
+              Active
+            </span>
+          </div>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="min-w-0 flex-1">
+              <p className="break-all font-mono text-xl font-medium leading-snug tracking-tight text-neutral-900 md:text-2xl">
+                {WALLET}
+              </p>
+              <p className="mt-4 text-sm text-muted">Funds settle instantly to this address</p>
+            </div>
             <button
               type="button"
               onClick={copyWallet}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-white/20 px-4 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:border-mint/40 hover:text-mint"
+              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-6 text-sm font-semibold text-neutral-800 shadow-sm transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50"
             >
               <Copy className="h-4 w-4" />
-              Copy
+              Copy address
             </button>
           </div>
-          <p className="mt-4 text-sm text-muted">Funds settle instantly to this address</p>
         </section>
 
         <section>
-          <h2 className="mb-6 text-lg font-semibold text-white">Find Other Merchants</h2>
+          <div className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+            <h2 className="text-xl font-semibold tracking-tight text-neutral-900">Merchants</h2>
+            <p className="text-sm text-muted">Discover partners on the LightRain network</p>
+          </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((m) => (
               <MerchantCard key={m.id} merchant={m} onView={setProfileMerchant} />
             ))}
           </div>
           {filtered.length === 0 && (
-            <p className="py-12 text-center text-sm text-muted">No merchants match your search.</p>
+            <p className="py-16 text-center text-sm text-muted">No merchants match your search.</p>
           )}
         </section>
       </main>
@@ -112,27 +129,27 @@ export function Dashboard() {
       >
         {profileMerchant && (
           <div className="space-y-4 text-sm">
-            <p className="font-mono text-mint">{profileMerchant.federationAddress}</p>
+            <p className="font-mono text-accent">{profileMerchant.federationAddress}</p>
             <p className="text-muted">{profileMerchant.description}</p>
-            <dl className="grid grid-cols-1 gap-3 border-t border-white/10 pt-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-3 border-t border-neutral-200 pt-4 sm:grid-cols-2">
               <div>
                 <dt className="text-xs uppercase tracking-wide text-muted">Type</dt>
-                <dd className="mt-0.5 capitalize text-white">{profileMerchant.type}</dd>
+                <dd className="mt-0.5 capitalize text-neutral-900">{profileMerchant.type}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-wide text-muted">Region</dt>
-                <dd className="mt-0.5 text-white">{profileMerchant.region}</dd>
+                <dd className="mt-0.5 text-neutral-900">{profileMerchant.region}</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-wide text-muted">Established</dt>
-                <dd className="mt-0.5 text-white">{profileMerchant.established}</dd>
+                <dd className="mt-0.5 text-neutral-900">{profileMerchant.established}</dd>
               </div>
             </dl>
             <p className="leading-relaxed text-muted">{profileMerchant.notes}</p>
             <button
               type="button"
               onClick={() => setProfileMerchant(null)}
-              className="w-full rounded-lg border border-white/15 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
+              className="w-full rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-800 transition-colors hover:bg-neutral-50"
             >
               Close
             </button>

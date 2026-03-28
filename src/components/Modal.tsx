@@ -32,23 +32,23 @@ export function Modal({ open, title, onClose, children, wide }: ModalProps) {
     >
       <button
         type="button"
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-neutral-900/40 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
         aria-label="Close dialog"
       />
       <div
-        className={`relative z-10 w-full rounded-xl border border-white/15 bg-[#0A0A0A] p-6 shadow-2xl transition-all duration-300 ${
+        className={`relative z-10 w-full rounded-2xl border border-neutral-200 bg-white p-6 shadow-card transition-all duration-300 ${
           wide ? "max-w-lg" : "max-w-md"
         }`}
       >
         <div className="mb-4 flex items-start justify-between gap-4">
-          <h2 id="modal-title" className="text-lg font-semibold tracking-tight text-white">
+          <h2 id="modal-title" className="text-lg font-semibold tracking-tight text-neutral-900">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-muted transition-colors hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-1.5 text-muted transition-colors hover:bg-neutral-100 hover:text-neutral-900"
             aria-label="Close"
           >
             <X className="h-5 w-5" />

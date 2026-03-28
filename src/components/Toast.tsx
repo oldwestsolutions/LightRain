@@ -9,10 +9,10 @@ export function Toast() {
   return (
     <div className="pointer-events-none fixed bottom-8 left-1/2 z-[200] flex -translate-x-1/2 justify-center px-4">
       <div
-        className="pointer-events-auto flex items-center gap-2 rounded-full border border-mint/40 bg-black/95 px-5 py-3 text-sm text-white shadow-mint backdrop-blur-md transition-all duration-500"
+        className="pointer-events-auto flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 py-3 text-sm text-neutral-900 shadow-card backdrop-blur-md transition-all duration-500"
         role="status"
       >
-        <CheckCircle2 className="h-4 w-4 shrink-0 text-mint" aria-hidden />
+        <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" aria-hidden />
         <span>{message}</span>
       </div>
     </div>

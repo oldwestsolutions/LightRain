@@ -14,25 +14,25 @@ export function Navbar({ user, searchQuery, onSearchChange, onLogout }: Props) {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 lg:px-8">
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-neutral-200/90 bg-white/95 shadow-nav backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 lg:px-8">
           <div className="flex shrink-0 items-center gap-3">
             <button
               type="button"
-              className="rounded-lg p-2 text-white lg:hidden"
+              className="rounded-lg p-2 text-neutral-800 lg:hidden"
               onClick={() => setMobileOpen((o) => !o)}
               aria-expanded={mobileOpen}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
             >
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <span className="text-lg font-bold tracking-tight text-white">
-              LightRa<span className="text-mint">.</span>in
+            <span className="text-lg font-semibold tracking-tight text-neutral-900">
+              LightRa<span className="text-accent">.</span>in
             </span>
           </div>
 
           <div className="hidden min-w-0 flex-1 justify-center px-4 lg:flex">
-            <label htmlFor="nav-search" className="relative w-full max-w-2xl">
+            <label htmlFor="nav-search" className="relative w-full max-w-xl">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
               <input
                 id="nav-search"
@@ -40,37 +40,37 @@ export function Navbar({ user, searchQuery, onSearchChange, onLogout }: Props) {
                 placeholder="Search merchants by name or federation address…"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full rounded-full border border-white/12 bg-white/[0.03] py-3 pl-11 pr-5 text-sm text-white placeholder:text-muted/70 outline-none transition-all duration-300 focus:border-mint/35 focus:bg-white/[0.05]"
+                className="w-full rounded-full border border-neutral-200 bg-neutral-50/80 py-3 pl-11 pr-5 text-sm text-neutral-900 placeholder:text-muted/80 outline-none transition-all duration-300 focus:border-neutral-300 focus:bg-white focus:shadow-sm"
               />
             </label>
           </div>
 
-          <div className="ml-auto hidden items-center gap-4 lg:flex">
+          <div className="ml-auto hidden items-center gap-5 lg:flex">
             <div className="flex items-center gap-3">
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/[0.06] text-sm font-semibold text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 text-sm font-semibold text-neutral-800 ring-2 ring-white"
                 aria-hidden
               >
                 {user.initials}
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-white">{user.name}</p>
+                <p className="text-sm font-medium text-neutral-900">{user.name}</p>
                 <p className="max-w-[160px] truncate text-xs text-muted">{user.email}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={onLogout}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-4 py-2 text-sm font-medium text-muted transition-all duration-300 hover:border-white/30 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50"
             >
               <LogOut className="h-4 w-4" />
-              Logout
+              Log out
             </button>
           </div>
         </div>
 
         {mobileOpen && (
-          <div className="border-t border-white/10 bg-black px-4 py-4 lg:hidden">
+          <div className="border-t border-neutral-100 bg-white px-4 py-4 lg:hidden">
             <label htmlFor="nav-search-mobile" className="relative mb-4 block">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
               <input
@@ -79,15 +79,15 @@ export function Navbar({ user, searchQuery, onSearchChange, onLogout }: Props) {
                 placeholder="Search merchants…"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full rounded-full border border-white/12 bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder:text-muted/70 outline-none focus:border-mint/35"
+                className="w-full rounded-full border border-neutral-200 bg-neutral-50 py-3 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-muted/80 outline-none focus:border-neutral-300"
               />
             </label>
-            <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/[0.06] text-sm font-semibold">
+            <div className="flex items-center gap-3 border-b border-neutral-100 pb-4">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-sm font-semibold text-neutral-800">
                 {user.initials}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-white">{user.name}</p>
+                <p className="truncate text-sm font-medium text-neutral-900">{user.name}</p>
                 <p className="truncate text-xs text-muted">{user.email}</p>
               </div>
             </div>
@@ -97,10 +97,10 @@ export function Navbar({ user, searchQuery, onSearchChange, onLogout }: Props) {
                 onLogout();
                 setMobileOpen(false);
               }}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-white/15 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-50"
             >
               <LogOut className="h-4 w-4" />
-              Logout
+              Log out
             </button>
           </div>
         )}
