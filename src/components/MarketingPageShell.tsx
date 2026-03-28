@@ -8,9 +8,11 @@ type Props = {
   children: ReactNode;
   backTo: string;
   backLabel: string;
+  /** Wider content column (e.g. immersive company page) */
+  wide?: boolean;
 };
 
-export function MarketingPageShell({ children, backTo, backLabel }: Props) {
+export function MarketingPageShell({ children, backTo, backLabel, wide }: Props) {
   return (
     <div className="relative flex min-h-screen min-h-[100dvh] flex-col bg-canvas safe-pt">
       <RainBackground />
@@ -19,7 +21,7 @@ export function MarketingPageShell({ children, backTo, backLabel }: Props) {
         aria-hidden
       />
       <div className="relative z-10 flex flex-1 flex-col px-4 pb-10 pt-[6vh] sm:px-6 sm:pt-[8vh]">
-        <div className="mx-auto w-full max-w-2xl flex-1">
+        <div className={`mx-auto w-full flex-1 ${wide ? "max-w-4xl" : "max-w-2xl"}`}>
           <Link
             to={backTo}
             className="mb-6 inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-accent"
