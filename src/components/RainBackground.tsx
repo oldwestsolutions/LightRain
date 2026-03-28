@@ -94,51 +94,52 @@ export function RainBackground() {
     const mobile = window.innerWidth < 640;
     const layers: ReturnType<typeof createRainLayer>[] = [];
 
+    /* Sparse, slow drizzle — subtle / romantic */
     layers.push(
       createRainLayer(scene, {
-        count: mobile ? 1100 : 2200,
-        speedMin: 0.55,
-        speedMax: 1.15,
-        lengthMin: 1.1,
-        lengthMax: 2.8,
-        opacity: 0.22,
-        color: 0x050505,
+        count: mobile ? 180 : 380,
+        speedMin: 0.06,
+        speedMax: 0.11,
+        lengthMin: 0.55,
+        lengthMax: 1.15,
+        opacity: 0.07,
+        color: 0x1c1c24,
         spreadX: 95,
         spreadY: 75,
-        spreadZ: 28,
-        drift: 0.018,
+        spreadZ: 22,
+        drift: 0.006,
       })
     );
 
     layers.push(
       createRainLayer(scene, {
-        count: mobile ? 700 : 1400,
-        speedMin: 0.35,
-        speedMax: 0.72,
-        lengthMin: 0.7,
-        lengthMax: 1.6,
-        opacity: 0.14,
-        color: 0x0a0a0a,
-        spreadX: 110,
-        spreadY: 85,
-        spreadZ: 38,
-        drift: 0.012,
+        count: mobile ? 120 : 260,
+        speedMin: 0.045,
+        speedMax: 0.085,
+        lengthMin: 0.4,
+        lengthMax: 0.85,
+        opacity: 0.045,
+        color: 0x25252e,
+        spreadX: 105,
+        spreadY: 82,
+        spreadZ: 32,
+        drift: 0.004,
       })
     );
 
     layers.push(
       createRainLayer(scene, {
-        count: mobile ? 320 : 600,
-        speedMin: 0.2,
-        speedMax: 0.45,
-        lengthMin: 0.45,
-        lengthMax: 1.1,
-        opacity: 0.09,
-        color: 0x111111,
-        spreadX: 125,
-        spreadY: 90,
-        spreadZ: 45,
-        drift: 0.008,
+        count: mobile ? 70 : 140,
+        speedMin: 0.03,
+        speedMax: 0.055,
+        lengthMin: 0.28,
+        lengthMax: 0.55,
+        opacity: 0.028,
+        color: 0x2a2a35,
+        spreadX: 115,
+        spreadY: 88,
+        spreadZ: 40,
+        drift: 0.003,
       })
     );
 
@@ -163,33 +164,34 @@ export function RainBackground() {
     const tick = () => {
       animationId = requestAnimationFrame(tick);
       const t = clock.getElapsedTime();
-      const gust = Math.sin(t * 0.35) * 0.4 + Math.sin(t * 1.1) * 0.15;
+      const gust =
+        Math.sin(t * 0.12) * 0.22 + Math.sin(t * 0.35) * 0.08 + Math.sin(t * 0.55 + 1.2) * 0.05;
 
       for (let L = 0; L < layers.length; L++) {
         const layer = layers[L];
         const { geometry, velocities, driftPhase, count } = layer;
         const pos = geometry.attributes.position.array as Float32Array;
-        const driftScale = [0.018, 0.012, 0.008][L] ?? 0.01;
+        const driftScale = [0.006, 0.004, 0.0025][L] ?? 0.003;
 
         for (let i = 0; i < count; i++) {
           const base = i * 6;
           const vy = velocities[i];
-          const wind = gust * driftScale * 18 + Math.sin(t * 0.8 + driftPhase[i]) * driftScale * 6;
+          const wind = gust * driftScale * 10 + Math.sin(t * 0.28 + driftPhase[i]) * driftScale * 2.5;
 
-          pos[base] += wind * 0.016;
+          pos[base] += wind * 0.005;
           pos[base + 1] -= vy;
-          pos[base + 2] += Math.cos(t * 0.5 + driftPhase[i]) * 0.012;
+          pos[base + 2] += Math.cos(t * 0.22 + driftPhase[i]) * 0.0035;
 
-          pos[base + 3] += wind * 0.016;
+          pos[base + 3] += wind * 0.005;
           pos[base + 4] -= vy;
-          pos[base + 5] += Math.cos(t * 0.5 + driftPhase[i]) * 0.012;
+          pos[base + 5] += Math.cos(t * 0.22 + driftPhase[i]) * 0.0035;
 
           if (pos[base + 4] < bounds.bottom) {
             const nx = (Math.random() - 0.5) * (95 + L * 12);
             const ny = bounds.top + Math.random() * 12;
             const nz = (Math.random() - 0.5) * (28 + L * 8);
             const len =
-              [1.1, 0.7, 0.45][L]! + Math.random() * ([1.7, 0.9, 0.65][L] ?? 1);
+              [0.55, 0.4, 0.28][L]! + Math.random() * ([0.6, 0.45, 0.27][L] ?? 0.5);
             pos[base] = nx;
             pos[base + 1] = ny;
             pos[base + 2] = nz;

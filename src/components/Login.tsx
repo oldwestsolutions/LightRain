@@ -38,7 +38,7 @@ export function Login() {
       <div className="relative flex min-h-screen min-h-[100dvh] flex-col bg-canvas safe-pt">
         <RainBackground />
         <div
-          className="pointer-events-none fixed inset-0 z-[2] bg-gradient-to-b from-canvas/85 via-canvas/35 to-canvas/75"
+          className="pointer-events-none fixed inset-0 z-[2] bg-gradient-to-b from-canvas/88 via-canvas/45 to-canvas/82"
           aria-hidden
         />
 
@@ -102,7 +102,6 @@ export function Login() {
                       id="password"
                       type="password"
                       autoComplete="current-password"
-                      placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className={inputClass}
