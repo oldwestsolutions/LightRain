@@ -45,7 +45,7 @@ export function Login() {
                 Light<span className="text-accent">Rain</span>
               </h1>
               <p className="text-sm leading-relaxed text-muted">
-                Shop the world—buy anything from around the world, in one place.
+                Private Discretionary Blockchain Ledger
               </p>
             </header>
 
