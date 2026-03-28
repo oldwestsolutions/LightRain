@@ -36,7 +36,7 @@ npm start
 
 The app opens at [http://localhost:3000](http://localhost:3000).
 
-- **Demo login:** email `demo@lightrain.in`, password `demo123` (any password works; auth is mocked).
+- **Demo login:** use **Login** or **Create account** with any credentials (fields can be empty; auth is mocked).
 - After login, a **500ms** loading state runs, then the dashboard appears.
 - Use **Copy** on the federation address to see a toast: “Address copied!”
 - **Send Payment** and **View Profile** open modals with mock forms and details.
@@ -69,7 +69,7 @@ There is **no backend**; merchants, login, and payments are entirely client-side
 - `src/index.css` — Tailwind directives + scanline utility
 - `src/store/` — `useAuthStore`, `useToastStore`
 - `src/data/merchants.ts` — fake merchant directory
-- `src/components/` — Login, Dashboard, Navbar, MerchantCard, Modal, Toast, wallet/payment modals
+- `src/components/` — Login, Dashboard, Navbar, MerchantCard, Modal, Toast, SendPaymentModal
 
 ## License
 

@@ -40,9 +40,9 @@ export function Dashboard() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#ECECEF]">
+    <div className="relative min-h-screen min-h-[100dvh] bg-[#ECECEF]">
       <div
-        className="pointer-events-none fixed inset-0 z-0 bg-grid-faint bg-[length:40px_40px] opacity-30"
+        className="pointer-events-none fixed inset-0 z-0 bg-grid-faint bg-[length:32px_32px] opacity-25 sm:bg-[length:40px_40px] sm:opacity-30"
         aria-hidden
       />
 
@@ -53,14 +53,14 @@ export function Dashboard() {
         onLogout={logout}
       />
 
-      <main className="relative z-[2] mx-auto max-w-6xl px-4 pb-24 pt-24 lg:px-8 lg:pt-32">
-        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-1 text-sm font-medium text-muted">Account overview</p>
-            <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 md:text-[2rem] md:leading-tight">
+      <main className="relative z-[2] mx-auto max-w-6xl px-3 pb-28 pt-[4.5rem] safe-pb sm:px-4 sm:pb-24 sm:pt-24 lg:px-8 lg:pt-32">
+        <div className="mb-8 flex flex-col gap-5 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <div className="min-w-0">
+            <p className="mb-1 text-xs font-medium text-muted sm:text-sm">Account overview</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl md:text-[2rem] md:leading-tight">
               Welcome back, {user.name.split(" ")[0] ?? user.name}
             </h1>
-            <p className="mt-2 max-w-md text-[15px] leading-relaxed text-muted">
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-muted sm:text-[15px]">
               Your settlement address is ready. Send and receive crypto with the clarity of a modern
               bank—built for regulated commerce.
             </p>
@@ -68,55 +68,55 @@ export function Dashboard() {
           <button
             type="button"
             onClick={() => setSendOpen(true)}
-            className="inline-flex h-12 items-center justify-center gap-2 self-start rounded-full bg-accent px-7 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 sm:self-auto"
+            className="inline-flex min-h-[48px] w-full touch-manipulation items-center justify-center gap-2 rounded-full bg-accent px-6 text-base font-semibold text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 active:bg-neutral-900 sm:w-auto sm:self-auto sm:px-7 sm:text-sm"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4 shrink-0" />
             Send payment
           </button>
         </div>
 
-        <section className="mb-14 overflow-hidden rounded-[28px] border border-neutral-200/80 bg-white p-8 shadow-card md:p-10">
-          <div className="mb-8 flex flex-col gap-2 border-b border-neutral-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <section className="mb-10 overflow-hidden rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-card sm:mb-14 sm:rounded-[28px] sm:p-8 md:p-10">
+          <div className="mb-6 flex flex-col gap-3 border-b border-neutral-100 pb-5 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted sm:text-xs">
                 Federation address
               </p>
-              <p className="mt-1 text-sm text-neutral-600">Instant settlement · Stellar network</p>
+              <p className="mt-1 text-xs text-neutral-600 sm:text-sm">Instant settlement · Stellar network</p>
             </div>
             <span className="inline-flex w-fit items-center rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
               Active
             </span>
           </div>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
             <div className="min-w-0 flex-1">
-              <p className="break-all font-mono text-xl font-medium leading-snug tracking-tight text-neutral-900 md:text-2xl">
+              <p className="break-words font-mono text-lg font-medium leading-snug tracking-tight text-neutral-900 sm:break-all sm:text-xl md:text-2xl">
                 {WALLET}
               </p>
-              <p className="mt-4 text-sm text-muted">Funds settle instantly to this address</p>
+              <p className="mt-3 text-xs text-muted sm:mt-4 sm:text-sm">Funds settle instantly to this address</p>
             </div>
             <button
               type="button"
               onClick={copyWallet}
-              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-6 text-sm font-semibold text-neutral-800 shadow-sm transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50"
+              className="inline-flex min-h-[48px] w-full shrink-0 touch-manipulation items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-6 text-base font-semibold text-neutral-800 shadow-sm transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50 active:bg-neutral-100 sm:w-auto sm:text-sm"
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-4 w-4 shrink-0" />
               Copy address
             </button>
           </div>
         </section>
 
         <section>
-          <div className="mb-8 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-            <h2 className="text-xl font-semibold tracking-tight text-neutral-900">Merchants</h2>
-            <p className="text-sm text-muted">Discover partners on the LightRain network</p>
+          <div className="mb-6 flex flex-col gap-1 sm:mb-8 sm:flex-row sm:items-baseline sm:justify-between">
+            <h2 className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl">Merchants</h2>
+            <p className="text-xs text-muted sm:text-sm">Discover partners on the LightRain network</p>
           </div>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((m) => (
               <MerchantCard key={m.id} merchant={m} onView={setProfileMerchant} />
             ))}
           </div>
           {filtered.length === 0 && (
-            <p className="py-16 text-center text-sm text-muted">No merchants match your search.</p>
+            <p className="py-12 text-center text-sm text-muted sm:py-16">No merchants match your search.</p>
           )}
         </section>
       </main>
@@ -129,7 +129,7 @@ export function Dashboard() {
       >
         {profileMerchant && (
           <div className="space-y-4 text-sm">
-            <p className="font-mono text-accent">{profileMerchant.federationAddress}</p>
+            <p className="break-words font-mono text-base text-accent sm:text-sm">{profileMerchant.federationAddress}</p>
             <p className="text-muted">{profileMerchant.description}</p>
             <dl className="grid grid-cols-1 gap-3 border-t border-neutral-200 pt-4 sm:grid-cols-2">
               <div>
@@ -149,7 +149,7 @@ export function Dashboard() {
             <button
               type="button"
               onClick={() => setProfileMerchant(null)}
-              className="w-full rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-800 transition-colors hover:bg-neutral-50"
+              className="min-h-[48px] w-full touch-manipulation rounded-xl border border-neutral-200 bg-white py-3 text-base font-semibold text-neutral-800 transition-colors hover:bg-neutral-50 active:bg-neutral-100 sm:text-sm"
             >
               Close
             </button>

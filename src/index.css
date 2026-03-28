@@ -5,8 +5,24 @@
 @layer base {
   html {
     @apply antialiased;
+    -webkit-tap-highlight-color: transparent;
   }
   body {
-    @apply bg-canvas text-neutral-900 font-sans min-h-screen;
+    @apply bg-canvas text-neutral-900 font-sans min-h-screen min-h-[100dvh];
+  }
+}
+
+@layer utilities {
+  .safe-pt {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+  .safe-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  .safe-pl {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  .safe-pr {
+    padding-right: max(1rem, env(safe-area-inset-right));
   }
 }

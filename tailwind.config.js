@@ -21,6 +21,16 @@ module.exports = {
           "Arial",
           "sans-serif",
         ],
+        display: [
+          '"Didact Gothic"',
+          '"Century Gothic"',
+          "CenturyGothic",
+          "AppleGothic",
+          "URW Gothic",
+          "Geneva",
+          "Tahoma",
+          "sans-serif",
+        ],
       },
       backgroundImage: {
         "grid-faint":

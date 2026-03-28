@@ -24,6 +24,9 @@ export function SendPaymentModal({ open, onClose, merchants }: Props) {
     }, 900);
   };
 
+  const fieldClass =
+    "min-h-[48px] w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-base text-neutral-900 outline-none transition-colors focus:border-accent/40 focus:ring-2 focus:ring-accent/10 sm:text-sm";
+
   return (
     <Modal open={open} title="Send Payment" onClose={onClose} wide>
       <form onSubmit={submit} className="space-y-4">
@@ -38,7 +41,7 @@ export function SendPaymentModal({ open, onClose, merchants }: Props) {
             id="pay-to"
             value={toId}
             onChange={(e) => setToId(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 outline-none transition-colors focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
+            className={fieldClass}
           >
             {merchants.map((m) => (
               <option key={m.id} value={m.id}>
@@ -58,7 +61,8 @@ export function SendPaymentModal({ open, onClose, merchants }: Props) {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 font-mono text-sm text-neutral-900 outline-none transition-colors focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
+            inputMode="decimal"
+            className={`${fieldClass} font-mono`}
           />
         </div>
         <div>
@@ -68,29 +72,24 @@ export function SendPaymentModal({ open, onClose, merchants }: Props) {
           >
             Memo
           </label>
-          <input
-            id="memo"
-            value={memo}
-            onChange={(e) => setMemo(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 outline-none transition-colors focus:border-accent/40 focus:ring-2 focus:ring-accent/10"
-          />
+          <input id="memo" value={memo} onChange={(e) => setMemo(e.target.value)} className={fieldClass} />
         </div>
-        <div className="flex flex-wrap gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 min-[400px]:flex-none"
+            className="min-h-[48px] flex-1 touch-manipulation rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-base font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 active:bg-neutral-100 sm:flex-none sm:text-sm"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={busy}
-            className="flex min-w-[140px] flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-neutral-800 disabled:opacity-60 min-[400px]:flex-none"
+            className="flex min-h-[48px] min-w-0 flex-1 touch-manipulation items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-base font-semibold text-white transition-all hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-60 sm:min-w-[140px] sm:flex-none sm:text-sm"
           >
             {busy ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
                 Sending…
               </>
             ) : (
