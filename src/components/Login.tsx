@@ -8,7 +8,7 @@ import { RainBackground } from "./RainBackground";
 /** Fallback when email left empty (demo) */
 const GUEST_EMAIL = "guest@lightra.in";
 /** Sample shown in email field — lightra.in style */
-export const SAMPLE_EMAIL_PLACEHOLDER = "merchant@lightra.in";
+export const SAMPLE_EMAIL_PLACEHOLDER = "mailbox@lightra.in";
 
 export function Login() {
   const navigate = useNavigate();
