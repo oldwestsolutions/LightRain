@@ -8,7 +8,7 @@ import { Modal } from "./Modal";
 import { Navbar } from "./Navbar";
 import { SendPaymentModal } from "./SendPaymentModal";
 
-const WALLET = "dispensary01*lightra.in";
+const WALLET = "dispensary01*lightrain.in";
 
 export function Dashboard() {
   const user = useAuthStore((s) => s.user)!;

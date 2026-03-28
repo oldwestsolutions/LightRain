@@ -1,6 +1,6 @@
-# LightRa.in — Merchant Dashboard (Demo SPA)
+# LightRain — Merchant Dashboard (Demo SPA)
 
-A dark, cyber-minimal single-page application for **LightRain** (www.lightra.in): a mocked high-risk crypto payment experience for THC and cannabis merchants. Built with **Create React App**–style tooling (no Vite), **React 19**, **TypeScript**, **Tailwind CSS**, **Zustand**, and **Lucide React**.
+A single-page application for **LightRain** (www.lightrain.in): a mocked high-risk crypto payment experience for THC and cannabis merchants. Built with **Create React App**–style tooling (no Vite), **React 19**, **TypeScript**, **Tailwind CSS**, **Zustand**, and **Lucide React**.
 
 ## Prerequisites
 
@@ -36,7 +36,7 @@ npm start
 
 The app opens at [http://localhost:3000](http://localhost:3000).
 
-- **Demo login:** email `demo@lightra.in`, password `demo123` (any password works; auth is mocked).
+- **Demo login:** email `demo@lightrain.in`, password `demo123` (any password works; auth is mocked).
 - After login, a **500ms** loading state runs, then the dashboard appears.
 - Use **Copy** on the federation address to see a toast: “Address copied!”
 - **Send Payment** and **View Profile** open modals with mock forms and details.

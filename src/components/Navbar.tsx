@@ -27,7 +27,7 @@ export function Navbar({ user, searchQuery, onSearchChange, onLogout }: Props) {
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
             <span className="text-lg font-semibold tracking-tight text-neutral-900">
-              LightRa<span className="text-accent">.</span>in
+              Light<span className="text-accent">Rain</span>
             </span>
           </div>
 

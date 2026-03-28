@@ -13,7 +13,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "1",
     name: "GreenLeaf Dispensary",
-    federationAddress: "greenleaf*lightra.in",
+    federationAddress: "greenleaf*lightrain.in",
     description: "Licensed THC retailer in Wyoming",
     type: "dispensary",
     region: "Cheyenne, WY",
@@ -23,7 +23,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "2",
     name: "Alpine Cultivation Co.",
-    federationAddress: "alpinecult*lightra.in",
+    federationAddress: "alpinecult*lightrain.in",
     description: "Indoor craft cannabis grower",
     type: "cultivator",
     region: "Boulder, CO",
@@ -33,7 +33,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "3",
     name: "Pacific Extracts Lab",
-    federationAddress: "pacificextracts*lightra.in",
+    federationAddress: "pacificextracts*lightrain.in",
     description: "CO₂ extraction and edible manufacturing",
     type: "processor",
     region: "Portland, OR",
@@ -43,7 +43,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "4",
     name: "Riverbend Dispensary",
-    federationAddress: "riverbend*lightra.in",
+    federationAddress: "riverbend*lightrain.in",
     description: "Boutique dispensary & delivery hub",
     type: "dispensary",
     region: "Missoula, MT",
@@ -53,7 +53,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "5",
     name: "Sunstone Growers",
-    federationAddress: "sunstone*lightra.in",
+    federationAddress: "sunstone*lightrain.in",
     description: "Greenhouse cultivator — sustainable ops",
     type: "cultivator",
     region: "Santa Rosa, CA",
@@ -63,7 +63,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "6",
     name: "North Star Processing",
-    federationAddress: "northstar*lightra.in",
+    federationAddress: "northstar*lightrain.in",
     description: "Infused products & packaging",
     type: "processor",
     region: "Anchorage, AK",
@@ -73,7 +73,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "7",
     name: "Emerald City Collective",
-    federationAddress: "emeraldcity*lightra.in",
+    federationAddress: "emeraldcity*lightrain.in",
     description: "Medical & recreational storefront",
     type: "dispensary",
     region: "Seattle, WA",
@@ -83,7 +83,7 @@ export const MERCHANTS: Merchant[] = [
   {
     id: "8",
     name: "High Plains Hemp & THC",
-    federationAddress: "highplains*lightra.in",
+    federationAddress: "highplains*lightrain.in",
     description: "Dual-license retailer & micro-cultivation",
     type: "dispensary",
     region: "Denver, CO",

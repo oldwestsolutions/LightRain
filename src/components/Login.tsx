@@ -6,7 +6,7 @@ import { WalletConnectModal } from "./WalletConnectModal";
 
 export function Login() {
   const login = useAuthStore((s) => s.login);
-  const [email, setEmail] = useState("demo@lightra.in");
+  const [email, setEmail] = useState("demo@lightrain.in");
   const [password, setPassword] = useState("demo123");
   const [walletOpen, setWalletOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,13 +38,14 @@ export function Login() {
         )}
 
         <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
-          <div className="relative z-[1] w-full max-w-md rounded-3xl border border-neutral-200/80 bg-surface p-8 shadow-card transition-shadow duration-500 hover:shadow-soft">
+          <div className="flex w-full max-w-md flex-col items-center">
+            <div className="relative z-[1] w-full rounded-3xl border border-neutral-200/80 bg-surface p-8 shadow-card transition-shadow duration-500 hover:shadow-soft">
             <header className="mb-8 text-center">
               <h1 className="mb-2 text-3xl font-bold tracking-tight text-neutral-900">
-                <span className="border-b-2 border-accent/40 pb-0.5">LightRa.in</span>
+                Light<span className="text-accent">Rain</span>
               </h1>
               <p className="text-sm leading-relaxed text-muted">
-                Compliant Crypto Payments for High-Risk Merchants
+                Shop the world—buy anything from around the world, in one place.
               </p>
             </header>
 
@@ -104,10 +105,10 @@ export function Login() {
                 Create account
               </button>
             </form>
+            </div>
+            <LoginFooter />
           </div>
         </div>
-
-        <LoginFooter />
       </div>
 
       <WalletConnectModal open={walletOpen} onClose={() => setWalletOpen(false)} />

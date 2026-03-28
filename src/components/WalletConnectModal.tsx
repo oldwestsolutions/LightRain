@@ -10,8 +10,8 @@ export function WalletConnectModal({ open, onClose }: Props) {
   return (
     <Modal open={open} title="Connect with Wallet" onClose={onClose}>
       <p className="mb-4 text-sm leading-relaxed text-muted">
-        LightRain uses Stellar federation addresses for settlement. Select your linked address or add
-        a new one.
+        LightRain uses Stellar federation addresses for settlement. Select your linked address or add a
+        new one.
       </p>
       <div className="space-y-3">
         <button
@@ -21,7 +21,7 @@ export function WalletConnectModal({ open, onClose }: Props) {
         >
           <Wallet className="h-5 w-5 text-accent" />
           <div>
-            <p className="font-medium text-neutral-900">dispensary01*lightra.in</p>
+            <p className="font-medium text-neutral-900">dispensary01*lightrain.in</p>
             <p className="text-xs text-muted">Primary · Stellar federation</p>
           </div>
         </button>
