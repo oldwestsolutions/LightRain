@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { useAuthStore } from "./store/useAuthStore";
 import { Login } from "./components/Login";
 import { Dashboard } from "./components/Dashboard";
@@ -10,6 +11,7 @@ function App() {
     <>
       {isLoggedIn ? <Dashboard /> : <Login />}
       <Toast />
+      <Analytics />
     </>
   );
 }
