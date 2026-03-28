@@ -4,8 +4,9 @@ import { Loader2, Lock, Mail } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { LoginFooter } from "../components/LoginFooter";
 import { RainBackground } from "../components/RainBackground";
+import { SAMPLE_EMAIL_PLACEHOLDER } from "../components/Login";
 
-const GUEST_EMAIL = "guest@lightrain.in";
+const GUEST_EMAIL = "guest@lightra.in";
 
 export function CreateAccountPage() {
   const navigate = useNavigate();
@@ -27,6 +28,9 @@ export function CreateAccountPage() {
 
   const inputClass =
     "min-h-[48px] w-full rounded-xl border border-neutral-200/90 bg-white py-3 pl-10 pr-3 text-base text-neutral-900 outline-none transition-colors focus:border-accent/50 focus:ring-2 focus:ring-accent/10 sm:text-sm";
+
+  const primaryBtnClass =
+    "flex min-h-[48px] w-full items-center justify-center rounded-xl border border-neutral-600 bg-neutral-700 px-4 py-3.5 text-base font-semibold leading-none text-white shadow-sm transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-50 sm:min-h-[48px] sm:py-3.5 sm:text-sm";
 
   return (
     <>
@@ -80,6 +84,7 @@ export function CreateAccountPage() {
                       type="email"
                       autoComplete="email"
                       inputMode="email"
+                      placeholder={SAMPLE_EMAIL_PLACEHOLDER}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={inputClass}
@@ -104,11 +109,7 @@ export function CreateAccountPage() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="min-h-[48px] w-full touch-manipulation rounded-xl bg-accent py-3.5 text-base font-semibold tracking-wide text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-50 sm:text-sm"
-                >
+                <button type="submit" disabled={loading} className={`${primaryBtnClass} touch-manipulation`}>
                   Create account
                 </button>
               </form>
