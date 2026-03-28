@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Copy, Send } from "lucide-react";
 import { MERCHANTS, type Merchant } from "../data/merchants";
 import { useAuthStore } from "../store/useAuthStore";
@@ -11,9 +12,15 @@ import { SendPaymentModal } from "./SendPaymentModal";
 const WALLET = "dispensary01*lightrain.in";
 
 export function Dashboard() {
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user)!;
   const logout = useAuthStore((s) => s.logout);
   const showToast = useToastStore((s) => s.show);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
   const [profileMerchant, setProfileMerchant] = useState<Merchant | null>(null);
@@ -50,7 +57,7 @@ export function Dashboard() {
         user={user}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onLogout={logout}
+        onLogout={handleLogout}
       />
 
       <main className="relative z-[2] mx-auto max-w-6xl px-3 pb-28 pt-[4.5rem] safe-pb sm:px-4 sm:pb-24 sm:pt-24 lg:px-8 lg:pt-32">

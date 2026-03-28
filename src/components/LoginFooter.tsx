@@ -1,9 +1,10 @@
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 const microLinks = [
-  { label: "Support", href: "https://www.lightrain.in/support" },
-  { label: "Legal", href: "https://www.lightrain.in/legal" },
-  { label: "Company", href: "https://www.lightrain.in/company" },
+  { label: "Support", to: "/support" },
+  { label: "Legal", to: "/legal" },
+  { label: "Company", to: "/company" },
 ] as const;
 
 export function LoginFooter() {
@@ -14,20 +15,18 @@ export function LoginFooter() {
         aria-label="Legal and company links"
       >
         {microLinks.map((link, i) => (
-          <Fragment key={link.href}>
+          <Fragment key={link.to}>
             {i > 0 && (
               <span className="select-none text-neutral-300" aria-hidden>
                 ·
               </span>
             )}
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to={link.to}
               className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center px-2 py-2 transition-colors duration-200 hover:text-accent active:text-neutral-900"
             >
               {link.label}
-            </a>
+            </Link>
           </Fragment>
         ))}
       </nav>

@@ -2,19 +2,20 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import { LoginFooter } from "./LoginFooter";
-import { RainBackground } from "./RainBackground";
+import { LoginFooter } from "../components/LoginFooter";
+import { RainBackground } from "../components/RainBackground";
 
 const GUEST_EMAIL = "guest@lightrain.in";
 
-export function Login() {
+export function CreateAccountPage() {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const runLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
     try {
       await login(email.trim() || GUEST_EMAIL, password);
@@ -22,11 +23,6 @@ export function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await runLogin();
   };
 
   const inputClass =
@@ -43,41 +39,44 @@ export function Login() {
 
         {loading && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 backdrop-blur-sm transition-opacity duration-300"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 backdrop-blur-sm"
             aria-busy="true"
-            aria-label="Signing in"
+            aria-label="Creating account"
           >
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="h-10 w-10 animate-spin text-accent" />
-              <p className="text-sm text-muted">Signing in…</p>
+              <p className="text-sm text-muted">Creating your account…</p>
             </div>
           </div>
         )}
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-start px-4 pb-6 pt-[6vh] sm:px-6 sm:pb-10 sm:pt-[10vh] md:pt-[12vh]">
           <div className="flex w-full max-w-md flex-col items-center">
-            <div className="relative z-[1] w-full rounded-2xl border border-neutral-200/90 bg-white/92 p-5 shadow-card backdrop-blur-md transition-shadow duration-500 sm:rounded-3xl sm:p-8 sm:hover:shadow-soft">
+            <div className="relative z-[1] w-full rounded-2xl border border-neutral-200/90 bg-white/92 p-5 shadow-card backdrop-blur-md sm:rounded-3xl sm:p-8">
+              <p className="mb-4 text-center">
+                <Link to="/" className="text-sm font-medium text-muted hover:text-accent">
+                  ← Back to sign in
+                </Link>
+              </p>
               <header className="mb-6 text-center sm:mb-8">
-                <h1 className="font-display text-[1.85rem] font-normal leading-tight tracking-[0.12em] text-neutral-900 sm:text-4xl sm:tracking-[0.14em]">
-                  Light<span className="text-accent">Rain</span>
+                <h1 className="font-display text-[1.65rem] font-normal leading-tight tracking-[0.1em] text-neutral-900 sm:text-3xl">
+                  Create your account
                 </h1>
                 <p className="mt-3 text-sm leading-relaxed text-muted sm:text-[15px]">
-                  Private Discretionary Blockchain Ledger
+                  Join LightRain to get a federation settlement address and access the merchant network. Choose an
+                  email and password you will use to sign in later (demo: any values work).
                 </p>
               </header>
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted"
-                  >
+                  <label htmlFor="signup-email" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted">
                     Email
                   </label>
                   <div className="relative">
                     <Mail className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted sm:left-3.5" />
                     <input
-                      id="email"
+                      id="signup-email"
                       type="email"
                       autoComplete="email"
                       inputMode="email"
@@ -88,18 +87,15 @@ export function Login() {
                   </div>
                 </div>
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted"
-                  >
+                  <label htmlFor="signup-password" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted">
                     Password
                   </label>
                   <div className="relative">
                     <Lock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted sm:left-3.5" />
                     <input
-                      id="password"
+                      id="signup-password"
                       type="password"
-                      autoComplete="current-password"
+                      autoComplete="new-password"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -111,19 +107,11 @@ export function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="min-h-[48px] w-full touch-manipulation rounded-xl border border-neutral-600 bg-neutral-700 py-3 text-base font-semibold text-white shadow-sm transition-all duration-300 hover:border-neutral-700 hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-50 sm:text-sm"
+                  className="min-h-[48px] w-full touch-manipulation rounded-xl bg-accent py-3.5 text-base font-semibold tracking-wide text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-50 sm:text-sm"
                 >
-                  Login
+                  Create account
                 </button>
               </form>
-
-              <Link
-                to="/create-account"
-                aria-disabled={loading}
-                className={`mt-4 flex min-h-[48px] w-full touch-manipulation items-center justify-center rounded-xl bg-accent py-3.5 text-center text-base font-semibold tracking-wide text-white shadow-soft transition-all duration-300 hover:bg-neutral-800 active:bg-neutral-900 ${loading ? "pointer-events-none opacity-50" : ""}`}
-              >
-                Create account
-              </Link>
             </div>
             <div className="safe-pb w-full">
               <LoginFooter />

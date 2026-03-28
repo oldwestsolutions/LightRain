@@ -36,7 +36,8 @@ npm start
 
 The app opens at [http://localhost:3000](http://localhost:3000).
 
-- **Demo login:** use **Login** or **Create account** with any credentials (fields can be empty; auth is mocked).
+- **Demo login:** **Login** or open **Create account** (`/create-account`) with any credentials (fields can be empty; auth is mocked). After sign-in you are routed to `/dashboard`.
+- **Static pages:** `/support`, `/legal`, `/company` (in-app routes with contextual copy).
 - After login, a **500ms** loading state runs, then the dashboard appears.
 - Use **Copy** on the federation address to see a toast: “Address copied!”
 - **Send Payment** and **View Profile** open modals with mock forms and details.

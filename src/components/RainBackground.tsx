@@ -94,12 +94,12 @@ export function RainBackground() {
     const mobile = window.innerWidth < 640;
     const layers: ReturnType<typeof createRainLayer>[] = [];
 
-    /* Sparse, slow drizzle — subtle / romantic */
+    /* Sparse streaks, natural fall speed — still soft opacity */
     layers.push(
       createRainLayer(scene, {
         count: mobile ? 180 : 380,
-        speedMin: 0.06,
-        speedMax: 0.11,
+        speedMin: 0.42,
+        speedMax: 0.78,
         lengthMin: 0.55,
         lengthMax: 1.15,
         opacity: 0.07,
@@ -114,8 +114,8 @@ export function RainBackground() {
     layers.push(
       createRainLayer(scene, {
         count: mobile ? 120 : 260,
-        speedMin: 0.045,
-        speedMax: 0.085,
+        speedMin: 0.28,
+        speedMax: 0.52,
         lengthMin: 0.4,
         lengthMax: 0.85,
         opacity: 0.045,
@@ -130,8 +130,8 @@ export function RainBackground() {
     layers.push(
       createRainLayer(scene, {
         count: mobile ? 70 : 140,
-        speedMin: 0.03,
-        speedMax: 0.055,
+        speedMin: 0.16,
+        speedMax: 0.32,
         lengthMin: 0.28,
         lengthMax: 0.55,
         opacity: 0.028,
@@ -178,13 +178,13 @@ export function RainBackground() {
           const vy = velocities[i];
           const wind = gust * driftScale * 10 + Math.sin(t * 0.28 + driftPhase[i]) * driftScale * 2.5;
 
-          pos[base] += wind * 0.005;
+          pos[base] += wind * 0.012;
           pos[base + 1] -= vy;
-          pos[base + 2] += Math.cos(t * 0.22 + driftPhase[i]) * 0.0035;
+          pos[base + 2] += Math.cos(t * 0.22 + driftPhase[i]) * 0.006;
 
-          pos[base + 3] += wind * 0.005;
+          pos[base + 3] += wind * 0.012;
           pos[base + 4] -= vy;
-          pos[base + 5] += Math.cos(t * 0.22 + driftPhase[i]) * 0.0035;
+          pos[base + 5] += Math.cos(t * 0.22 + driftPhase[i]) * 0.006;
 
           if (pos[base + 4] < bounds.bottom) {
             const nx = (Math.random() - 0.5) * (95 + L * 12);
