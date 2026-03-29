@@ -4,7 +4,6 @@ import { motion, useReducedMotion, type Transition } from "framer-motion";
 import { Store, Wallet } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
-import { staggerItem, staggerParent } from "../motion/stagger";
 import { useAuthStore } from "../store/useAuthStore";
 import { ProfileOverviewModal } from "./ProfileOverviewModal";
 import { SendPaymentModal } from "./SendPaymentModal";
@@ -24,7 +23,6 @@ export function Dashboard() {
   const [walletOpen, setWalletOpen] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
   const [txHistoryOpen, setTxHistoryOpen] = useState(false);
-  const item = staggerItem(!!reduceMotion);
   const btnSpring: Transition = reduceMotion
     ? { duration: 0.01 }
     : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
@@ -32,18 +30,8 @@ export function Dashboard() {
   const handleId = user?.handle?.replace(/^@/, "") ?? "account";
 
   return (
-    <motion.main
-      variants={staggerParent}
-      initial="hidden"
-      animate="show"
-      className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-2 py-10 sm:max-w-lg sm:px-3 sm:py-16 md:max-w-xl md:py-20 lg:py-24"
-    >
-      <motion.section
-        variants={item}
-        layout={reduceMotion ? undefined : "position"}
-        transition={btnSpring}
-        className="w-full overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-[24px]"
-      >
+    <main className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col justify-center px-2 py-10 sm:max-w-lg sm:px-3 sm:py-16 md:max-w-xl md:py-20 lg:py-24">
+      <section className="w-full overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-[24px]">
         <div className="border-b border-neutral-100 px-5 py-6 sm:px-8 sm:py-8">
           <motion.button
             type="button"
@@ -90,7 +78,7 @@ export function Dashboard() {
         </div>
 
         <TransactionHistoryTrigger embedded onOpen={() => setTxHistoryOpen(true)} />
-      </motion.section>
+      </section>
 
       {user && (
         <ProfileOverviewModal
@@ -114,6 +102,6 @@ export function Dashboard() {
         transactions={TRANSACTIONS}
         pageSize={TX_PAGE_SIZE}
       />
-    </motion.main>
+    </main>
   );
 }
