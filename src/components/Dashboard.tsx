@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion, type Transition } from "framer-motion";
-import { Store, Wallet } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
 import { useAuthStore } from "../store/useAuthStore";
@@ -48,33 +47,6 @@ export function Dashboard() {
               {handleId}
             </span>
           </motion.button>
-
-          <div className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <motion.button
-              type="button"
-              onClick={() => navigate("/marketplace")}
-              whileHover={reduceMotion ? undefined : { scale: 1.03, y: -1 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-              transition={btnSpring}
-              className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-neutral-900 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-initial sm:px-10"
-              aria-label="Marketplace"
-            >
-              <Store className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-              Marketplace
-            </motion.button>
-            <motion.button
-              type="button"
-              onClick={() => setWalletOpen(true)}
-              whileHover={reduceMotion ? undefined : { scale: 1.03, y: -1 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
-              transition={btnSpring}
-              className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-initial sm:px-10"
-              aria-label="Wallet"
-            >
-              <Wallet className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-              Wallet
-            </motion.button>
-          </div>
         </div>
 
         <TransactionHistoryTrigger embedded onOpen={() => setTxHistoryOpen(true)} />
@@ -86,6 +58,8 @@ export function Dashboard() {
           onClose={() => setProfileOpen(false)}
           user={user}
           federationAddress={FEDERATION_ADDRESS}
+          onMarketplace={() => navigate("/marketplace")}
+          onWallet={() => setWalletOpen(true)}
         />
       )}
       <WalletModal

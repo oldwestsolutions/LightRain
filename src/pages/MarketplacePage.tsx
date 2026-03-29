@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, Store, X } from "lucide-react";
 import { MERCHANTS, type Merchant } from "../data/merchants";
@@ -70,6 +70,7 @@ function buildSnippet(m: Merchant, q: string): string {
 }
 
 export function MarketplacePage() {
+  const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
   const [inputValue, setInputValue] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
@@ -133,20 +134,10 @@ export function MarketplacePage() {
       )}
 
       <div
-        className={`relative z-[1] mx-auto w-full px-4 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-6 ${
+        className={`relative z-[1] mx-auto w-full px-4 pb-16 pt-2 sm:px-6 sm:pb-20 sm:pt-3 ${
           phase === "results" ? "max-w-[100rem]" : "max-w-6xl"
         }`}
       >
-        {phase === "hero" && (
-          <Link
-            to="/dashboard"
-            className="mb-6 inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-white/60 hover:text-neutral-900"
-          >
-            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
-            Dashboard
-          </Link>
-        )}
-
         <AnimatePresence mode="wait">
           {phase === "hero" ? (
             <motion.div
@@ -155,22 +146,43 @@ export function MarketplacePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -16 }}
               transition={spring}
-              className="flex min-h-[min(76dvh,calc(100dvh-8rem))] flex-col items-center justify-center px-2 text-center sm:px-4"
+              className="flex flex-col"
             >
+              <header className="sticky top-0 z-20 -mx-4 mb-4 flex items-center justify-between border-b border-neutral-200/70 bg-white/85 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:mb-5 sm:px-6">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="inline-flex min-h-[40px] min-w-0 items-center gap-2 text-sm font-medium text-neutral-700 transition-colors hover:text-neutral-900"
+                >
+                  <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+                  Back
+                </button>
+                <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-sm font-medium tracking-wide text-neutral-900">
+                  Marketplace
+                </span>
+                <Link
+                  to="/dashboard"
+                  className="min-h-[40px] shrink-0 content-center text-sm font-semibold text-indigo-600 hover:underline"
+                >
+                  Dashboard
+                </Link>
+              </header>
+
+              <div className="flex flex-col items-center px-2 pb-8 pt-2 text-center sm:px-4 sm:pt-4">
               <motion.div
                 initial={reduceMotion ? false : { scale: 0.97, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ ...spring, delay: reduceMotion ? 0 : 0.06 }}
-                className="mb-3 flex items-center gap-2 text-neutral-500"
+                className="mb-2 flex items-center gap-2 text-neutral-500 sm:mb-3"
               >
                 <Store className="h-5 w-5 text-indigo-500" aria-hidden />
-                <span className="text-sm font-medium tracking-wide">Marketplace</span>
+                <span className="text-sm font-medium tracking-wide">Search</span>
               </motion.div>
               <h1 className="font-display max-w-xl text-3xl font-normal tracking-tight text-neutral-900 sm:text-4xl md:text-[2.75rem] md:leading-[1.15]">
                 Search trusted partners
               </h1>
 
-              <div className="relative mt-10 w-full max-w-xl">
+              <div className="relative mt-6 w-full max-w-xl sm:mt-8">
                 <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/90 bg-white p-2 shadow-[0_8px_40px_rgba(15,23,42,0.08)] sm:flex-row sm:items-stretch sm:rounded-full sm:p-1.5 sm:pr-2 sm:shadow-[0_12px_48px_rgba(15,23,42,0.1)]">
                   <label htmlFor="mp-search" className="sr-only">
                     Search marketplace
@@ -205,6 +217,7 @@ export function MarketplacePage() {
                   </button>
                 </div>
               </div>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -217,18 +230,29 @@ export function MarketplacePage() {
               {/* Google-style header */}
               <header className="sticky top-0 z-30 border-b border-[#ebebeb] bg-white">
                 <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-6 sm:px-8 sm:py-3.5">
-                  <div className="flex items-center gap-4 sm:min-w-[140px]">
-                    <button
-                      type="button"
-                      onClick={() => setPhase("hero")}
-                      className="text-left text-xl font-normal tracking-tight text-[#202124]"
-                      aria-label="New search"
-                    >
-                      Light<span className="text-accent">Rain</span>
-                    </button>
+                  <div className="flex w-full items-center justify-between gap-3 sm:min-w-0 sm:w-auto sm:justify-start sm:gap-4">
+                    <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                      <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-[#70757a] hover:text-[#202124]"
+                        aria-label="Go back"
+                      >
+                        <ArrowLeft className="h-4 w-4" aria-hidden />
+                        <span>Back</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPhase("hero")}
+                        className="truncate text-left text-lg font-normal tracking-tight text-[#202124] sm:text-xl"
+                        aria-label="New search"
+                      >
+                        Light<span className="text-accent">Rain</span>
+                      </button>
+                    </div>
                     <Link
                       to="/dashboard"
-                      className="hidden text-sm text-[#70757a] hover:underline sm:inline"
+                      className="shrink-0 text-sm font-medium text-[#1a73e8] hover:underline"
                     >
                       Dashboard
                     </Link>
@@ -289,15 +313,6 @@ export function MarketplacePage() {
                   </div>
                 </div>
               </header>
-
-              <motion.button
-                type="button"
-                onClick={() => setPhase("hero")}
-                className="my-3 px-4 text-sm text-[#1a0dab] hover:underline sm:hidden"
-                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              >
-                ← New search
-              </motion.button>
 
               <div className="flex flex-col px-4 pb-12 sm:flex-row sm:px-8">
                 <main className="max-w-none flex-1 sm:max-w-[652px]">
