@@ -4,6 +4,8 @@ export type User = {
   email: string;
   name: string;
   initials: string;
+  /** Public handle without @ (e.g. dispensary01 → shown as @dispensary01) */
+  handle: string;
 };
 
 type AuthState = {
@@ -24,6 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         email,
         name: "Mountain View Collective",
         initials: "MV",
+        handle: "dispensary01",
       },
     });
   },

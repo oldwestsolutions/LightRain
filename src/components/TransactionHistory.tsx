@@ -7,6 +7,8 @@ type Props = {
   page: number;
   pageSize: number;
   onPageChange: (page: number) => void;
+  /** Inside another card: drop outer border, radius, shadow */
+  embedded?: boolean;
 };
 
 function formatWhen(iso: string) {
@@ -23,15 +25,21 @@ function formatWhen(iso: string) {
   }
 }
 
-export function TransactionHistory({ transactions, page, pageSize, onPageChange }: Props) {
-  const [open, setOpen] = useState(false);
+export function TransactionHistory({ transactions, page, pageSize, onPageChange, embedded }: Props) {
+  const [open, setOpen] = useState(true);
   const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
   const safePage = Math.min(page, totalPages);
   const start = (safePage - 1) * pageSize;
   const slice = transactions.slice(start, start + pageSize);
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl">
+    <section
+      className={
+        embedded
+          ? "overflow-hidden"
+          : "overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl"
+      }
+    >
       <h2 className="sr-only">Transaction history</h2>
       <button
         type="button"
