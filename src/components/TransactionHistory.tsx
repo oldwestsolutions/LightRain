@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { LedgerTransaction } from "../data/transactions";
 
 type Props = {
@@ -23,6 +24,7 @@ function formatWhen(iso: string) {
 }
 
 export function TransactionHistory({ transactions, page, pageSize, onPageChange }: Props) {
+  const [open, setOpen] = useState(false);
   const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
   const safePage = Math.min(page, totalPages);
   const start = (safePage - 1) * pageSize;
@@ -30,16 +32,35 @@ export function TransactionHistory({ transactions, page, pageSize, onPageChange 
 
   return (
     <section className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl">
-      <div className="border-b border-neutral-100 px-4 py-4 sm:px-6 sm:py-5">
-        <h2 className="text-base font-semibold tracking-tight text-neutral-900 sm:text-lg">Transaction history</h2>
-        <p className="mt-1 text-xs text-muted sm:text-sm">Recent settlements and transfers on your federation address</p>
-      </div>
+      <h2 className="sr-only">Transaction history</h2>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-start gap-3 border-b border-neutral-100 px-4 py-4 text-left transition-colors hover:bg-neutral-50/80 sm:px-6 sm:py-5"
+        aria-expanded={open}
+        aria-controls="transaction-history-panel"
+      >
+        <div className="min-w-0 flex-1">
+          <span className="block text-base font-semibold tracking-tight text-neutral-900 sm:text-lg">
+            Transaction history
+          </span>
+          <span className="mt-1 block text-xs text-muted sm:text-sm">
+            Recent settlements and transfers on your federation address
+          </span>
+        </div>
+        <ChevronDown
+          className={`mt-1 h-5 w-5 shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        />
+      </button>
 
-      {transactions.length === 0 ? (
-        <p className="px-4 py-12 text-center text-sm text-muted sm:px-6">No transactions match your search.</p>
-      ) : (
-        <>
-          <ul className="divide-y divide-neutral-100">
+      {open && (
+        <div id="transaction-history-panel">
+        {transactions.length === 0 ? (
+          <p className="px-4 py-12 text-center text-sm text-muted sm:px-6">No transactions match your search.</p>
+        ) : (
+          <>
+            <ul className="divide-y divide-neutral-100">
             {slice.map((tx) => (
               <li
                 key={tx.id}
@@ -113,7 +134,9 @@ export function TransactionHistory({ transactions, page, pageSize, onPageChange 
               </button>
             </div>
           </div>
-        </>
+          </>
+        )}
+        </div>
       )}
     </section>
   );
