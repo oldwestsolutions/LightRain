@@ -4,7 +4,6 @@ import { motion, useReducedMotion, type Transition } from "framer-motion";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
 import { useAuthStore } from "../store/useAuthStore";
-import { formatUsdFromCents, useWalletStore } from "../store/useWalletStore";
 import { ProfileOverviewModal } from "./ProfileOverviewModal";
 import { SendPaymentModal } from "./SendPaymentModal";
 import { TransactionHistoryModal, TransactionHistoryTrigger } from "./TransactionHistory";
@@ -16,7 +15,6 @@ const TX_PAGE_SIZE = 5;
 export function Dashboard() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const cashBalanceCents = useWalletStore((s) => s.cashBalanceCents);
   const reduceMotion = useReducedMotion();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -27,7 +25,7 @@ export function Dashboard() {
     ? { duration: 0.01 }
     : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
 
-  const cashDisplay = formatUsdFromCents(cashBalanceCents);
+  const walletTitle = user?.name?.trim() || "Profile";
 
   return (
     <main className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col justify-center px-2 py-10 sm:max-w-lg sm:px-3 sm:py-16 md:max-w-xl md:py-20 lg:py-24">
@@ -43,19 +41,15 @@ export function Dashboard() {
             aria-haspopup="dialog"
             aria-expanded={profileOpen}
           >
-            <span className="text-xs font-medium text-neutral-500 sm:text-[13px]">Account</span>
+            <span className="text-xs font-medium text-neutral-500 sm:text-[13px]">Wallet</span>
             <span className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl sm:font-medium">
-              {user?.name ?? "Profile"}
+              <span className="text-neutral-400">+</span>
+              {walletTitle}
             </span>
-            <span className="mt-1 text-xs text-neutral-500">Profile, marketplace & wallet</span>
           </motion.button>
         </div>
 
-        <TransactionHistoryTrigger
-          embedded
-          balanceDisplay={cashDisplay}
-          onOpen={() => setTxHistoryOpen(true)}
-        />
+        <TransactionHistoryTrigger embedded onOpen={() => setTxHistoryOpen(true)} />
       </section>
 
       {user && (

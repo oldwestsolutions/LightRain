@@ -123,12 +123,10 @@ export function TransactionHistoryList({ transactions, page, pageSize, onPageCha
 type TriggerProps = {
   onOpen: () => void;
   embedded?: boolean;
-  /** Formatted dollars only (e.g. 0.00 or 1,234.56) */
-  balanceDisplay: string;
 };
 
-/** Centered cash row; opens full activity modal. */
-export function TransactionHistoryTrigger({ onOpen, embedded, balanceDisplay }: TriggerProps) {
+/** Centered transactions row (no balance); opens full activity modal. */
+export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
   const reduceMotion = useReducedMotion();
   const spring: Transition = reduceMotion
     ? { duration: 0.01 }
@@ -142,24 +140,20 @@ export function TransactionHistoryTrigger({ onOpen, embedded, balanceDisplay }: 
           : "overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl"
       }
     >
-      <h2 className="sr-only">Account activity</h2>
+      <h2 className="sr-only">Transactions</h2>
       <motion.button
         type="button"
         onClick={onOpen}
         whileHover={reduceMotion ? undefined : { scale: 1.005 }}
         whileTap={reduceMotion ? undefined : { scale: 0.992 }}
         transition={spring}
-        className="relative flex w-full min-h-[100px] flex-col items-center justify-center px-5 py-5 text-center transition-colors hover:bg-white/80 sm:min-h-[108px] sm:px-7 sm:py-6"
+        className="relative flex w-full min-h-[76px] flex-col items-center justify-center px-5 py-4 text-center transition-colors hover:bg-white/80 sm:min-h-[84px] sm:px-7 sm:py-5"
         aria-haspopup="dialog"
-        aria-label={`Open activity, ${balanceDisplay} dollars cash`}
+        aria-label="Open transactions"
       >
-        <div className="mx-auto max-w-md">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400">Cash</p>
-          <p className="mt-1 text-[2rem] font-medium leading-none tracking-tight tabular-nums text-neutral-900 sm:text-[2.125rem]">
-            <span className="text-[1.35rem] font-medium text-neutral-400 sm:text-[1.45rem]">$</span>
-            {balanceDisplay}
-          </p>
-        </div>
+        <p className="text-[2rem] font-medium leading-none tracking-tight text-neutral-900 sm:text-[2.125rem]">
+          Transactions
+        </p>
         <ChevronRight
           className="pointer-events-none absolute right-5 top-1/2 h-6 w-6 -translate-y-1/2 text-neutral-300 sm:right-7"
           strokeWidth={1.75}
