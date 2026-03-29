@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronRight, Store, Wallet } from "lucide-react";
+import { Store, Wallet } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
 import { staggerItem, staggerParent } from "../motion/stagger";
 import { useAuthStore } from "../store/useAuthStore";
 import { ProfileOverviewModal } from "./ProfileOverviewModal";
 import { SendPaymentModal } from "./SendPaymentModal";
-import { TransactionHistory } from "./TransactionHistory";
+import { TransactionHistoryModal, TransactionHistoryTrigger } from "./TransactionHistory";
 import { WalletModal } from "./WalletModal";
 
 const FEDERATION_ADDRESS = "dispensary01*lightrain.in";
@@ -20,19 +20,13 @@ export function Dashboard() {
   const user = useAuthStore((s) => s.user);
   const reduceMotion = useReducedMotion();
 
-  const [txPage, setTxPage] = useState(1);
   const [profileOpen, setProfileOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
   const [sendOpen, setSendOpen] = useState(false);
+  const [txHistoryOpen, setTxHistoryOpen] = useState(false);
   const item = staggerItem(!!reduceMotion);
 
   const handleId = user?.handle?.replace(/^@/, "") ?? "account";
-  const displayHandle = `@${handleId}`;
-
-  useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(TRANSACTIONS.length / TX_PAGE_SIZE));
-    setTxPage((p) => Math.min(p, maxPage));
-  }, []);
 
   return (
     <motion.main variants={staggerParent} initial="hidden" animate="show">
@@ -45,19 +39,14 @@ export function Dashboard() {
             type="button"
             onClick={() => setProfileOpen(true)}
             whileTap={reduceMotion ? undefined : { scale: 0.99 }}
-            className="group flex w-full max-w-md mx-auto flex-col items-center rounded-2xl px-4 py-3 text-center transition-colors hover:bg-neutral-50 sm:py-4"
+            className="flex w-full max-w-md mx-auto flex-col items-center rounded-2xl px-4 py-3 text-center transition-colors hover:bg-neutral-50 sm:py-4"
             aria-haspopup="dialog"
             aria-expanded={profileOpen}
           >
             <span className="text-xs font-medium text-neutral-500 sm:text-[13px]">Account</span>
-            <span className="mt-1 flex items-center gap-1 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">
-              {displayHandle}
-              <ChevronRight
-                className="h-5 w-5 shrink-0 text-neutral-400 transition-transform group-hover:translate-x-0.5"
-                aria-hidden
-              />
+            <span className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">
+              {handleId}
             </span>
-            <span className="mt-1 text-xs text-neutral-500">Tap for profile · Overview and details</span>
           </motion.button>
 
           <div className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -84,15 +73,7 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="border-t border-neutral-100">
-          <TransactionHistory
-            embedded
-            transactions={TRANSACTIONS}
-            page={txPage}
-            pageSize={TX_PAGE_SIZE}
-            onPageChange={setTxPage}
-          />
-        </div>
+        <TransactionHistoryTrigger embedded onOpen={() => setTxHistoryOpen(true)} />
       </motion.section>
 
       {user && (
@@ -111,6 +92,12 @@ export function Dashboard() {
         onOpenSend={() => setSendOpen(true)}
       />
       <SendPaymentModal open={sendOpen} onClose={() => setSendOpen(false)} merchants={MERCHANTS} />
+      <TransactionHistoryModal
+        open={txHistoryOpen}
+        onClose={() => setTxHistoryOpen(false)}
+        transactions={TRANSACTIONS}
+        pageSize={TX_PAGE_SIZE}
+      />
     </motion.main>
   );
 }

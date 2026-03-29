@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  ChevronDown,
-  FileText,
-  HelpCircle,
-  LogOut,
-  Shield,
-  UserRound,
-} from "lucide-react";
+import { FileText, HelpCircle, LogOut, Shield, UserRound } from "lucide-react";
 
 type Props = {
   onLogout: () => void;
@@ -87,15 +80,11 @@ export function Navbar({ onLogout }: Props) {
             aria-expanded={menuOpen}
             aria-haspopup="true"
             aria-controls="account-menu"
-            className="inline-flex min-h-[40px] max-w-[min(100vw-2rem,16rem)] touch-manipulation items-center gap-2 rounded-full border border-neutral-200 bg-white py-2 pl-4 pr-2.5 text-left transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50 active:bg-neutral-100"
+            className="inline-flex min-h-[40px] max-w-[min(100vw-2rem,16rem)] touch-manipulation items-center rounded-full border border-neutral-200 bg-white px-4 py-2 text-left transition-all duration-300 hover:border-neutral-300 hover:bg-neutral-50 active:bg-neutral-100"
           >
-            <span className="font-display min-w-0 flex-1 truncate text-base font-normal tracking-[0.1em] text-neutral-900 sm:text-lg sm:tracking-[0.12em]">
+            <span className="font-display min-w-0 truncate text-base font-normal tracking-[0.1em] text-neutral-900 sm:text-lg sm:tracking-[0.12em]">
               Light<span className="text-accent">Rain</span>
             </span>
-            <ChevronDown
-              className={`h-4 w-4 shrink-0 text-neutral-500 transition-transform ${menuOpen ? "rotate-180" : ""}`}
-              aria-hidden
-            />
           </button>
 
           <AnimatePresence>
