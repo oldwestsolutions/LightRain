@@ -3,29 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownLeft, Copy, Store } from "lucide-react";
 import { TRANSACTIONS } from "../data/transactions";
+import { staggerItem, staggerParent } from "../motion/stagger";
 import { useToastStore } from "../store/useToastStore";
 import { TransactionHistory } from "./TransactionHistory";
 
 const WALLET = "dispensary01*lightrain.in";
 const TX_PAGE_SIZE = 5;
 const AVAILABLE_BALANCE = "2,847.32";
-
-const staggerParent = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.07, delayChildren: 0.04 },
-  },
-};
-
-const staggerItem = (reduce: boolean) => ({
-  hidden: { opacity: reduce ? 1 : 0, y: reduce ? 0 : 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
-  },
-});
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -96,20 +80,37 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 px-5 py-4 sm:px-8 sm:py-5">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-neutral-900">Linked address</p>
-            <p className="mt-0.5 truncate text-sm text-neutral-500">{WALLET}</p>
+        <div className="border-t border-neutral-100 px-5 py-5 sm:px-8 sm:py-6">
+          <div className="flex flex-col gap-4 rounded-xl border border-neutral-200/80 bg-neutral-50/90 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
+                  Receiving address
+                </p>
+                <span className="rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-600 ring-1 ring-neutral-200/90">
+                  Primary
+                </span>
+              </div>
+              <p
+                className="mt-2 break-all font-mono text-[13px] font-medium leading-snug tracking-wide text-neutral-900 sm:text-sm"
+                translate="no"
+              >
+                {WALLET}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+                Use this address for deposits and payouts. Keep it private like an account number.
+              </p>
+            </div>
+            <motion.button
+              type="button"
+              onClick={copyWallet}
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              className="inline-flex min-h-[44px] shrink-0 touch-manipulation items-center justify-center gap-2 self-stretch rounded-xl border border-neutral-200/90 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 sm:self-center sm:px-6"
+            >
+              <Copy className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
+              Copy address
+            </motion.button>
           </div>
-          <motion.button
-            type="button"
-            onClick={copyWallet}
-            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            className="inline-flex min-h-[40px] shrink-0 touch-manipulation items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-100"
-          >
-            <Copy className="h-4 w-4 shrink-0 text-neutral-500" aria-hidden />
-            Copy
-          </motion.button>
         </div>
       </motion.section>
 

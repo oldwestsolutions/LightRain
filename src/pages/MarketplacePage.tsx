@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Building2, MapPin } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
+import { listStaggerParent, staggerItem, staggerParent } from "../motion/stagger";
 
 const typeLabel: Record<(typeof MERCHANTS)[number]["type"], string> = {
   dispensary: "Retail",
@@ -10,22 +11,19 @@ const typeLabel: Record<(typeof MERCHANTS)[number]["type"], string> = {
 
 export function MarketplacePage() {
   const reduceMotion = useReducedMotion();
+  const item = staggerItem(!!reduceMotion);
+  const row = staggerItem(!!reduceMotion);
 
   return (
-    <main>
-      <header className="mb-6 sm:mb-8">
+    <motion.main variants={staggerParent} initial="hidden" animate="show">
+      <motion.header variants={item} className="mb-6 sm:mb-8">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">Marketplace</h1>
         <p className="mt-1 text-sm text-neutral-500">Browse verified partners. Demo listings only.</p>
-      </header>
+      </motion.header>
 
-      <ul className="space-y-3 sm:space-y-4">
-        {MERCHANTS.map((m, i) => (
-          <motion.li
-            key={m.id}
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: reduceMotion ? 0 : i * 0.04 }}
-          >
+      <motion.ul variants={listStaggerParent} className="space-y-3 sm:space-y-4">
+        {MERCHANTS.map((m) => (
+          <motion.li key={m.id} variants={row}>
             <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -50,7 +48,7 @@ export function MarketplacePage() {
             </div>
           </motion.li>
         ))}
-      </ul>
-    </main>
+      </motion.ul>
+    </motion.main>
   );
 }
