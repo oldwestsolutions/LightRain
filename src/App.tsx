@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { PageTransitionLayout } from "./components/PageTransitionLayout";
 import { useAuthStore } from "./store/useAuthStore";
 import { Login } from "./components/Login";
 import { Dashboard } from "./components/Dashboard";
@@ -30,13 +31,15 @@ function DashboardRoute() {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LoginRoute />} />
-      <Route path="/create-account" element={<CreateAccountRoute />} />
-      <Route path="/support" element={<SupportPage />} />
-      <Route path="/legal" element={<LegalPage />} />
-      <Route path="/company" element={<CompanyPage />} />
-      <Route path="/dashboard" element={<DashboardRoute />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route element={<PageTransitionLayout />}>
+        <Route path="/" element={<LoginRoute />} />
+        <Route path="/create-account" element={<CreateAccountRoute />} />
+        <Route path="/support" element={<SupportPage />} />
+        <Route path="/legal" element={<LegalPage />} />
+        <Route path="/company" element={<CompanyPage />} />
+        <Route path="/dashboard" element={<DashboardRoute />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
     </Routes>
   );
 }
