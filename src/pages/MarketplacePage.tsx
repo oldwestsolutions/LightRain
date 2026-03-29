@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
-import { Building2, MapPin } from "lucide-react";
+import { ArrowLeft, Building2, MapPin } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { listStaggerParent, staggerItem, staggerParent } from "../motion/stagger";
 
@@ -16,6 +17,15 @@ export function MarketplacePage() {
 
   return (
     <motion.main variants={staggerParent} initial="hidden" animate="show">
+      <motion.div variants={item} className="mb-5 sm:mb-6">
+        <Link
+          to="/dashboard"
+          className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-900"
+        >
+          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+          Back to dashboard
+        </Link>
+      </motion.div>
       <motion.header variants={item} className="mb-6 sm:mb-8">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">Marketplace</h1>
         <p className="mt-1 text-sm text-neutral-500">Browse verified partners. Demo listings only.</p>
