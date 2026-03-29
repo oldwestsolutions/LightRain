@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Search, Sparkles, Store, X } from "lucide-react";
+import { ArrowLeft, Search, Store, X } from "lucide-react";
 import { MERCHANTS, type Merchant } from "../data/merchants";
 
 const typeLabel: Record<Merchant["type"], string> = {
@@ -16,14 +16,6 @@ const typeFilters: { id: "all" | Merchant["type"]; label: string }[] = [
   { id: "cultivator", label: "Grower" },
   { id: "processor", label: "Processing" },
 ];
-
-const suggestedSearches = [
-  "Denver",
-  "Seattle dispensary",
-  "Greenhouse grower",
-  "extraction lab",
-  "Boulder",
-] as const;
 
 type Category = (typeof typeFilters)[number]["id"];
 
@@ -177,10 +169,6 @@ export function MarketplacePage() {
               <h1 className="font-display max-w-xl text-3xl font-normal tracking-tight text-neutral-900 sm:text-4xl md:text-[2.75rem] md:leading-[1.15]">
                 Search trusted partners
               </h1>
-              <p className="mt-3 max-w-md text-sm text-neutral-600 sm:text-base">
-                Start here — results open in a Google-style page with organic listings. Hook up your database when
-                it&apos;s ready.
-              </p>
 
               <div className="relative mt-10 w-full max-w-xl">
                 <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/90 bg-white p-2 shadow-[0_8px_40px_rgba(15,23,42,0.08)] sm:flex-row sm:items-stretch sm:rounded-full sm:p-1.5 sm:pr-2 sm:shadow-[0_12px_48px_rgba(15,23,42,0.1)]">
@@ -216,56 +204,6 @@ export function MarketplacePage() {
                     Search
                   </button>
                 </div>
-                <p className="mt-3 text-xs text-neutral-500 sm:text-sm">Press Enter to search (simulated delay).</p>
-              </div>
-
-              <div className="mt-8 flex max-w-xl flex-wrap items-center justify-center gap-2">
-                <span className="flex items-center gap-1 text-xs font-medium text-neutral-500">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-500" aria-hidden />
-                  Try
-                </span>
-                {suggestedSearches.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    disabled={isLoading}
-                    onClick={() => {
-                      setInputValue(s);
-                      void commitSearch(s, typeFilter);
-                    }}
-                    className="rounded-full border border-neutral-200/90 bg-white/80 px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm transition-colors hover:border-indigo-200 hover:bg-indigo-50/80 hover:text-indigo-900 disabled:opacity-50"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-10 w-full max-w-xl border-t border-neutral-200/80 pt-8">
-                <p className="mb-3 text-xs font-medium uppercase tracking-wider text-neutral-500">Category</p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {typeFilters.map((f) => (
-                    <button
-                      key={f.id}
-                      type="button"
-                      onClick={() => setTypeFilter(f.id)}
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                        typeFilter === f.id
-                          ? "bg-neutral-900 text-white shadow-md"
-                          : "bg-white/90 text-neutral-700 ring-1 ring-neutral-200/90 hover:ring-neutral-300"
-                      }`}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => void browseAll()}
-                  disabled={isLoading}
-                  className="mt-8 text-sm font-semibold text-indigo-600 underline-offset-4 hover:underline disabled:opacity-50"
-                >
-                  Browse all {MERCHANTS.length} listings →
-                </button>
               </div>
             </motion.div>
           ) : (
