@@ -100,7 +100,8 @@ export function CompanyPage() {
               Hardware & cold storage
             </h2>
             <p className="mt-1 max-w-2xl text-sm text-muted">
-              Catalog layout inspired by Square / BigCommerce—categories below with clear, simple copy.
+              Demo catalog styled like Square / BigCommerce checkout surfaces—neutral rails, clear pricing, hardware
+              shoppers expect.
             </p>
           </div>
 
