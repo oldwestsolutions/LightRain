@@ -32,56 +32,68 @@ export function TransactionHistoryList({ transactions, page, pageSize, onPageCha
   const slice = transactions.slice(start, start + pageSize);
 
   if (transactions.length === 0) {
-    return <p className="py-12 text-center text-sm text-muted">No transactions yet.</p>;
+    return (
+      <p className="rounded-2xl bg-neutral-50 py-14 text-center text-sm text-neutral-500">
+        No activity yet.
+      </p>
+    );
   }
 
   return (
     <>
-      <ul className="divide-y divide-neutral-100 rounded-xl border border-neutral-200/90 overflow-hidden">
+      <ul className="divide-y divide-neutral-100/90 overflow-hidden rounded-2xl bg-neutral-50/50">
         {slice.map((tx) => (
           <li
             key={tx.id}
-            className="flex flex-col gap-2 bg-white px-4 py-3.5 transition-colors hover:bg-neutral-50/80 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5 sm:py-4"
+            className="flex gap-4 bg-white/80 px-4 py-4 transition-colors hover:bg-white sm:px-5 sm:py-4"
           >
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <div className="flex items-start justify-between gap-3">
+                <p className="min-w-0 truncate text-[15px] font-medium leading-snug text-neutral-900">
+                  {tx.counterparty}
+                </p>
                 <span
-                  className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide sm:text-xs ${
-                    tx.direction === "in" ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
-                  }`}
-                >
-                  {tx.direction === "in" ? "Received" : "Sent"}
-                </span>
-                <span
-                  className={`text-sm font-semibold tabular-nums sm:text-base ${
-                    tx.direction === "in" ? "text-emerald-700" : "text-rose-700"
+                  className={`shrink-0 text-[15px] font-semibold tabular-nums tracking-tight ${
+                    tx.direction === "in" ? "text-emerald-600" : "text-neutral-900"
                   }`}
                 >
                   {tx.direction === "in" ? "+" : "−"}
                   {tx.amount} {tx.asset}
                 </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-medium sm:text-xs ${
-                    tx.status === "settled" ? "bg-neutral-200 text-neutral-800" : "bg-amber-100 text-amber-900"
+                  className={`text-[11px] font-medium uppercase tracking-wide ${
+                    tx.direction === "in" ? "text-emerald-600" : "text-rose-600"
                   }`}
                 >
-                  {tx.status === "settled" ? "Settled" : "Pending"}
+                  {tx.direction === "in" ? "In" : "Out"}
+                </span>
+                <span className="text-[11px] text-neutral-400">·</span>
+                <span
+                  className={`text-[11px] font-medium ${
+                    tx.status === "settled" ? "text-neutral-500" : "text-amber-700"
+                  }`}
+                >
+                  {tx.status === "settled" ? "Completed" : "Pending"}
                 </span>
               </div>
-              <p className="mt-1 truncate text-sm font-medium text-neutral-900">{tx.counterparty}</p>
-              <p className="truncate font-mono text-[11px] text-accent sm:text-xs">{tx.federation}</p>
-              <p className="mt-0.5 line-clamp-2 text-xs text-muted">{tx.memo}</p>
+              <p className="truncate font-mono text-[11px] text-neutral-400">{tx.federation}</p>
+              {tx.memo ? <p className="line-clamp-2 text-[13px] leading-snug text-neutral-500">{tx.memo}</p> : null}
             </div>
-            <time className="shrink-0 text-[11px] text-muted sm:text-right sm:text-xs" dateTime={tx.date}>
+            <time
+              className="shrink-0 pt-0.5 text-right text-[11px] tabular-nums text-neutral-400 sm:text-xs"
+              dateTime={tx.date}
+            >
               {formatWhen(tx.date)}
             </time>
           </li>
         ))}
       </ul>
 
-      <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-center text-[11px] text-muted sm:text-left sm:text-xs">
-          Page {safePage} of {totalPages} · {transactions.length} total
+      <div className="mt-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-center text-[11px] text-neutral-400 sm:text-left sm:text-xs">
+          {transactions.length} items · page {safePage} of {totalPages}
         </p>
         <div className="flex items-center justify-center gap-2">
           <button
@@ -111,45 +123,58 @@ export function TransactionHistoryList({ transactions, page, pageSize, onPageCha
 type TriggerProps = {
   onOpen: () => void;
   embedded?: boolean;
+  /** Handle without leading @ */
+  handleDisplay: string;
+  /** Formatted dollars only (e.g. 0.00 or 1,234.56) */
+  balanceDisplay: string;
 };
 
-/** Summary row on the dashboard; opens the full history modal. */
-export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
+/** Cash + handle row (Robinhood-style); opens full activity modal. */
+export function TransactionHistoryTrigger({
+  onOpen,
+  embedded,
+  handleDisplay,
+  balanceDisplay,
+}: TriggerProps) {
   const reduceMotion = useReducedMotion();
   const spring: Transition = reduceMotion
     ? { duration: 0.01 }
-    : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
+    : { type: "spring", stiffness: 420, damping: 28, mass: 0.88 };
+
+  const handleLabel = handleDisplay.startsWith("@") ? handleDisplay : `@${handleDisplay}`;
 
   return (
     <section
       className={
         embedded
-          ? "overflow-hidden border-t border-neutral-100"
+          ? "overflow-hidden border-t border-neutral-100 bg-gradient-to-b from-white to-neutral-50/90"
           : "overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl"
       }
     >
-      <h2 className="sr-only">Transactions</h2>
+      <h2 className="sr-only">Account activity</h2>
       <motion.button
         type="button"
         onClick={onOpen}
-        whileHover={reduceMotion ? undefined : { scale: 1.01 }}
-        whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.005 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.992 }}
         transition={spring}
-        className={`flex w-full px-4 py-4 transition-colors sm:px-6 sm:py-5 ${
-          embedded
-            ? "flex-col items-center justify-center text-center hover:bg-neutral-50/80"
-            : "items-start text-left hover:bg-neutral-50/80"
-        }`}
+        className="flex w-full min-h-[100px] items-center gap-4 px-5 py-5 text-left transition-colors hover:bg-white/80 sm:min-h-[108px] sm:px-7 sm:py-6"
         aria-haspopup="dialog"
+        aria-label={`Open activity, ${handleLabel}, ${balanceDisplay} dollars cash`}
       >
-        <div className={embedded ? "min-w-0 max-w-md" : "min-w-0 flex-1"}>
-          <span className="block text-base font-semibold tracking-tight text-neutral-900 sm:text-lg">
-            Transactions
-          </span>
-          <span className="mt-1 block text-xs text-muted sm:text-sm">
-            Recent settlements and transfers on your federation address
-          </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400">Cash</p>
+          <p className="mt-1 text-[2rem] font-medium leading-none tracking-tight tabular-nums text-neutral-900 sm:text-[2.125rem]">
+            <span className="text-[1.35rem] font-medium text-neutral-400 sm:text-[1.45rem]">$</span>
+            {balanceDisplay}
+          </p>
+          <p className="mt-2 truncate text-[15px] font-medium text-neutral-500">{handleLabel}</p>
         </div>
+        <ChevronRight
+          className="h-6 w-6 shrink-0 text-neutral-300"
+          strokeWidth={1.75}
+          aria-hidden
+        />
       </motion.button>
     </section>
   );
@@ -175,10 +200,7 @@ export function TransactionHistoryModal({ open, onClose, transactions, pageSize 
   }, [transactions.length, pageSize]);
 
   return (
-    <Modal open={open} title="Transactions" onClose={onClose} wide>
-      <p className="mb-4 text-sm text-muted">
-        Recent settlements and transfers on your federation address
-      </p>
+    <Modal open={open} title="Activity" onClose={onClose} wide>
       <TransactionHistoryList transactions={transactions} page={page} pageSize={pageSize} onPageChange={setPage} />
     </Modal>
   );

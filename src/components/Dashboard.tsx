@@ -45,18 +45,19 @@ export function Dashboard() {
             aria-expanded={profileOpen}
           >
             <span className="text-xs font-medium text-neutral-500 sm:text-[13px]">Account</span>
-            <span className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">
-              {handleId}
+            <span className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl sm:font-medium">
+              {user?.name ?? "Profile"}
             </span>
-            <span className="mt-2 text-sm font-medium tabular-nums tracking-tight text-neutral-600">
-              <span className="font-normal text-neutral-500">Cash </span>
-              <span className="text-neutral-500">$</span>
-              {cashDisplay}
-            </span>
+            <span className="mt-1 text-xs text-neutral-500">Profile, marketplace & wallet</span>
           </motion.button>
         </div>
 
-        <TransactionHistoryTrigger embedded onOpen={() => setTxHistoryOpen(true)} />
+        <TransactionHistoryTrigger
+          embedded
+          handleDisplay={handleId}
+          balanceDisplay={cashDisplay}
+          onOpen={() => setTxHistoryOpen(true)}
+        />
       </section>
 
       {user && (
