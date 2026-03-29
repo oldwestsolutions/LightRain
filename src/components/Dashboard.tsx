@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownLeft, Copy, Search, Send } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
@@ -11,13 +12,30 @@ import { TransactionHistory } from "./TransactionHistory";
 
 const WALLET = "dispensary01*lightrain.in";
 const TX_PAGE_SIZE = 5;
-/** Demo available balance — Cash App–style headline number */
 const AVAILABLE_BALANCE = "2,847.32";
+
+const staggerParent = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.07, delayChildren: 0.04 },
+  },
+};
+
+const staggerItem = (reduce: boolean) => ({
+  hidden: { opacity: reduce ? 1 : 0, y: reduce ? 0 : 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
+  },
+});
 
 export function Dashboard() {
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const showToast = useToastStore((s) => s.show);
+  const reduceMotion = useReducedMotion();
 
   const handleLogout = () => {
     logout();
@@ -27,6 +45,8 @@ export function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [txPage, setTxPage] = useState(1);
   const [sendOpen, setSendOpen] = useState(false);
+
+  const item = staggerItem(!!reduceMotion);
 
   const filteredTransactions = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -77,44 +97,49 @@ export function Dashboard() {
 
       <Navbar onLogout={handleLogout} />
 
-      <main className="relative z-[2] mx-auto max-w-6xl px-3 pb-28 pt-[calc(4.75rem+env(safe-area-inset-top))] safe-pb sm:px-4 sm:pb-24 sm:pt-[calc(6rem+env(safe-area-inset-top))] lg:px-8 lg:pt-[calc(6.5rem+env(safe-area-inset-top))]">
-        <section className="mb-10 overflow-hidden rounded-[28px] border border-neutral-200/80 bg-white shadow-card sm:mb-14">
-          {/* Cash App–inspired balance + Send / Receive */}
-          <div className="bg-neutral-950 px-5 pb-10 pt-10 text-center sm:px-8 sm:pb-12 sm:pt-12">
-            <p className="text-[13px] font-medium uppercase tracking-[0.12em] text-white/55">Available balance</p>
-            <p className="mt-2 font-mono text-5xl font-semibold tabular-nums tracking-tight text-white sm:text-6xl">
-              <span className="text-[0.55em] align-top text-white/90">$</span>
+      <motion.main
+        className="relative z-[2] mx-auto max-w-6xl px-3 pb-28 pt-[calc(4.75rem+env(safe-area-inset-top))] safe-pb sm:px-4 sm:pb-24 sm:pt-[calc(6rem+env(safe-area-inset-top))] lg:px-8 lg:pt-[calc(6.5rem+env(safe-area-inset-top))]"
+        variants={staggerParent}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.section
+          variants={item}
+          className="mb-8 overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:mb-10 sm:rounded-[24px]"
+        >
+          <div className="border-b border-neutral-100 px-5 py-6 sm:px-8 sm:py-8">
+            <p className="text-center text-xs font-medium uppercase tracking-[0.14em] text-muted">Available balance</p>
+            <p className="mt-2 text-center font-mono text-4xl font-semibold tabular-nums tracking-tight text-neutral-900 sm:text-5xl">
+              <span className="text-[0.55em] align-top text-neutral-600">$</span>
               {AVAILABLE_BALANCE}
             </p>
-            <p className="mt-2 text-xs text-white/45">USDC · Demo · Not a bank account</p>
+            <p className="mt-2 text-center text-xs text-muted">USDC · Demo</p>
 
-            <div className="mx-auto mt-10 flex max-w-sm items-start justify-center gap-10 sm:gap-14">
-              <div className="flex flex-col items-center">
-                <button
-                  type="button"
-                  onClick={() => setSendOpen(true)}
-                  className="flex h-[72px] w-[72px] touch-manipulation items-center justify-center rounded-full bg-white text-neutral-950 shadow-lg transition-transform active:scale-[0.98]"
-                  aria-label="Send"
-                >
-                  <Send className="h-7 w-7" strokeWidth={2} aria-hidden />
-                </button>
-                <span className="mt-3 text-sm font-semibold text-white/90">Send</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <button
-                  type="button"
-                  onClick={handleReceive}
-                  className="flex h-[72px] w-[72px] touch-manipulation items-center justify-center rounded-full border-2 border-white/25 bg-white/10 text-white backdrop-blur-sm transition-transform active:scale-[0.98]"
-                  aria-label="Receive"
-                >
-                  <ArrowDownLeft className="h-7 w-7" strokeWidth={2} aria-hidden />
-                </button>
-                <span className="mt-3 text-sm font-semibold text-white/90">Receive</span>
-              </div>
+            <div className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <motion.button
+                type="button"
+                onClick={() => setSendOpen(true)}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-neutral-900 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-initial sm:px-10"
+                aria-label="Send"
+              >
+                <Send className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+                Send
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={handleReceive}
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-initial sm:px-10"
+                aria-label="Receive"
+              >
+                <ArrowDownLeft className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+                Receive
+              </motion.button>
             </div>
           </div>
 
-          <div className="border-b border-neutral-100 px-5 py-5 sm:px-8 sm:py-6">
+          <div className="border-b border-neutral-100 px-5 py-4 sm:px-8 sm:py-5">
             <label htmlFor="dashboard-tx-search" className="relative block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted sm:left-4" />
               <input
@@ -128,43 +153,35 @@ export function Dashboard() {
             </label>
           </div>
 
-          {/* Federation address — compact, scannable */}
-          <div className="px-5 py-6 sm:px-8 sm:py-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+          <div className="px-5 py-5 sm:px-8 sm:py-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
               <div className="min-w-0 flex-1 text-center sm:text-left">
-                <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">Federation address</p>
-                  <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
-                    Active
-                  </span>
-                </div>
-                <p className="mt-2 text-xs text-neutral-500 sm:text-sm">Instant settlement · Stellar network</p>
-                <p className="mt-4 break-all font-mono text-lg font-semibold leading-snug tracking-tight text-neutral-900 sm:text-xl md:text-2xl">
-                  {WALLET}
-                </p>
-                <p className="mt-3 text-xs leading-relaxed text-muted sm:text-sm">
-                  Funds settle instantly to this address. Use Receive to copy and share with payers.
-                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted">Federation address</p>
+                <p className="mt-1 font-mono text-base font-medium text-neutral-900 sm:text-lg">{WALLET}</p>
+                <p className="mt-2 text-xs text-muted">Stellar · Active</p>
               </div>
-              <button
+              <motion.button
                 type="button"
                 onClick={copyWallet}
-                className="inline-flex min-h-[48px] w-full shrink-0 touch-manipulation items-center justify-center gap-2 self-center rounded-full border border-neutral-200 bg-white px-6 text-sm font-semibold text-neutral-800 shadow-sm transition-all hover:bg-neutral-50 sm:w-auto sm:self-start"
+                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                className="inline-flex min-h-[44px] shrink-0 touch-manipulation items-center justify-center gap-2 self-center rounded-full border border-neutral-200 bg-white px-7 py-2.5 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:self-auto"
               >
                 <Copy className="h-4 w-4 shrink-0" aria-hidden />
-                Copy address
-              </button>
+                Copy
+              </motion.button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <TransactionHistory
-          transactions={filteredTransactions}
-          page={txPage}
-          pageSize={TX_PAGE_SIZE}
-          onPageChange={setTxPage}
-        />
-      </main>
+        <motion.div variants={item}>
+          <TransactionHistory
+            transactions={filteredTransactions}
+            page={txPage}
+            pageSize={TX_PAGE_SIZE}
+            onPageChange={setTxPage}
+          />
+        </motion.div>
+      </motion.main>
 
       <SendPaymentModal open={sendOpen} onClose={() => setSendOpen(false)} merchants={MERCHANTS} />
     </div>
