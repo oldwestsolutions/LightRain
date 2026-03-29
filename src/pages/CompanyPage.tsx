@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  Check,
   ChevronDown,
   Laptop,
   Layers,
@@ -13,6 +14,7 @@ import {
   WifiOff,
   type LucideIcon,
 } from "lucide-react";
+import { CompanyHeroImage } from "../components/CompanyHeroImage";
 import { CompanySidebar } from "../components/CompanySidebar";
 import { MarketingPageShell } from "../components/MarketingPageShell";
 import {
@@ -89,60 +91,74 @@ export function CompanyPage() {
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
       <div className="space-y-10 lg:space-y-12">
-        {/* Full-width hero — detailed company story */}
-        <article className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card">
-          <div className="border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-100/80 px-6 py-10 sm:px-10 sm:py-14 md:min-h-[min(78vh,640px)] md:py-16 md:flex md:flex-col md:justify-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">Company</p>
-            <h1 className="mt-3 font-display text-3xl font-normal tracking-[0.06em] text-neutral-900 sm:text-4xl md:text-5xl">
-              <span className="text-neutral-900">Light</span>
-              <span className="text-neutral-500">Rain</span>
-            </h1>
-            <p className="mt-4 max-w-3xl text-base leading-relaxed text-neutral-700 sm:text-lg">
-              Federation addresses and settlement tooling for high-risk commerce—so operators can move value with
-              clearer rails while keeping obligations where they belong: on licensed entities, not on naive software
-              promises.
-            </p>
-            <div className="mt-8 max-w-3xl space-y-4 text-sm leading-relaxed text-muted sm:text-[15px]">
-              <p>
-                We focus on legible federation endpoints, settlement visibility, and flows that match how regulated
-                teams actually work: audits, counterparties, and network rules—not just a pretty wallet screen.
-                LightRain sits in that layer between your brand and the chain: human-readable addresses, history you
-                can reason about, and room to wire policy as your counsel and regulators require.
-              </p>
-              <p>
-                The hardware catalog on this page is illustrative—styled like major commerce platforms so you can see
-                how a full retail surface could pair with custody and backup categories. Checkout remains a demo until
-                you connect real inventory and payments.
-              </p>
+        <article className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04),0_24px_60px_-12px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04]">
+          <div className="grid min-h-[min(88vh,720px)] lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,44%)] xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,40%)]">
+            <div className="flex flex-col justify-center border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-50/90 px-6 py-10 sm:px-10 sm:py-12 lg:border-b-0 lg:border-r lg:border-neutral-100 lg:px-12 lg:py-14 xl:px-16 xl:py-16">
+              <div className="w-full max-w-none">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-neutral-200/80 pb-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted">Company</p>
+                  <span className="hidden h-4 w-px bg-neutral-200 sm:block" aria-hidden />
+                  <p className="text-xs font-medium text-neutral-500">Settlement infrastructure</p>
+                </div>
+                <h1 className="mt-8 font-display text-3xl font-normal tracking-[0.05em] text-neutral-900 sm:text-4xl md:text-[2.75rem] md:leading-[1.1] lg:text-5xl">
+                  <span className="text-neutral-900">Light</span>
+                  <span className="text-neutral-500">Rain</span>
+                </h1>
+                <p className="mt-6 w-full text-pretty text-base leading-[1.65] text-neutral-800 sm:text-lg lg:text-[1.125rem] lg:leading-[1.7]">
+                  Federation addresses and settlement tooling for high-risk commerce—so operators can move value with
+                  clearer rails while keeping obligations where they belong: on licensed entities, not on naive software
+                  promises.
+                </p>
+                <div className="mt-8 w-full space-y-5 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
+                  <p className="text-pretty">
+                    We focus on legible federation endpoints, settlement visibility, and flows that match how regulated
+                    teams actually work: audits, counterparties, and network rules—not just a pretty wallet screen.
+                    LightRain sits in that layer between your brand and the chain: human-readable addresses, history
+                    you can reason about, and room to wire policy as your counsel and regulators require.
+                  </p>
+                  <p className="text-pretty">
+                    The hardware catalog on this page is illustrative—styled like major commerce platforms so you can
+                    see how a full retail surface could pair with custody and backup categories. Checkout remains a demo
+                    until you connect real inventory and payments.
+                  </p>
+                </div>
+                <ul className="mt-10 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
+                    <span className="text-sm leading-snug text-neutral-800">
+                      Federation-native addressing and settlement context
+                    </span>
+                  </li>
+                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
+                    <span className="text-sm leading-snug text-neutral-800">
+                      Interfaces aimed at compliant, high-friction categories
+                    </span>
+                  </li>
+                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03] sm:col-span-2 lg:col-span-1">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
+                    <span className="text-sm leading-snug text-neutral-800">
+                      Policies and downloads live under Legal—review before production use
+                    </span>
+                  </li>
+                </ul>
+                <div className="mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
+                  <Link
+                    to="/legal"
+                    className="inline-flex min-h-[48px] min-w-[160px] flex-1 items-center justify-center rounded-full border border-neutral-900 bg-neutral-900 px-8 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-none"
+                  >
+                    Legal &amp; policies
+                  </Link>
+                  <Link
+                    to="/support"
+                    className="inline-flex min-h-[48px] min-w-[140px] flex-1 items-center justify-center rounded-full border border-neutral-200 bg-white px-8 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-none"
+                  >
+                    Support
+                  </Link>
+                </div>
+              </div>
             </div>
-            <ul className="mt-8 grid max-w-2xl gap-3 text-sm text-neutral-800 sm:grid-cols-2 sm:text-[15px]">
-              <li className="flex gap-2 rounded-xl border border-neutral-200/80 bg-white/80 px-4 py-3 shadow-sm">
-                <span className="font-semibold text-neutral-900">·</span>
-                <span>Federation-native addressing and settlement context</span>
-              </li>
-              <li className="flex gap-2 rounded-xl border border-neutral-200/80 bg-white/80 px-4 py-3 shadow-sm">
-                <span className="font-semibold text-neutral-900">·</span>
-                <span>Interfaces aimed at compliant, high-friction categories</span>
-              </li>
-              <li className="flex gap-2 rounded-xl border border-neutral-200/80 bg-white/80 px-4 py-3 shadow-sm sm:col-span-2">
-                <span className="font-semibold text-neutral-900">·</span>
-                <span>Policies and downloads live under Legal—review before production use</span>
-              </li>
-            </ul>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                to="/legal"
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-neutral-900 bg-neutral-900 px-8 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
-              >
-                Legal &amp; policies
-              </Link>
-              <Link
-                to="/support"
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-neutral-200 bg-white px-8 text-sm font-semibold text-neutral-800 transition-colors hover:bg-neutral-50"
-              >
-                Support
-              </Link>
-            </div>
+            <CompanyHeroImage />
           </div>
         </article>
 
