@@ -87,13 +87,14 @@ export function CompanyPage() {
   return (
     <MarketingPageShell
       extraWide
+      compactTop
       backTo={isLoggedIn ? "/dashboard" : "/"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
-      <div className="space-y-10 lg:space-y-12">
+      <div className="space-y-6 lg:space-y-8">
         <article className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04),0_24px_60px_-12px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04]">
-          <div className="grid min-h-[min(88vh,720px)] lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,44%)] xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,40%)]">
-            <div className="flex flex-col justify-center border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-50/90 px-6 py-10 sm:px-10 sm:py-12 lg:border-b-0 lg:border-r lg:border-neutral-100 lg:px-12 lg:py-14 xl:px-16 xl:py-16">
+          <div className="grid lg:min-h-[min(62vh,520px)] lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,44%)] xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,40%)]">
+            <div className="flex flex-col justify-center border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-50/90 px-6 py-8 sm:px-10 sm:py-10 lg:border-b-0 lg:border-r lg:border-neutral-100 lg:px-12 lg:py-12 xl:px-14 xl:py-14">
               <div className="w-full max-w-none">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-neutral-200/80 pb-6">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted">Company</p>

@@ -3,7 +3,7 @@
  */
 export function CompanyHeroImage() {
   return (
-    <div className="relative h-full min-h-[280px] w-full overflow-hidden bg-[#E8EAEE] lg:min-h-[520px]">
+    <div className="relative h-full min-h-[220px] w-full overflow-hidden bg-[#E8EAEE] lg:min-h-full lg:min-h-0">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
         style={{

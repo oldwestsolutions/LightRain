@@ -101,21 +101,21 @@ export function SupportPage() {
           <p className="mt-1.5 text-sm text-muted">Call during business hours, or message the assistant below.</p>
         </header>
 
-        {/* Robinhood-style phone strip */}
+        {/* Phone — centered */}
         <a
           href={`tel:${SUPPORT_PHONE_TEL}`}
-          className="flex items-center gap-4 rounded-2xl border border-neutral-200/90 bg-white p-4 shadow-soft transition-colors hover:border-neutral-300 hover:bg-neutral-50/80 sm:p-5"
+          className="flex flex-col items-center rounded-2xl border border-neutral-200/90 bg-white p-6 text-center shadow-soft transition-colors hover:border-neutral-300 hover:bg-neutral-50/80 sm:p-8"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 text-white">
             <Phone className="h-5 w-5" aria-hidden />
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted">Phone</p>
-            <p className="mt-0.5 font-mono text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl">
-              {SUPPORT_PHONE_DISPLAY}
-            </p>
-            <p className="mt-1 text-xs text-muted">{HOURS_LINE} · Tap to call</p>
-          </div>
+          <p className="mt-4 text-xs font-medium uppercase tracking-wide text-muted">Phone</p>
+          <p className="mt-1 font-mono text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
+            {SUPPORT_PHONE_DISPLAY}
+          </p>
+          <p className="mt-2 max-w-sm text-xs leading-relaxed text-muted sm:text-sm">
+            {HOURS_LINE} · Tap to call
+          </p>
         </a>
 
         {/* ChatGPT-style chat panel */}
