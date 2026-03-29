@@ -128,7 +128,7 @@ export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
           : "overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-3xl"
       }
     >
-      <h2 className="sr-only">Transaction history</h2>
+      <h2 className="sr-only">Transactions</h2>
       <motion.button
         type="button"
         onClick={onOpen}
@@ -144,7 +144,7 @@ export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
       >
         <div className={embedded ? "min-w-0 max-w-md" : "min-w-0 flex-1"}>
           <span className="block text-base font-semibold tracking-tight text-neutral-900 sm:text-lg">
-            Transaction history
+            Transactions
           </span>
           <span className="mt-1 block text-xs text-muted sm:text-sm">
             Recent settlements and transfers on your federation address
@@ -175,7 +175,7 @@ export function TransactionHistoryModal({ open, onClose, transactions, pageSize 
   }, [transactions.length, pageSize]);
 
   return (
-    <Modal open={open} title="Transaction history" onClose={onClose} wide>
+    <Modal open={open} title="Transactions" onClose={onClose} wide>
       <p className="mb-4 text-sm text-muted">
         Recent settlements and transfers on your federation address
       </p>

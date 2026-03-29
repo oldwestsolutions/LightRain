@@ -8,11 +8,22 @@ export type User = {
   handle: string;
 };
 
+export function deriveInitialsFromName(name: string): string {
+  const t = name.trim();
+  if (!t) return "?";
+  const parts = t.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase().slice(0, 2) || "?";
+  }
+  return t.slice(0, 2).toUpperCase();
+}
+
 type AuthState = {
   isLoggedIn: boolean;
   user: User | null;
   login: (email: string, _password: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (patch: Partial<Pick<User, "name" | "email" | "handle">>) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -31,4 +42,17 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
   },
   logout: () => set({ isLoggedIn: false, user: null }),
+  updateProfile: (patch) =>
+    set((state) => {
+      if (!state.user) return state;
+      const u = state.user;
+      const name = patch.name ?? u.name;
+      const email = patch.email ?? u.email;
+      const rawHandle = patch.handle ?? u.handle;
+      const handle = rawHandle.replace(/^@/, "").trim() || u.handle;
+      const initials = patch.name !== undefined ? deriveInitialsFromName(name) : u.initials;
+      return {
+        user: { ...u, name, email, handle, initials },
+      };
+    }),
 }));
