@@ -10,23 +10,20 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Modal } from "./Modal";
+import { formatUsdFromCents, useWalletStore } from "../store/useWalletStore";
 import { useToastStore } from "../store/useToastStore";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   federationAddress: string;
-  availableBalanceDisplay: string;
   onOpenSend: () => void;
 };
 
-export function WalletModal({
-  open,
-  onClose,
-  federationAddress,
-  availableBalanceDisplay,
-  onOpenSend,
-}: Props) {
+export function WalletModal({ open, onClose, federationAddress, onOpenSend }: Props) {
+  const cashBalanceCents = useWalletStore((s) => s.cashBalanceCents);
+  const syncStatus = useWalletStore((s) => s.syncStatus);
+  const lastSyncError = useWalletStore((s) => s.lastSyncError);
   const showToast = useToastStore((s) => s.show);
   const [showFullAddress, setShowFullAddress] = useState(true);
 
@@ -42,6 +39,16 @@ export function WalletModal({
   const rowBtn =
     "flex w-full items-center gap-3 rounded-xl border border-neutral-200/90 bg-white px-4 py-3.5 text-left text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50";
 
+  const balanceDisplay = formatUsdFromCents(cashBalanceCents);
+  const balanceCaption =
+    syncStatus === "syncing"
+      ? "Syncing with cold wallet…"
+      : syncStatus === "error" && lastSyncError
+        ? lastSyncError
+        : syncStatus === "error"
+          ? "Could not sync cold wallet balance."
+          : "Cash balance · updates when your cold wallet reports funds";
+
   return (
     <Modal open={open} title="Wallet" onClose={onClose} wide>
       <div className="space-y-5">
@@ -49,9 +56,9 @@ export function WalletModal({
           <p className="text-xs font-medium text-neutral-500">Available</p>
           <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-neutral-900">
             <span className="text-lg text-neutral-500">$</span>
-            {availableBalanceDisplay}
+            {balanceDisplay}
           </p>
-          <p className="mt-1 text-xs text-neutral-500">Cash balance · Demo</p>
+          <p className="mt-1 text-xs text-neutral-500">{balanceCaption}</p>
         </div>
 
         <div className="rounded-xl border border-neutral-200/90 bg-white p-4">

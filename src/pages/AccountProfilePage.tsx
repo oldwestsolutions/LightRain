@@ -7,12 +7,13 @@ import { SendPaymentModal } from "../components/SendPaymentModal";
 import { WalletModal } from "../components/WalletModal";
 import { staggerItem, staggerParent } from "../motion/stagger";
 import { useAuthStore } from "../store/useAuthStore";
+import { formatUsdFromCents, useWalletStore } from "../store/useWalletStore";
 
 const FEDERATION_ADDRESS = "dispensary01*lightrain.in";
-const AVAILABLE_BALANCE = "2,847.32";
 
 export function AccountProfilePage() {
   const user = useAuthStore((s) => s.user);
+  const cashBalanceCents = useWalletStore((s) => s.cashBalanceCents);
   const reduceMotion = useReducedMotion();
   const item = staggerItem(!!reduceMotion);
   const [walletOpen, setWalletOpen] = useState(false);
@@ -23,6 +24,11 @@ export function AccountProfilePage() {
       <motion.header variants={item} className="mb-6 sm:mb-8">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">Profile & settings</h1>
         <p className="mt-1 text-sm text-neutral-500">Your account details (demo).</p>
+        <p className="mt-2 text-sm font-medium tabular-nums tracking-tight text-neutral-600">
+          <span className="font-normal text-neutral-500">Cash </span>
+          <span className="text-neutral-500">$</span>
+          {formatUsdFromCents(cashBalanceCents)}
+        </p>
       </motion.header>
 
       <motion.div variants={item} className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -62,7 +68,6 @@ export function AccountProfilePage() {
         open={walletOpen}
         onClose={() => setWalletOpen(false)}
         federationAddress={FEDERATION_ADDRESS}
-        availableBalanceDisplay={AVAILABLE_BALANCE}
         onOpenSend={() => setSendOpen(true)}
       />
       <SendPaymentModal open={sendOpen} onClose={() => setSendOpen(false)} merchants={MERCHANTS} />

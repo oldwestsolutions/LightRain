@@ -4,6 +4,7 @@ import { motion, useReducedMotion, type Transition } from "framer-motion";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
 import { useAuthStore } from "../store/useAuthStore";
+import { formatUsdFromCents, useWalletStore } from "../store/useWalletStore";
 import { ProfileOverviewModal } from "./ProfileOverviewModal";
 import { SendPaymentModal } from "./SendPaymentModal";
 import { TransactionHistoryModal, TransactionHistoryTrigger } from "./TransactionHistory";
@@ -11,11 +12,11 @@ import { WalletModal } from "./WalletModal";
 
 const FEDERATION_ADDRESS = "dispensary01*lightrain.in";
 const TX_PAGE_SIZE = 5;
-const AVAILABLE_BALANCE = "2,847.32";
 
 export function Dashboard() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
+  const cashBalanceCents = useWalletStore((s) => s.cashBalanceCents);
   const reduceMotion = useReducedMotion();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -27,6 +28,7 @@ export function Dashboard() {
     : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
 
   const handleId = user?.handle?.replace(/^@/, "") ?? "account";
+  const cashDisplay = formatUsdFromCents(cashBalanceCents);
 
   return (
     <main className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col justify-center px-2 py-10 sm:max-w-lg sm:px-3 sm:py-16 md:max-w-xl md:py-20 lg:py-24">
@@ -45,6 +47,11 @@ export function Dashboard() {
             <span className="text-xs font-medium text-neutral-500 sm:text-[13px]">Account</span>
             <span className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl sm:font-medium">
               {handleId}
+            </span>
+            <span className="mt-2 text-sm font-medium tabular-nums tracking-tight text-neutral-600">
+              <span className="font-normal text-neutral-500">Cash </span>
+              <span className="text-neutral-500">$</span>
+              {cashDisplay}
             </span>
           </motion.button>
         </div>
@@ -66,7 +73,6 @@ export function Dashboard() {
         open={walletOpen}
         onClose={() => setWalletOpen(false)}
         federationAddress={FEDERATION_ADDRESS}
-        availableBalanceDisplay={AVAILABLE_BALANCE}
         onOpenSend={() => setSendOpen(true)}
       />
       <SendPaymentModal open={sendOpen} onClose={() => setSendOpen(false)} merchants={MERCHANTS} />
