@@ -26,8 +26,9 @@ export function Modal({ open, title, onClose, children, wide }: ModalProps) {
 
   if (!open) return null;
 
+  /** Fits below safe area + breathing room; avoids clipping the header on mobile. */
   const panelMaxH =
-    "max-h-[min(72dvh,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-3.5rem))] sm:max-h-[min(78dvh,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-4rem))]";
+    "max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-6.75rem)] sm:max-h-[calc(100svh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-7.5rem)]";
 
   const motionProps = reduceMotion
     ? {}
@@ -46,7 +47,7 @@ export function Modal({ open, title, onClose, children, wide }: ModalProps) {
         aria-label="Close dialog"
       />
       <div
-        className="relative z-10 flex min-h-[100dvh] w-full justify-center px-3 pb-14 pt-[max(1rem,calc(env(safe-area-inset-top)+1.25rem))] sm:px-5 sm:pb-20 sm:pt-[max(1.25rem,calc(env(safe-area-inset-top)+1.75rem))]"
+        className="relative z-10 flex min-h-[100svh] w-full flex-col items-center justify-start px-3 pb-[max(2rem,calc(env(safe-area-inset-bottom)+1.5rem))] pt-[calc(env(safe-area-inset-top)+4.25rem)] sm:px-5 sm:pb-24 sm:pt-[calc(env(safe-area-inset-top)+4.75rem)]"
         onClick={onClose}
         role="presentation"
       >
@@ -55,7 +56,7 @@ export function Modal({ open, title, onClose, children, wide }: ModalProps) {
           aria-modal="true"
           aria-labelledby="modal-title"
           onClick={(e) => e.stopPropagation()}
-          className={`my-auto flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-xl sm:rounded-2xl ${panelMaxH} ${
+          className={`flex w-full min-h-0 flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-xl sm:rounded-2xl ${panelMaxH} ${
             wide ? "max-w-lg" : "max-w-md"
           }`}
           {...motionProps}
