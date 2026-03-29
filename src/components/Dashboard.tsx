@@ -29,10 +29,15 @@ export function Dashboard() {
   const handleId = user?.handle?.replace(/^@/, "") ?? "account";
 
   return (
-    <motion.main variants={staggerParent} initial="hidden" animate="show">
+    <motion.main
+      variants={staggerParent}
+      initial="hidden"
+      animate="show"
+      className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-2 py-10 sm:max-w-lg sm:px-3 sm:py-16 md:max-w-xl md:py-20 lg:py-24"
+    >
       <motion.section
         variants={item}
-        className="mb-8 overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:mb-10 sm:rounded-[24px]"
+        className="w-full overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-[24px]"
       >
         <div className="border-b border-neutral-100 px-5 py-6 sm:px-8 sm:py-8">
           <motion.button

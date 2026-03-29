@@ -126,10 +126,14 @@ export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
       <button
         type="button"
         onClick={onOpen}
-        className="flex w-full items-start px-4 py-4 text-left transition-colors hover:bg-neutral-50/80 sm:px-6 sm:py-5"
+        className={`flex w-full px-4 py-4 transition-colors sm:px-6 sm:py-5 ${
+          embedded
+            ? "flex-col items-center justify-center text-center hover:bg-neutral-50/80"
+            : "items-start text-left hover:bg-neutral-50/80"
+        }`}
         aria-haspopup="dialog"
       >
-        <div className="min-w-0 flex-1">
+        <div className={embedded ? "min-w-0 max-w-md" : "min-w-0 flex-1"}>
           <span className="block text-base font-semibold tracking-tight text-neutral-900 sm:text-lg">
             Transaction history
           </span>
