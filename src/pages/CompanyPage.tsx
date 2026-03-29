@@ -1,36 +1,72 @@
-import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Cpu, ShoppingCart } from "lucide-react";
+import {
+  Laptop,
+  Layers,
+  Package,
+  ScrollText,
+  ShoppingCart,
+  Unplug,
+  Users,
+  Wallet,
+  WifiOff,
+  type LucideIcon,
+} from "lucide-react";
 import { MarketingPageShell } from "../components/MarketingPageShell";
-import { STORE_PRODUCTS, type StoreProduct } from "../data/storeProducts";
+import {
+  ADVANCED_PRODUCT_CATEGORIES,
+  CORE_PRODUCT_CATEGORIES,
+  type CategoryAccent,
+  type StoreCategoryItem,
+} from "../data/storeProducts";
 import { useAuthStore } from "../store/useAuthStore";
 import { useToastStore } from "../store/useToastStore";
 
-const ACCENT_BG: Record<StoreProduct["accent"], string> = {
+const ACCENT_BG: Record<CategoryAccent, string> = {
   slate: "from-slate-200 to-slate-400",
   zinc: "from-zinc-200 to-zinc-500",
   stone: "from-stone-200 to-stone-500",
   neutral: "from-neutral-200 to-neutral-500",
 };
 
-type Cat = "all" | StoreProduct["category"];
-
-const CAT_LABEL: Record<Cat, string> = {
-  all: "All products",
-  "cold-wallet": "Cold wallets",
-  hardware: "Security keys",
-  backup: "Backup & metal",
+const ICON_MAP: Record<StoreCategoryItem["icon"], LucideIcon> = {
+  wallet: Wallet,
+  unplug: Unplug,
+  scroll: ScrollText,
+  layers: Layers,
+  users: Users,
+  package: Package,
+  laptop: Laptop,
+  "wifi-off": WifiOff,
 };
+
+function CategoryCard({ item, onAdd }: { item: StoreCategoryItem; onAdd: (title: string) => void }) {
+  const Icon = ICON_MAP[item.icon];
+  return (
+    <article className="flex flex-col overflow-hidden rounded-xl border border-neutral-200/90 bg-white shadow-sm transition-shadow hover:shadow-md">
+      <div
+        className={`relative aspect-[5/3] bg-gradient-to-br ${ACCENT_BG[item.accent]} flex items-center justify-center sm:aspect-[16/9]`}
+      >
+        <Icon className="h-14 w-14 text-white/90 drop-shadow-sm sm:h-16 sm:w-16" aria-hidden />
+      </div>
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <h3 className="text-base font-semibold leading-snug text-neutral-900 sm:text-lg">{item.title}</h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{item.description}</p>
+        <button
+          type="button"
+          onClick={() => onAdd(item.title)}
+          className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800"
+        >
+          <ShoppingCart className="h-4 w-4 shrink-0" aria-hidden />
+          Add to cart
+        </button>
+      </div>
+    </article>
+  );
+}
 
 export function CompanyPage() {
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const showToast = useToastStore((s) => s.show);
-  const [category, setCategory] = useState<Cat>("all");
-
-  const filtered = useMemo(() => {
-    if (category === "all") return STORE_PRODUCTS;
-    return STORE_PRODUCTS.filter((p) => p.category === category);
-  }, [category]);
 
   const addDemo = (name: string) => {
     showToast(`Demo store — “${name}” added. Checkout not connected.`);
@@ -57,74 +93,35 @@ export function CompanyPage() {
           </p>
         </article>
 
-        {/* BigCommerce / Square–style storefront */}
         <section className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card">
           <div className="border-b border-neutral-200/80 bg-neutral-50/90 px-5 py-5 sm:px-8 sm:py-6">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Shop</p>
-                <h2 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
-                  Hardware & cold storage
-                </h2>
-                <p className="mt-1 max-w-2xl text-sm text-muted">
-                  Demo catalog styled like Square / BigCommerce checkout surfaces—neutral rails, clear pricing, hardware
-                  shoppers expect.
-                </p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {(Object.keys(CAT_LABEL) as Cat[]).map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setCategory(c)}
-                  className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                    category === c
-                      ? "border-neutral-900 bg-neutral-900 text-white"
-                      : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50"
-                  }`}
-                >
-                  {CAT_LABEL[c]}
-                </button>
-              ))}
-            </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Shop</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
+              Hardware & cold storage
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-muted">
+              Catalog layout inspired by Square / BigCommerce—categories below with clear, simple copy.
+            </p>
           </div>
 
-          <div className="grid gap-5 p-5 sm:grid-cols-2 sm:gap-6 sm:p-8 lg:grid-cols-3">
-            {filtered.map((p) => (
-              <article
-                key={p.id}
-                className="group flex flex-col overflow-hidden rounded-xl border border-neutral-200/90 bg-white shadow-sm transition-shadow hover:shadow-md"
-              >
-                <div
-                  className={`relative aspect-[4/3] bg-gradient-to-br ${ACCENT_BG[p.accent]} flex items-center justify-center`}
-                >
-                  <Cpu className="h-16 w-16 text-white/90 drop-shadow-sm sm:h-20 sm:w-20" aria-hidden />
-                  <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-800 shadow-sm">
-                    {p.category === "cold-wallet"
-                      ? "Cold wallet"
-                      : p.category === "backup"
-                        ? "Backup"
-                        : "Hardware"}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-4 sm:p-5">
-                  <h3 className="text-base font-semibold text-neutral-900 sm:text-lg">{p.name}</h3>
-                  <p className="mt-1 flex-1 text-sm leading-snug text-muted">{p.tagline}</p>
-                  <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
-                    <span className="text-lg font-semibold tabular-nums text-neutral-900">{p.price}</span>
-                    <button
-                      type="button"
-                      onClick={() => addDemo(p.name)}
-                      className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800"
-                    >
-                      <ShoppingCart className="h-4 w-4 shrink-0" aria-hidden />
-                      Add to cart
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div className="space-y-10 p-5 sm:p-8">
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">Core product categories</h3>
+              <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:gap-6">
+                {CORE_PRODUCT_CATEGORIES.map((item) => (
+                  <CategoryCard key={item.id} item={item} onAdd={addDemo} />
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-neutral-100 pt-10">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">Advanced systems</h3>
+              <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:gap-6">
+                {ADVANCED_PRODUCT_CATEGORIES.map((item) => (
+                  <CategoryCard key={item.id} item={item} onAdd={addDemo} />
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
