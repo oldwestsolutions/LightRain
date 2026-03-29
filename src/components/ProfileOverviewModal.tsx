@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mail, Store, UserRound, Wallet } from "lucide-react";
 import { deriveInitialsFromName, type User, useAuthStore } from "../store/useAuthStore";
-import { useToastStore } from "../store/useToastStore";
 import { Modal } from "./Modal";
 
 type Props = {
@@ -13,6 +12,10 @@ type Props = {
   onWallet: () => void;
 };
 
+function handleWithoutAt(h: string) {
+  return h.startsWith("@") ? h.slice(1) : h;
+}
+
 export function ProfileOverviewModal({
   open,
   onClose,
@@ -22,30 +25,40 @@ export function ProfileOverviewModal({
   onWallet,
 }: Props) {
   const updateProfile = useAuthStore((s) => s.updateProfile);
-  const showToast = useToastStore((s) => s.show);
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [handleInput, setHandleInput] = useState(() =>
-    user.handle.startsWith("@") ? user.handle.slice(1) : user.handle
-  );
+  const [handleInput, setHandleInput] = useState(() => handleWithoutAt(user.handle));
 
+  const wasOpen = useRef(false);
   useEffect(() => {
-    if (!open) return;
-    setName(user.name);
-    setEmail(user.email);
-    setHandleInput(user.handle.startsWith("@") ? user.handle.slice(1) : user.handle);
+    if (open && !wasOpen.current) {
+      setName(user.name);
+      setEmail(user.email);
+      setHandleInput(handleWithoutAt(user.handle));
+    }
+    wasOpen.current = open;
   }, [open, user]);
 
   const previewInitials = deriveInitialsFromName(name);
 
-  const save = () => {
-    updateProfile({
-      name: name.trim(),
-      email: email.trim(),
-      handle: handleInput.trim().replace(/^@/, ""),
-    });
-    showToast("Profile saved");
+  const commitName = () => {
+    const next = name.trim();
+    if (next === user.name) return;
+    updateProfile({ name: next });
+  };
+
+  const commitEmail = () => {
+    const next = email.trim();
+    if (next === user.email) return;
+    updateProfile({ email: next });
+  };
+
+  const commitHandle = () => {
+    const raw = handleInput.trim().replace(/^@/, "");
+    updateProfile({ handle: raw });
+    const h = useAuthStore.getState().user?.handle ?? "";
+    setHandleInput(handleWithoutAt(h));
   };
 
   const fieldClass =
@@ -62,7 +75,7 @@ export function ProfileOverviewModal({
             {previewInitials}
           </div>
           <div className="min-w-0 text-sm text-neutral-500">
-            Avatar initials update from display name when you save.
+            Initials update when you leave the display name field after changing it.
           </div>
         </div>
 
@@ -102,6 +115,7 @@ export function ProfileOverviewModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onBlur={commitName}
               autoComplete="name"
               className={fieldClass}
             />
@@ -116,6 +130,7 @@ export function ProfileOverviewModal({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={commitEmail}
               autoComplete="email"
               className={fieldClass}
             />
@@ -133,6 +148,7 @@ export function ProfileOverviewModal({
                 type="text"
                 value={handleInput}
                 onChange={(e) => setHandleInput(e.target.value.replace(/^@/, ""))}
+                onBlur={commitHandle}
                 autoComplete="username"
                 className={`${fieldClass} pl-8 font-mono text-[13px]`}
                 translate="no"
@@ -146,14 +162,6 @@ export function ProfileOverviewModal({
             </dd>
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={save}
-          className="w-full min-h-[48px] rounded-xl border border-neutral-200 bg-neutral-900 px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800"
-        >
-          Save changes
-        </button>
       </div>
     </Modal>
   );
