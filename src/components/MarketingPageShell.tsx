@@ -15,7 +15,7 @@ type Props = {
 };
 
 export function MarketingPageShell({ children, backTo, backLabel, wide, extraWide }: Props) {
-  const maxClass = extraWide ? "max-w-6xl" : wide ? "max-w-4xl" : "max-w-2xl";
+  const maxClass = extraWide ? "max-w-7xl" : wide ? "max-w-4xl" : "max-w-2xl";
   return (
     <div className="relative flex min-h-screen min-h-[100dvh] flex-col bg-canvas safe-pt">
       <RainBackground />
