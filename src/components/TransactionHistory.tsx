@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion, type Transition } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { LedgerTransaction } from "../data/transactions";
 import { Modal } from "./Modal";
@@ -114,6 +115,11 @@ type TriggerProps = {
 
 /** Summary row on the dashboard; opens the full history modal. */
 export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
+  const reduceMotion = useReducedMotion();
+  const spring: Transition = reduceMotion
+    ? { duration: 0.01 }
+    : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
+
   return (
     <section
       className={
@@ -123,9 +129,12 @@ export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
       }
     >
       <h2 className="sr-only">Transaction history</h2>
-      <button
+      <motion.button
         type="button"
         onClick={onOpen}
+        whileHover={reduceMotion ? undefined : { scale: 1.01 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+        transition={spring}
         className={`flex w-full px-4 py-4 transition-colors sm:px-6 sm:py-5 ${
           embedded
             ? "flex-col items-center justify-center text-center hover:bg-neutral-50/80"
@@ -141,7 +150,7 @@ export function TransactionHistoryTrigger({ onOpen, embedded }: TriggerProps) {
             Recent settlements and transfers on your federation address
           </span>
         </div>
-      </button>
+      </motion.button>
     </section>
   );
 }

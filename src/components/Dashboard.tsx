@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Transition } from "framer-motion";
 import { Store, Wallet } from "lucide-react";
 import { MERCHANTS } from "../data/merchants";
 import { TRANSACTIONS } from "../data/transactions";
@@ -25,6 +25,9 @@ export function Dashboard() {
   const [sendOpen, setSendOpen] = useState(false);
   const [txHistoryOpen, setTxHistoryOpen] = useState(false);
   const item = staggerItem(!!reduceMotion);
+  const btnSpring: Transition = reduceMotion
+    ? { duration: 0.01 }
+    : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
 
   const handleId = user?.handle?.replace(/^@/, "") ?? "account";
 
@@ -37,13 +40,17 @@ export function Dashboard() {
     >
       <motion.section
         variants={item}
+        layout={reduceMotion ? undefined : "position"}
+        transition={btnSpring}
         className="w-full overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-[24px]"
       >
         <div className="border-b border-neutral-100 px-5 py-6 sm:px-8 sm:py-8">
           <motion.button
             type="button"
             onClick={() => setProfileOpen(true)}
-            whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+            whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+            transition={btnSpring}
             className="flex w-full max-w-md mx-auto flex-col items-center rounded-2xl px-4 py-3 text-center transition-colors hover:bg-neutral-50 sm:py-4"
             aria-haspopup="dialog"
             aria-expanded={profileOpen}
@@ -58,7 +65,9 @@ export function Dashboard() {
             <motion.button
               type="button"
               onClick={() => navigate("/marketplace")}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              whileHover={reduceMotion ? undefined : { scale: 1.03, y: -1 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+              transition={btnSpring}
               className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-neutral-900 px-8 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-initial sm:px-10"
               aria-label="Marketplace"
             >
@@ -68,7 +77,9 @@ export function Dashboard() {
             <motion.button
               type="button"
               onClick={() => setWalletOpen(true)}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+              whileHover={reduceMotion ? undefined : { scale: 1.03, y: -1 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+              transition={btnSpring}
               className="inline-flex min-h-[48px] min-w-[140px] flex-1 touch-manipulation items-center justify-center gap-2.5 rounded-full border border-neutral-200 bg-white px-8 py-3 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-initial sm:px-10"
               aria-label="Wallet"
             >
