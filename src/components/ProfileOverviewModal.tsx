@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Store, UserRound, Wallet } from "lucide-react";
 import { deriveInitialsFromName, type User, useAuthStore } from "../store/useAuthStore";
 import { Modal } from "./Modal";
@@ -12,10 +12,6 @@ type Props = {
   onWallet: () => void;
 };
 
-function handleWithoutAt(h: string) {
-  return h.startsWith("@") ? h.slice(1) : h;
-}
-
 export function ProfileOverviewModal({
   open,
   onClose,
@@ -28,37 +24,32 @@ export function ProfileOverviewModal({
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [handleInput, setHandleInput] = useState(() => handleWithoutAt(user.handle));
+  const [handleInput, setHandleInput] = useState(() =>
+    user.handle.startsWith("@") ? user.handle.slice(1) : user.handle
+  );
 
-  const wasOpen = useRef(false);
   useEffect(() => {
-    if (open && !wasOpen.current) {
-      setName(user.name);
-      setEmail(user.email);
-      setHandleInput(handleWithoutAt(user.handle));
-    }
-    wasOpen.current = open;
+    if (!open) return;
+    setName(user.name);
+    setEmail(user.email);
+    setHandleInput(user.handle.startsWith("@") ? user.handle.slice(1) : user.handle);
   }, [open, user]);
 
   const previewInitials = deriveInitialsFromName(name);
 
   const commitName = () => {
     const next = name.trim();
-    if (next === user.name) return;
-    updateProfile({ name: next });
+    if (next !== user.name) updateProfile({ name: next });
   };
 
   const commitEmail = () => {
     const next = email.trim();
-    if (next === user.email) return;
-    updateProfile({ email: next });
+    if (next !== user.email) updateProfile({ email: next });
   };
 
   const commitHandle = () => {
-    const raw = handleInput.trim().replace(/^@/, "");
-    updateProfile({ handle: raw });
-    const h = useAuthStore.getState().user?.handle ?? "";
-    setHandleInput(handleWithoutAt(h));
+    const next = handleInput.trim().replace(/^@/, "");
+    if (next !== user.handle) updateProfile({ handle: next });
   };
 
   const fieldClass =
@@ -75,7 +66,7 @@ export function ProfileOverviewModal({
             {previewInitials}
           </div>
           <div className="min-w-0 text-sm text-neutral-500">
-            Initials update when you leave the display name field after changing it.
+            Avatar initials update from display name when you leave that field.
           </div>
         </div>
 
