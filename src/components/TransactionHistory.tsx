@@ -123,25 +123,16 @@ export function TransactionHistoryList({ transactions, page, pageSize, onPageCha
 type TriggerProps = {
   onOpen: () => void;
   embedded?: boolean;
-  /** Handle without leading @ */
-  handleDisplay: string;
   /** Formatted dollars only (e.g. 0.00 or 1,234.56) */
   balanceDisplay: string;
 };
 
-/** Cash + handle row (Robinhood-style); opens full activity modal. */
-export function TransactionHistoryTrigger({
-  onOpen,
-  embedded,
-  handleDisplay,
-  balanceDisplay,
-}: TriggerProps) {
+/** Centered cash row; opens full activity modal. */
+export function TransactionHistoryTrigger({ onOpen, embedded, balanceDisplay }: TriggerProps) {
   const reduceMotion = useReducedMotion();
   const spring: Transition = reduceMotion
     ? { duration: 0.01 }
     : { type: "spring", stiffness: 420, damping: 28, mass: 0.88 };
-
-  const handleLabel = handleDisplay.startsWith("@") ? handleDisplay : `@${handleDisplay}`;
 
   return (
     <section
@@ -158,20 +149,19 @@ export function TransactionHistoryTrigger({
         whileHover={reduceMotion ? undefined : { scale: 1.005 }}
         whileTap={reduceMotion ? undefined : { scale: 0.992 }}
         transition={spring}
-        className="flex w-full min-h-[100px] items-center gap-4 px-5 py-5 text-left transition-colors hover:bg-white/80 sm:min-h-[108px] sm:px-7 sm:py-6"
+        className="relative flex w-full min-h-[100px] flex-col items-center justify-center px-5 py-5 text-center transition-colors hover:bg-white/80 sm:min-h-[108px] sm:px-7 sm:py-6"
         aria-haspopup="dialog"
-        aria-label={`Open activity, ${handleLabel}, ${balanceDisplay} dollars cash`}
+        aria-label={`Open activity, ${balanceDisplay} dollars cash`}
       >
-        <div className="min-w-0 flex-1">
+        <div className="mx-auto max-w-md">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400">Cash</p>
           <p className="mt-1 text-[2rem] font-medium leading-none tracking-tight tabular-nums text-neutral-900 sm:text-[2.125rem]">
             <span className="text-[1.35rem] font-medium text-neutral-400 sm:text-[1.45rem]">$</span>
             {balanceDisplay}
           </p>
-          <p className="mt-2 truncate text-[15px] font-medium text-neutral-500">{handleLabel}</p>
         </div>
         <ChevronRight
-          className="h-6 w-6 shrink-0 text-neutral-300"
+          className="pointer-events-none absolute right-5 top-1/2 h-6 w-6 -translate-y-1/2 text-neutral-300 sm:right-7"
           strokeWidth={1.75}
           aria-hidden
         />

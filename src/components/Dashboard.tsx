@@ -27,7 +27,6 @@ export function Dashboard() {
     ? { duration: 0.01 }
     : { type: "spring", stiffness: 420, damping: 26, mass: 0.9 };
 
-  const handleId = user?.handle?.replace(/^@/, "") ?? "account";
   const cashDisplay = formatUsdFromCents(cashBalanceCents);
 
   return (
@@ -54,7 +53,6 @@ export function Dashboard() {
 
         <TransactionHistoryTrigger
           embedded
-          handleDisplay={handleId}
           balanceDisplay={cashDisplay}
           onOpen={() => setTxHistoryOpen(true)}
         />

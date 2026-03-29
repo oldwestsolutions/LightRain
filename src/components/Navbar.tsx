@@ -70,7 +70,7 @@ export function Navbar({ onLogout }: Props) {
         scrollHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-end gap-3 px-3 py-3 sm:px-4 lg:px-8 lg:py-3.5">
+      <div className="mx-auto flex max-w-6xl items-center justify-start gap-3 px-3 py-3 sm:px-4 lg:px-8 lg:py-3.5">
         <div className="relative" ref={menuRef}>
           <button
             ref={buttonRef}
@@ -97,7 +97,7 @@ export function Navbar({ onLogout }: Props) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
                 transition={menuTransition}
-                className="absolute right-0 top-[calc(100%+0.375rem)] z-[70] w-[min(calc(100vw-1.5rem),16rem)] origin-top-right overflow-hidden rounded-2xl border border-neutral-200/90 bg-white py-1.5 shadow-lg"
+                className="absolute left-0 top-[calc(100%+0.375rem)] z-[70] w-[min(calc(100vw-1.5rem),16rem)] origin-top-left overflow-hidden rounded-2xl border border-neutral-200/90 bg-white py-1.5 shadow-lg"
               >
                 <Link
                   to="/account/profile"
