@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, Store, X } from "lucide-react";
 import { MERCHANTS, type Merchant } from "../data/merchants";
@@ -10,23 +10,13 @@ const typeLabel: Record<Merchant["type"], string> = {
   processor: "Processing",
 };
 
-const typeFilters: { id: "all" | Merchant["type"]; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "dispensary", label: "Retail" },
-  { id: "cultivator", label: "Grower" },
-  { id: "processor", label: "Processing" },
-];
-
-type Category = (typeof typeFilters)[number]["id"];
-
 function simulateListingFetch(): Promise<void> {
   return new Promise((r) => setTimeout(r, 380 + Math.random() * 220));
 }
 
-function filterMerchants(query: string, category: Category): Merchant[] {
+function filterMerchants(query: string): Merchant[] {
   const q = query.trim().toLowerCase();
   return MERCHANTS.filter((m) => {
-    if (category !== "all" && m.type !== category) return false;
     if (!q) return true;
     return (
       m.name.toLowerCase().includes(q) ||
@@ -74,38 +64,33 @@ export function MarketplacePage() {
   const reduceMotion = useReducedMotion();
   const [inputValue, setInputValue] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<Category>("all");
   const [phase, setPhase] = useState<"hero" | "results">("hero");
   const [isLoading, setIsLoading] = useState(false);
-  const [lastSearchSeconds, setLastSearchSeconds] = useState<number | null>(null);
 
   const listingResults = useMemo(() => {
     if (phase !== "results") return [];
-    return filterMerchants(activeQuery, typeFilter);
-  }, [phase, activeQuery, typeFilter]);
+    return filterMerchants(activeQuery);
+  }, [phase, activeQuery]);
 
-  const commitSearch = useCallback(async (query: string, category: Category) => {
+  const commitSearch = useCallback(async (query: string) => {
     setIsLoading(true);
-    const t0 = performance.now();
     try {
       await simulateListingFetch();
       setActiveQuery(query.trim());
-      setTypeFilter(category);
       setPhase("results");
-      setLastSearchSeconds(Math.round(((performance.now() - t0) / 1000) * 100) / 100);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const runSearch = useCallback(async () => {
-    await commitSearch(inputValue, typeFilter);
-  }, [commitSearch, inputValue, typeFilter]);
+    await commitSearch(inputValue);
+  }, [commitSearch, inputValue]);
 
   const browseAll = useCallback(async () => {
     setInputValue("");
-    await commitSearch("", typeFilter);
-  }, [commitSearch, typeFilter]);
+    await commitSearch("");
+  }, [commitSearch]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -148,7 +133,7 @@ export function MarketplacePage() {
               transition={spring}
               className="flex flex-col"
             >
-              <header className="sticky top-0 z-20 -mx-4 mb-4 flex items-center justify-between border-b border-neutral-200/70 bg-white/85 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:mb-5 sm:px-6">
+              <div className="mb-4">
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
@@ -157,16 +142,7 @@ export function MarketplacePage() {
                   <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
                   Back
                 </button>
-                <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-sm font-medium tracking-wide text-neutral-900">
-                  Marketplace
-                </span>
-                <Link
-                  to="/dashboard"
-                  className="min-h-[40px] shrink-0 content-center text-sm font-semibold text-indigo-600 hover:underline"
-                >
-                  Dashboard
-                </Link>
-              </header>
+              </div>
 
               <div className="flex flex-col items-center px-2 pb-8 pt-2 text-center sm:px-4 sm:pt-4">
               <motion.div
@@ -227,117 +203,55 @@ export function MarketplacePage() {
               transition={spring}
               className="w-full"
             >
-              {/* Google-style header */}
-              <header className="sticky top-0 z-30 border-b border-[#ebebeb] bg-white">
-                <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-6 sm:px-8 sm:py-3.5">
-                  <div className="flex w-full items-center justify-between gap-3 sm:min-w-0 sm:w-auto sm:justify-start sm:gap-4">
-                    <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                      <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-[#70757a] hover:text-[#202124]"
-                        aria-label="Go back"
-                      >
-                        <ArrowLeft className="h-4 w-4" aria-hidden />
-                        <span>Back</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPhase("hero")}
-                        className="truncate text-left text-lg font-normal tracking-tight text-[#202124] sm:text-xl"
-                        aria-label="New search"
-                      >
-                        Light<span className="text-accent">Rain</span>
-                      </button>
-                    </div>
-                    <Link
-                      to="/dashboard"
-                      className="shrink-0 text-sm font-medium text-[#1a73e8] hover:underline"
-                    >
-                      Dashboard
-                    </Link>
-                  </div>
+              <div className="flex flex-col gap-4 px-4 pb-12 pt-2 sm:px-8">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="inline-flex w-fit shrink-0 items-center gap-1.5 text-sm font-medium text-[#70757a] hover:text-[#202124]"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="h-4 w-4" aria-hidden />
+                  <span>Back</span>
+                </button>
 
-                  <div className="flex min-w-0 flex-1 flex-col gap-2 sm:max-w-[692px]">
-                    <div className="flex h-11 w-full items-stretch overflow-hidden rounded-full border border-[#dfe1e5] bg-white shadow-sm transition-shadow hover:shadow-[0_2px_8px_rgba(32,33,36,0.12)] focus-within:border-[#dfe1e5] focus-within:shadow-[0_2px_8px_rgba(32,33,36,0.18)]">
-                      <div className="flex flex-1 items-center gap-2 pl-4 pr-1">
-                        <Search className="h-4 w-4 shrink-0 text-[#9aa0a6]" strokeWidth={2} aria-hidden />
-                        <input
-                          type="search"
-                          value={inputValue}
-                          onChange={(e) => setInputValue(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          className="min-h-[40px] flex-1 border-0 bg-transparent text-base text-[#202124] outline-none placeholder:text-[#70757a]"
-                          placeholder="Search"
-                          aria-label="Search"
-                          autoComplete="off"
-                          disabled={isLoading}
-                        />
-                        {inputValue ? (
-                          <button
-                            type="button"
-                            onClick={() => setInputValue("")}
-                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#70757a] hover:bg-[#f1f3f4]"
-                            aria-label="Clear search"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        ) : null}
-                      </div>
+                <div className="flex h-11 w-full max-w-[692px] items-stretch overflow-hidden rounded-full border border-[#dfe1e5] bg-white shadow-sm transition-shadow hover:shadow-[0_2px_8px_rgba(32,33,36,0.12)] focus-within:border-[#dfe1e5] focus-within:shadow-[0_2px_8px_rgba(32,33,36,0.18)]">
+                  <div className="flex flex-1 items-center gap-2 pl-4 pr-1">
+                    <Search className="h-4 w-4 shrink-0 text-[#9aa0a6]" strokeWidth={2} aria-hidden />
+                    <input
+                      type="search"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      className="min-h-[40px] flex-1 border-0 bg-transparent text-base text-[#202124] outline-none placeholder:text-[#70757a]"
+                      placeholder="Search"
+                      aria-label="Search"
+                      autoComplete="off"
+                      disabled={isLoading}
+                    />
+                    {inputValue ? (
                       <button
                         type="button"
-                        onClick={() => void runSearch()}
-                        disabled={isLoading}
-                        className="border-l border-[#ebebeb] bg-[#f8f9fa] px-5 text-sm font-medium text-[#202124] transition-colors hover:bg-[#f1f3f4] disabled:opacity-50 sm:px-6"
+                        onClick={() => setInputValue("")}
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#70757a] hover:bg-[#f1f3f4]"
+                        aria-label="Clear search"
                       >
-                        {isLoading ? "…" : "Search"}
+                        <X className="h-4 w-4" />
                       </button>
-                    </div>
-
-                    <nav className="-mb-px flex gap-1 overflow-x-auto border-b border-[#ebebeb] pb-px sm:gap-6" aria-label="Result categories">
-                      {typeFilters.map((f) => (
-                        <button
-                          key={f.id}
-                          type="button"
-                          onClick={() => setTypeFilter(f.id)}
-                          className={`whitespace-nowrap border-b-2 px-2 py-2 text-sm transition-colors sm:px-0 ${
-                            typeFilter === f.id
-                              ? "border-[#1a73e8] font-medium text-[#1a73e8]"
-                              : "border-transparent text-[#70757a] hover:text-[#202124]"
-                          }`}
-                        >
-                          {f.label}
-                        </button>
-                      ))}
-                    </nav>
+                    ) : null}
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => void runSearch()}
+                    disabled={isLoading}
+                    className="border-l border-[#ebebeb] bg-[#f8f9fa] px-5 text-sm font-medium text-[#202124] transition-colors hover:bg-[#f1f3f4] disabled:opacity-50 sm:px-6"
+                  >
+                    {isLoading ? "…" : "Search"}
+                  </button>
                 </div>
-              </header>
+              </div>
 
               <div className="flex flex-col px-4 pb-12 sm:flex-row sm:px-8">
                 <main className="max-w-none flex-1 sm:max-w-[652px]">
-                  <div className="border-b border-[#ebebeb] py-3">
-                    <p className="text-sm text-[#70757a]">
-                      About{" "}
-                      <span className="font-medium text-[#202124]">
-                        {listingResults.length.toLocaleString()}
-                      </span>{" "}
-                      results
-                      {lastSearchSeconds != null && (
-                        <span className="text-[#70757a]"> ({lastSearchSeconds} seconds)</span>
-                      )}
-                      {activeQuery ? (
-                        <>
-                          {" "}
-                          for{" "}
-                          <span className="font-medium text-[#202124]">
-                            &ldquo;{activeQuery}&rdquo;
-                          </span>
-                        </>
-                      ) : null}
-                    </p>
-                  </div>
-
                   {listingResults.length === 0 ? (
                     <div className="py-14">
                       <p className="text-base leading-relaxed text-[#202124]">No results found for your search.</p>
