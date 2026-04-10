@@ -36,6 +36,7 @@ export function SecurityOnboardingWizard() {
   const [recoveryEmailTouched, setRecoveryEmailTouched] = useState(false);
 
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [wantTotp, setWantTotp] = useState(false);
   const [wantSecurityKey, setWantSecurityKey] = useState(false);
@@ -70,10 +71,15 @@ export function SecurityOnboardingWizard() {
 
   const pwdAnalysis = useMemo(() => analyzePassword(password), [password]);
   const passwordOk = passwordMeetsPolicy(pwdAnalysis);
+  const passwordsMatch = password.length > 0 && password === passwordConfirm;
 
   useEffect(() => {
     void computeDeviceFingerprintHex().then(setDeviceFingerprint);
   }, []);
+
+  useEffect(() => {
+    if (password.length === 0) setPasswordConfirm("");
+  }, [password]);
 
   const initTotp = useCallback(() => {
     const secret = new Secret({ size: 20 });
@@ -197,7 +203,7 @@ export function SecurityOnboardingWizard() {
       case 0:
         return emailValid;
       case 1:
-        return passwordOk;
+        return passwordOk && passwordsMatch;
       case 2:
         return atLeastOne2FA && twoFAComplete;
       case 3:
@@ -377,6 +383,42 @@ export function SecurityOnboardingWizard() {
                       )}
                     </div>
                   </div>
+
+                  {password.length > 0 && (
+                    <div
+                      className="rounded-xl border border-neutral-200/90 bg-neutral-50/90 p-4 shadow-sm"
+                      role="region"
+                      aria-labelledby="confirm-pass-heading"
+                    >
+                      <p id="confirm-pass-heading" className="text-sm font-medium text-neutral-900">
+                        Confirm your password
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted">
+                        Re-enter the same password to catch typos. This must match exactly before you can continue.
+                      </p>
+                      <label htmlFor="master-pass-confirm" className="sr-only">
+                        Re-type password to confirm
+                      </label>
+                      <div className="relative mt-3">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
+                        <input
+                          id="master-pass-confirm"
+                          type="password"
+                          autoComplete="new-password"
+                          value={passwordConfirm}
+                          onChange={(e) => setPasswordConfirm(e.target.value)}
+                          className="min-h-[48px] w-full rounded-xl border border-neutral-200/90 bg-white py-3 pl-10 pr-3 text-base text-neutral-900 outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/10 sm:text-sm"
+                          placeholder="Re-type your password"
+                        />
+                      </div>
+                      {passwordConfirm.length > 0 && !passwordsMatch && (
+                        <p className="mt-2 text-xs text-red-600">Passwords do not match.</p>
+                      )}
+                      {passwordOk && passwordsMatch && (
+                        <p className="mt-2 text-xs text-emerald-700">Passwords match.</p>
+                      )}
+                    </div>
+                  )}
                 </section>
               )}
 
@@ -741,8 +783,8 @@ export function SecurityOnboardingWizard() {
               )}
             </div>
 
-            <div className="safe-pb mt-8 w-full">
-              <LoginFooter />
+            <div className="safe-pb mt-8 flex w-full justify-center">
+              <LoginFooter variant="copyrightOnly" />
             </div>
           </div>
         </div>
