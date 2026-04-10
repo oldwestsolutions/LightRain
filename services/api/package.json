@@ -1,0 +1,6 @@
+{
+  "name": "@lightrain/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Placeholder for the separated API / BFF (Node, edge functions, or gateway)."
+}

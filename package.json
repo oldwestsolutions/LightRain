@@ -1,55 +1,20 @@
 {
-  "name": "lightrain",
-  "version": "0.1.0",
+  "name": "lightrain-monorepo",
   "private": true,
-  "dependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.2",
-    "@vercel/analytics": "^2.0.1",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^0.468.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.13.2",
-    "react-scripts": "5.0.1",
-    "three": "^0.183.2",
-    "typescript": "^4.9.5",
-    "web-vitals": "^4.2.4",
-    "zustand": "^5.0.2"
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev:web": "npm run dev -w @lightrain/web",
+    "dev:wallet": "npm run dev -w @lightrain/wallet",
+    "dev:admin": "npm run dev -w @lightrain/admin",
+    "build": "npm run build -w @lightrain/web && npm run build -w @lightrain/wallet && npm run build -w @lightrain/admin",
+    "build:web": "npm run build -w @lightrain/web",
+    "lint": "npm run lint -w @lightrain/web"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.16"
+  "engines": {
+    "node": ">=18"
   }
 }
