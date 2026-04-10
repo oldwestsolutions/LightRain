@@ -12,10 +12,8 @@ apps/*/build
 apps/*/dist
 apps/*/.next
 apps/*/out
-# Repo-root Vercel deploy (scripts/lightrain-build.mjs copies these from apps/*)
 /.next
 /public
-/next.config.ts
 
 # misc
 .DS_Store

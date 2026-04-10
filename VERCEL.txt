@@ -1,28 +1,21 @@
-LightRain on Vercel (one Git repo, three subdomains)
+LightRain — three separate Vercel projects (no shared root deploy)
 
-1) Create THREE Vercel projects, all linked to this repo.
+1) Create three projects from the same GitHub repo.
 
-2) For each project, set Root Directory (Settings → General → Root Directory):
+2) For each project set Root Directory (Settings → General):
    - Marketing:  apps/web
    - Wallet:     apps/wallet
    - Admin:      apps/admin
 
-   Leave Install Command / Build Command empty so each app’s vercel.json runs:
-   "cd ../.. && npm install" and "npm run build" (cwd is already apps/<app>, so .next is at path0).
+3) Do not set the repo root (.) as Root Directory. Do not add custom Output Directory unless Vercel asks.
 
-3) If you MUST leave Root Directory as "." (repo root) on a project:
-   - Add env var LIGHT_RAIN_VERCEL_APP = web | wallet | admin (match the app).
-   - Install: npm install
-   - Build: npm run build
-   - Root vercel.json: framework nextjs, outputDirectory null (clears a wrong "public"
-     override in the dashboard).
-   - Leave Output Directory empty: after build, scripts/lightrain-build.mjs symlinks
-     path0/.next → apps/<app>/.next so Vercel finds .next without copying (copying breaks
-     Node File Trace / @swc/helpers resolution).
-   - If LIGHT_RAIN_VERCEL_APP is omitted, the build defaults to web and warns.
-   Prefer Root Directory = apps/* instead (no symlink step needed).
+4) Install / build: leave defaults, or use each app’s vercel.json:
+   - Install: cd ../.. && npm install
+   - Build:     npm run build
 
-4) Domains (Settings → Domains):
-   - web    → lightra.in / www
-   - wallet → wallet.lightra.in
-   - admin  → admin.lightra.in
+5) Domains:
+   - web    → your apex / www (e.g. lightra.in)
+   - wallet → wallet.yourdomain
+   - admin  → admin.yourdomain
+
+Each app builds and runs on its own; open each URL in the browser.

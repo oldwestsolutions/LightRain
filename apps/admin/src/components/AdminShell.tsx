@@ -21,11 +21,9 @@ type AdminShellProps = {
 };
 
 export function AdminShell({ session, darkMode, onToggleDark, children }: AdminShellProps) {
-  const webOrigin = (process.env.NEXT_PUBLIC_WEB_ORIGIN || "https://lightra.in").replace(/\/$/, "");
-
   const onLogout = () => {
     clearSession();
-    window.location.href = `${webOrigin}/`;
+    window.location.assign("/");
   };
 
   return (

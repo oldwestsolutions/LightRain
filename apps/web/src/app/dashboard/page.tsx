@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AuthenticatedLayout } from "@/components/AuthenticatedLayout";
+import { Dashboard } from "@/components/Dashboard";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Page() {
@@ -14,5 +14,5 @@ export default function Page() {
   }, [isLoggedIn, router]);
 
   if (!isLoggedIn) return null;
-  return <AuthenticatedLayout />;
+  return <Dashboard />;
 }

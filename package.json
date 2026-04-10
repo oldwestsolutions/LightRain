@@ -10,7 +10,7 @@
     "dev:web": "npm run dev -w @lightrain/web",
     "dev:wallet": "npm run dev -w @lightrain/wallet",
     "dev:admin": "npm run dev -w @lightrain/admin",
-    "build": "node scripts/lightrain-build.mjs",
+    "build": "npm run build -w @lightrain/web && npm run build -w @lightrain/wallet && npm run build -w @lightrain/admin",
     "build:web": "npm run build -w @lightrain/web",
     "build:wallet": "npm run build -w @lightrain/wallet",
     "build:admin": "npm run build -w @lightrain/admin",

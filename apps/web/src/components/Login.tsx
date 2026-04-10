@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Loader2, Lock, Mail } from "lucide-react";
-import { redirectToWalletAfterLogin } from "@lightrain/auth";
 import { useAuthStore } from "../store/useAuthStore";
 import { LoginFooter } from "./LoginFooter";
 import { RainBackground } from "./RainBackground";
@@ -14,6 +14,7 @@ const GUEST_EMAIL = "guest@lightra.in";
 export const SAMPLE_EMAIL_PLACEHOLDER = "mailbox@lightra.in";
 
 export function Login() {
+  const router = useRouter();
   const login = useAuthStore((s) => s.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,10 +23,8 @@ export function Login() {
   const runLogin = async () => {
     setLoading(true);
     try {
-      const session = await login(email.trim() || GUEST_EMAIL, password);
-      const walletOrigin = process.env.NEXT_PUBLIC_WALLET_ORIGIN || "https://wallet.lightra.in";
-      const preferHandoff = !process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN;
-      redirectToWalletAfterLogin(session, { walletOrigin, preferHandoff });
+      await login(email.trim() || GUEST_EMAIL, password);
+      router.push("/dashboard");
     } finally {
       setLoading(false);
     }
