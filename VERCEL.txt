@@ -19,8 +19,7 @@ LightRain on Vercel (one Git repo, three subdomains)
      next.config.ts, and public to the repo root (symlinks are not reliable on Vercel).
      If LIGHT_RAIN_VERCEL_APP is omitted, the build defaults to web and warns (set the var
      for wallet/admin root deploys).
-   Prefer Root Directory = apps/* instead. next.config sets outputFileTracingRoot to the
-   monorepo root so Vercel’s file tracing matches workspace packages.
+   Prefer Root Directory = apps/* instead (avoids brittle repo-root tracing).
 
    If ".next not found at path0" persists on a repo-root project, in Vercel → Settings →
    Build & Deployment set Output Directory to apps/web/.next (or wallet/admin) for that
