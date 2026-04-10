@@ -4,9 +4,9 @@
  * Locally, omit the env to build all apps (same as before).
  *
  * When VERCEL is set and Root Directory is ".", Vercel looks for Next output at the repo
- * root. After a single-app build we symlink that app's .next, next.config.ts, and public
- * to the root so the Next preset finds them (and a mistaken dashboard "public" output dir
- * resolves to a real folder).
+ * root. After a single-app build we copy (not symlink) that app's .next, next.config.ts,
+ * and public to the root — Vercel's Next.js step does not reliably treat symlinked .next
+ * as present. Set LIGHT_RAIN_VERCEL_APP=web|wallet|admin on each root-based project.
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -33,42 +33,52 @@ function removePath(dest) {
   }
 }
 
-function linkAppToRootForVercel(appFolder) {
+function materializeAppAtRootForVercel(appFolder) {
   const appDir = path.join(root, "apps", appFolder);
-  const dirType = process.platform === "win32" ? "junction" : "dir";
-  const links = [
-    { name: ".next", type: dirType },
-    { name: "next.config.ts", type: "file" },
-    { name: "public", type: dirType },
+  const items = [
+    { name: ".next", isDir: true },
+    { name: "next.config.ts", isDir: false },
+    { name: "public", isDir: true },
   ];
-  for (const { name, type } of links) {
+  for (const { name, isDir } of items) {
     const target = path.join(appDir, name);
-    if (!fs.existsSync(target)) continue;
+    if (!fs.existsSync(target)) {
+      console.error(
+        `[lightrain-build] Missing ${target} after build; Next output must exist before copying to repo root.`,
+      );
+      process.exit(1);
+    }
     const dest = path.join(root, name);
     removePath(dest);
-    const rel = path.relative(path.dirname(dest), target);
-    try {
-      fs.symlinkSync(rel, dest, type);
-    } catch {
-      if (type === "file") fs.copyFileSync(target, dest);
-      else fs.cpSync(target, dest, { recursive: true });
-    }
+    if (isDir) fs.cpSync(target, dest, { recursive: true });
+    else fs.copyFileSync(target, dest);
   }
+  const buildId = path.join(root, ".next", "BUILD_ID");
+  if (!fs.existsSync(buildId)) {
+    console.error(
+      "[lightrain-build] Copied .next but BUILD_ID is missing; build may be incomplete.",
+    );
+    process.exit(1);
+  }
+  console.log(
+    `[lightrain-build] Copied apps/${appFolder} (.next, public, next.config.ts) to repo root for Vercel.`,
+  );
 }
 
 const key = (process.env.LIGHT_RAIN_VERCEL_APP || "").toLowerCase().trim();
 const workspace = MAP[key];
 
-if (process.env.VERCEL && !workspace) {
-  console.warn(
-    "[lightrain-build] VERCEL is set but LIGHT_RAIN_VERCEL_APP is missing; set it to web, wallet, or admin when deploying from repo root.",
-  );
-}
-
 if (workspace) {
-  execSync(`npm run build -w ${workspace}`, { stdio: "inherit" });
-  if (process.env.VERCEL && key) linkAppToRootForVercel(key);
+  const appDir = path.join(root, "apps", key);
+  execSync("npm run build", { stdio: "inherit", cwd: appDir });
+  if (process.env.VERCEL) materializeAppAtRootForVercel(key);
 } else {
+  if (process.env.VERCEL) {
+    console.error(
+      "[lightrain-build] On Vercel with Root Directory \".\", set env LIGHT_RAIN_VERCEL_APP=web|wallet|admin on this project. Otherwise .next is never copied to the repo root and the deploy fails.",
+    );
+    process.exit(1);
+  }
   execSync(
     "npm run build -w @lightrain/web && npm run build -w @lightrain/wallet && npm run build -w @lightrain/admin",
     { stdio: "inherit" },

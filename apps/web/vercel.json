@@ -3,5 +3,5 @@
   "framework": "nextjs",
   "outputDirectory": null,
   "installCommand": "cd ../.. && npm install",
-  "buildCommand": "cd ../.. && npm run build -w @lightrain/web"
+  "buildCommand": "npm run build"
 }
