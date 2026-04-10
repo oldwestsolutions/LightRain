@@ -7,13 +7,18 @@ LightRain — three separate Vercel projects (no shared root deploy)
    - Wallet:     apps/wallet
    - Admin:      apps/admin
 
-3) Do not set the repo root (.) as Root Directory. Do not add custom Output Directory unless Vercel asks.
+3) Do not set the repo root (.) as Root Directory.
 
-4) Install / build: leave defaults, or use each app’s vercel.json:
+4) “No Output Directory named public”: Next.js must not use a static output folder. In Vercel →
+   Project → Settings → Build & Development → Output Directory, delete any value (leave blank).
+   Framework Preset should be Next.js. Do not put outputDirectory in vercel.json for these apps.
+
+5) Install / build: leave defaults, or use each app’s vercel.json:
+
    - Install: cd ../.. && npm install
    - Build:     npm run build
 
-5) Domains:
+6) Domains:
    - web    → your apex / www (e.g. lightra.in)
    - wallet → wallet.yourdomain
    - admin  → admin.yourdomain
