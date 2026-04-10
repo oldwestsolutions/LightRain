@@ -8,10 +8,13 @@ import { useAuthStore } from "../store/useAuthStore";
 import { LoginFooter } from "./LoginFooter";
 import { RainBackground } from "./RainBackground";
 
-/** Fallback when email left empty (demo) */
-const GUEST_EMAIL = "guest@lightra.in";
 /** Sample shown in email field — lightra.in style */
 export const SAMPLE_EMAIL_PLACEHOLDER = "mailbox@lightra.in";
+
+function isValidEmail(value: string): boolean {
+  const t = value.trim();
+  return t.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
+}
 
 export function Login() {
   const router = useRouter();
@@ -20,10 +23,13 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const emailOk = isValidEmail(email);
+
   const runLogin = async () => {
+    if (!emailOk) return;
     setLoading(true);
     try {
-      await login(email.trim() || GUEST_EMAIL, password);
+      await login(email.trim(), password);
       router.push("/dashboard");
     } finally {
       setLoading(false);
@@ -121,7 +127,7 @@ export function Login() {
                 <div className="space-y-3 sm:space-y-4">
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !emailOk}
                     className={`${authButtonBase} touch-manipulation border border-neutral-600 bg-neutral-700 text-white shadow-sm hover:border-neutral-700 hover:bg-neutral-800 active:bg-neutral-900 disabled:opacity-50`}
                   >
                     Login

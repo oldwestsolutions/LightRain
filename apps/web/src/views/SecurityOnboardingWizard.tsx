@@ -17,7 +17,7 @@ import { generateBackupCodes } from "../lib/onboarding/backupCodes";
 import { encryptRecoveryPayload, downloadUint8Array } from "../lib/onboarding/recoveryFile";
 
 const STEPS = [
-  "Recovery email",
+  "Login email",
   "Master password",
   "Two-factor authentication",
   "Trusted device",
@@ -113,8 +113,9 @@ export function SecurityOnboardingWizard() {
   };
 
   const emailValid = useMemo(() => {
-    if (!recoveryEmail.trim()) return true;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recoveryEmail.trim());
+    const t = recoveryEmail.trim();
+    if (!t) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
   }, [recoveryEmail]);
 
   const twoFAComplete =
@@ -183,7 +184,7 @@ export function SecurityOnboardingWizard() {
     const payload = {
       v: 1,
       created: new Date().toISOString(),
-      recoveryEmail: recoveryEmail.trim() || null,
+      recoveryEmail: recoveryEmail.trim(),
       twoFactor: {
         totp: wantTotp && totpVerified,
         securityKey: !!securityKeyCred,
@@ -220,9 +221,7 @@ export function SecurityOnboardingWizard() {
   const handleCreate = async () => {
     setLoading(true);
     try {
-      const vaultId = `vault-${crypto.randomUUID().slice(0, 8)}@users.lightra.in`;
-      const loginEmail = recoveryEmail.trim() || vaultId;
-      await login(loginEmail, password);
+      await login(recoveryEmail.trim(), password);
       router.push("/dashboard");
     } finally {
       setLoading(false);
@@ -294,18 +293,18 @@ export function SecurityOnboardingWizard() {
               {step === 0 && (
                 <section className="space-y-4" aria-labelledby="step-email">
                   <h2 id="step-email" className="text-lg font-semibold text-neutral-900">
-                    Recovery email
+                    Login email
                   </h2>
                   <p className="text-sm text-muted">
-                    Optional. Your vault does not require an email. If provided, it is used only for security signals —
-                    never sold or shared.
+                    You sign in with this address. It is also used for security notifications and recovery — never sold
+                    or shared.
                   </p>
                   <div>
                     <label htmlFor="recovery-email" className="mb-1.5 flex items-center text-xs font-medium uppercase tracking-wide text-muted">
-                      Recovery Email (optional)
+                      Email
                       <InfoTooltip
-                        label="About recovery email"
-                        text="Used only for security notifications and recovery. Never shared."
+                        label="About your email"
+                        text="Required for sign-in, security notifications, and recovery. Never shared."
                       />
                     </label>
                     <div className="relative">
@@ -322,7 +321,7 @@ export function SecurityOnboardingWizard() {
                       />
                     </div>
                     {recoveryEmailTouched && !emailValid && (
-                      <p className="mt-1 text-xs text-red-600">Enter a valid email or leave blank.</p>
+                      <p className="mt-1 text-xs text-red-600">Enter a valid email address.</p>
                     )}
                   </div>
                 </section>
@@ -709,8 +708,8 @@ export function SecurityOnboardingWizard() {
                   </h2>
                   <ul className="space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm">
                     <li>
-                      <span className="font-medium text-neutral-700">Recovery email: </span>
-                      {recoveryEmail.trim() || <em className="text-muted">None (vault-only identity)</em>}
+                      <span className="font-medium text-neutral-700">Login email: </span>
+                      {recoveryEmail.trim()}
                     </li>
                     <li>
                       <span className="font-medium text-neutral-700">2FA: </span>
