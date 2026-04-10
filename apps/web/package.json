@@ -11,9 +11,11 @@
   "dependencies": {
     "@lightrain/auth": "*",
     "@vercel/analytics": "^2.0.1",
+    "bip39": "^3.1.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^0.468.0",
     "next": "^15.1.0",
+    "otpauth": "^9.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.183.2",
