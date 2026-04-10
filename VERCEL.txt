@@ -14,7 +14,11 @@ LightRain on Vercel (one Git repo, three subdomains)
    - Add env var LIGHT_RAIN_VERCEL_APP = web | wallet | admin (match the app).
    - Install: npm install
    - Build: npm run build
-   Prefer Root Directory = apps/* instead; it fixes Next.js detection and output.
+   - Root vercel.json sets framework nextjs and outputDirectory null (overrides a dashboard
+     Output Directory of "public"). After build, the script links that app's .next,
+     next.config.ts, and public to the repo root so Vercel's Next.js step finds them.
+   Prefer Root Directory = apps/* instead; it fixes Next.js detection and you can ignore
+   the symlink step above.
 
 4) Domains (Settings → Domains):
    - web    → lightra.in / www
