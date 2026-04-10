@@ -7,6 +7,8 @@
  * root. After a single-app build we copy (not symlink) that app's .next, next.config.ts,
  * and public to the root — Vercel's Next.js step does not reliably treat symlinked .next
  * as present. Set LIGHT_RAIN_VERCEL_APP=web|wallet|admin on each root-based project.
+ * If VERCEL is set but that var is missing, we default to web and warn (wallet/admin must
+ * set the var or use Root Directory apps/wallet|apps/admin).
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -65,20 +67,24 @@ function materializeAppAtRootForVercel(appFolder) {
   );
 }
 
+function buildOneAppAndMaybeMaterialize(appKey) {
+  const appDir = path.join(root, "apps", appKey);
+  execSync("npm run build", { stdio: "inherit", cwd: appDir });
+  if (process.env.VERCEL) materializeAppAtRootForVercel(appKey);
+}
+
 const key = (process.env.LIGHT_RAIN_VERCEL_APP || "").toLowerCase().trim();
 const workspace = MAP[key];
 
 if (workspace) {
-  const appDir = path.join(root, "apps", key);
-  execSync("npm run build", { stdio: "inherit", cwd: appDir });
-  if (process.env.VERCEL) materializeAppAtRootForVercel(key);
+  buildOneAppAndMaybeMaterialize(key);
+} else if (process.env.VERCEL) {
+  const fallback = "web";
+  console.warn(
+    `[lightrain-build] LIGHT_RAIN_VERCEL_APP not set; using "${fallback}" for this Vercel root deploy. Set LIGHT_RAIN_VERCEL_APP=wallet|admin for those apps, or set Root Directory to apps/<app>.`,
+  );
+  buildOneAppAndMaybeMaterialize(fallback);
 } else {
-  if (process.env.VERCEL) {
-    console.error(
-      "[lightrain-build] On Vercel with Root Directory \".\", set env LIGHT_RAIN_VERCEL_APP=web|wallet|admin on this project. Otherwise .next is never copied to the repo root and the deploy fails.",
-    );
-    process.exit(1);
-  }
   execSync(
     "npm run build -w @lightrain/web && npm run build -w @lightrain/wallet && npm run build -w @lightrain/admin",
     { stdio: "inherit" },

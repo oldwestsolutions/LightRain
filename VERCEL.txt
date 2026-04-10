@@ -17,8 +17,8 @@ LightRain on Vercel (one Git repo, three subdomains)
    - Root vercel.json sets framework nextjs and outputDirectory null (overrides a dashboard
      Output Directory of "public"). After build, the script copies that app's .next,
      next.config.ts, and public to the repo root (symlinks are not reliable on Vercel).
-     You MUST set LIGHT_RAIN_VERCEL_APP; without it the build exits with an error so
-     deploys do not finish without a root .next.
+     If LIGHT_RAIN_VERCEL_APP is omitted, the build defaults to web and warns (set the var
+     for wallet/admin root deploys).
    Prefer Root Directory = apps/* instead. next.config sets outputFileTracingRoot to the
    monorepo root so Vercel’s file tracing matches workspace packages.
 
