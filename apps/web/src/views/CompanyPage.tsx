@@ -16,6 +16,7 @@ import {
   WifiOff,
   type LucideIcon,
 } from "lucide-react";
+import { URL_SUPPORT } from "@/lib/site";
 import { CompanyHeroImage } from "../components/CompanyHeroImage";
 import { CompanySidebar } from "../components/CompanySidebar";
 import { MarketingPageShell } from "../components/MarketingPageShell";
@@ -93,7 +94,39 @@ export function CompanyPage() {
       backTo={isLoggedIn ? "/dashboard" : "/"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
-      <div className="space-y-6 lg:space-y-8">
+      <div className="space-y-6 lg:space-y-10">
+        <section
+          className="relative -mx-4 overflow-hidden rounded-2xl border border-neutral-200/80 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 px-5 py-10 text-white shadow-[0_28px_80px_-28px_rgba(0,0,0,0.55)] sm:-mx-6 sm:px-10 sm:py-12"
+          aria-label="Company introduction"
+        >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-40"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.14), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.12), transparent 50%)",
+            }}
+            aria-hidden
+          />
+          <div className="relative mx-auto max-w-4xl text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
+            <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:text-lg">
+              LightRain is settlement infrastructure with a Bitcoin-server mindset: keys stay yours, history stays
+              legible, and policy lives where regulators expect it—not buried in anonymous wallet chrome.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
+                Federation-native
+              </span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
+                Discretionary rails
+              </span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
+                Operator-grade UX
+              </span>
+            </div>
+          </div>
+        </section>
+
         <article className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04),0_24px_60px_-12px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04]">
           <div className="grid lg:min-h-[min(62vh,520px)] lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,44%)] xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,40%)]">
             <div className="flex flex-col justify-center border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-50/90 px-6 py-8 sm:px-10 sm:py-10 lg:border-b-0 lg:border-r lg:border-neutral-100 lg:px-12 lg:py-12 xl:px-14 xl:py-14">
@@ -152,18 +185,51 @@ export function CompanyPage() {
                   >
                     Legal &amp; policies
                   </Link>
-                  <Link
-                    href="/support"
+                  <a
+                    href={URL_SUPPORT}
                     className="inline-flex min-h-[48px] min-w-[140px] flex-1 items-center justify-center rounded-full border border-neutral-200 bg-white px-8 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-none"
                   >
                     Support
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
             <CompanyHeroImage />
           </div>
         </article>
+
+        <section
+          className="rounded-2xl border border-neutral-200/90 bg-gradient-to-b from-white to-neutral-50/90 px-5 py-10 shadow-inner sm:px-10 sm:py-12"
+          aria-labelledby="company-journey-heading"
+        >
+          <h2
+            id="company-journey-heading"
+            className="text-center font-display text-2xl font-normal tracking-[0.06em] text-neutral-900 sm:text-3xl"
+          >
+            From signal to settlement
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-muted sm:text-[15px]">
+            A guided path for teams who cannot afford ambiguous rails—each step is designed to leave an audit trail you
+            can defend.
+          </p>
+          <ol className="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { step: "01", title: "Addressing", body: "Federation labels and endpoints that humans and systems agree on." },
+              { step: "02", title: "Policy", body: "Wire your obligations where counsel expects—not as an afterthought." },
+              { step: "03", title: "Execution", body: "Settlement surfaces that mirror how regulated desks already work." },
+              { step: "04", title: "Evidence", body: "History and exports shaped for review, not just screenshots." },
+            ].map((item) => (
+              <li
+                key={item.step}
+                className="relative rounded-2xl border border-neutral-200/80 bg-white/90 p-5 shadow-sm ring-1 ring-black/[0.02]"
+              >
+                <span className="font-mono text-xs font-bold text-accent">{item.step}</span>
+                <p className="mt-2 font-semibold text-neutral-900">{item.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
 
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10 xl:gap-12">
           <div className="min-w-0 space-y-10">

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight, FileText, Headphones, Mail } from "lucide-react";
+import { URL_SUPPORT } from "@/lib/site";
 
 const links = [
-  { to: "/legal", label: "Legal & policies", icon: FileText },
-  { to: "/support", label: "Support", icon: Headphones },
+  { to: "/legal", label: "Legal & policies", icon: FileText, external: false },
+  { to: URL_SUPPORT, label: "Support", icon: Headphones, external: true },
 ] as const;
 
 export function CompanySidebar() {
@@ -13,17 +14,29 @@ export function CompanySidebar() {
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Quick links</p>
           <nav className="mt-3 flex flex-col gap-1" aria-label="Company sidebar">
-            {links.map(({ to, label, icon: Icon }) => (
-              <Link
-                key={to}
-                href={to}
-                className="group flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
-              >
-                <Icon className="h-4 w-4 shrink-0 text-muted group-hover:text-neutral-900" aria-hidden />
-                <span className="flex-1">{label}</span>
-                <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
-              </Link>
-            ))}
+            {links.map(({ to, label, icon: Icon, external }) =>
+              external ? (
+                <a
+                  key={to}
+                  href={to}
+                  className="group flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-muted group-hover:text-neutral-900" aria-hidden />
+                  <span className="flex-1">{label}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
+                </a>
+              ) : (
+                <Link
+                  key={to}
+                  href={to}
+                  className="group flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-muted group-hover:text-neutral-900" aria-hidden />
+                  <span className="flex-1">{label}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
+                </Link>
+              ),
+            )}
           </nav>
         </div>
 

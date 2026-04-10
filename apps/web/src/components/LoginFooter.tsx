@@ -2,11 +2,12 @@
 
 import { Fragment } from "react";
 import Link from "next/link";
+import { URL_COMPANY, URL_SHOP, URL_SUPPORT } from "@/lib/site";
 
 const microLinks = [
-  { label: "Support", href: "/support", external: false },
-  { label: "Shop", href: "https://shop.lightra.in", external: true },
-  { label: "Company", href: "/company", external: false },
+  { label: "Support", href: URL_SUPPORT, external: true },
+  { label: "Company", href: URL_COMPANY, external: true },
+  { label: "Shop", href: URL_SHOP, external: true },
 ] as const;
 
 type LoginFooterProps = {
@@ -36,8 +37,6 @@ export function LoginFooter({ variant = "default" }: LoginFooterProps) {
               {link.external ? (
                 <a
                   href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex min-h-[44px] min-w-[44px] touch-manipulation items-center justify-center px-2 py-2 transition-colors duration-200 hover:text-accent active:text-neutral-900"
                 >
                   {link.label}

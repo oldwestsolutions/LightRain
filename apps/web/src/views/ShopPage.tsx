@@ -1,6 +1,7 @@
 "use client";
 
 import { MarketingPageShell } from "@/components/MarketingPageShell";
+import { URL_SHOP } from "@/lib/site";
 import { Package, Shield, Shirt, BookOpen, Sticker, Usb, LockKeyhole } from "lucide-react";
 
 type Product = {
@@ -103,6 +104,8 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
+const SHOP_HOST = URL_SHOP.replace(/^https:\/\//, "");
+
 export function ShopPage() {
   const wallets = PRODUCTS.filter((p) => p.category === "wallets");
   const security = PRODUCTS.filter((p) => p.category === "security");
@@ -111,7 +114,7 @@ export function ShopPage() {
   return (
     <MarketingPageShell backTo="/" backLabel="Back to sign in" wide>
       <header className="mb-8 text-center sm:mb-10">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">shop.lightra.in</p>
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted">{SHOP_HOST}</p>
         <h1 className="mt-2 font-display text-2xl font-normal tracking-[0.08em] text-neutral-900 sm:text-3xl">
           LightRain shop
         </h1>
@@ -155,7 +158,7 @@ export function ShopPage() {
       </section>
 
       <p className="mt-10 rounded-xl border border-neutral-200/80 bg-white/60 p-4 text-center text-xs text-muted">
-        Prefer this URL? Point <strong className="font-medium text-neutral-700">shop.lightra.in</strong> at this site
+        Prefer this URL? Point <strong className="font-medium text-neutral-700">{SHOP_HOST}</strong> at this site
         (same app, <code className="rounded bg-neutral-100 px-1 py-0.5 text-[11px]">/shop</code>) when your DNS is
         ready.
       </p>
