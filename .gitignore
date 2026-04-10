@@ -13,7 +13,8 @@ apps/*/dist
 apps/*/.next
 apps/*/out
 /.next
-/public
+/public/*
+!/public/.gitkeep
 
 # misc
 .DS_Store
