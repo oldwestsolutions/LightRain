@@ -16,15 +16,11 @@ LightRain on Vercel (one Git repo, three subdomains)
    - Build: npm run build
    - Root vercel.json: framework nextjs, outputDirectory null (clears a wrong "public"
      override in the dashboard).
-   - REQUIRED: Vercel → Project → Settings → Build & Deployment → Output Directory:
-       web    → apps/web/.next
-       wallet → apps/wallet/.next
-       admin  → apps/admin/.next
-     Do not copy .next to the repo root: that breaks Node File Trace and causes errors
-     like ENOENT lstat '/node_modules/@swc/helpers/...'.
-   - If LIGHT_RAIN_VERCEL_APP is omitted, the build defaults to web and warns; still set
-     Output Directory to apps/web/.next for that project.
-   Prefer Root Directory = apps/* instead (no Output Directory override needed).
+   - Leave Output Directory empty: after build, scripts/lightrain-build.mjs symlinks
+     path0/.next → apps/<app>/.next so Vercel finds .next without copying (copying breaks
+     Node File Trace / @swc/helpers resolution).
+   - If LIGHT_RAIN_VERCEL_APP is omitted, the build defaults to web and warns.
+   Prefer Root Directory = apps/* instead (no symlink step needed).
 
 4) Domains (Settings → Domains):
    - web    → lightra.in / www
