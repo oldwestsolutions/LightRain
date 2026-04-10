@@ -1,24 +1,35 @@
-LightRain — three separate Vercel projects (no shared root deploy)
+LightRain — three separate Vercel projects
 
 1) Create three projects from the same GitHub repo.
 
-2) For each project set Root Directory (Settings → General):
-   - Marketing:  apps/web
-   - Wallet:     apps/wallet
-   - Admin:      apps/admin
+2) Marketing site (lightra.in) — pick ONE of these setups:
 
-3) Do not set the repo root (.) as Root Directory.
+   A) Recommended: Root Directory = apps/web
+      - Leave Output Directory empty. Framework Preset = Next.js.
+      - The repo root vercel.json is ignored for this project (only apps/web/vercel.json matters).
 
-4) “No Output Directory named public”: Next.js must not use a static output folder. In Vercel →
+   B) If Root Directory is left as . (repo root):
+      - Root vercel.json builds @lightrain/web and sets outputDirectory to apps/web/.next.
+      - Use this only for the marketing project, not wallet/admin.
+
+3) Wallet / admin projects: Root Directory MUST be apps/wallet and apps/admin (not .).
+
+4) “404: NOT_FOUND” with a Vercel id (e.g. cle1::…):
+   - The domain is not hitting a successful Production deployment, or it points at the wrong project.
+   - Vercel → Project → Domains: lightra.in / www must be on the marketing project only.
+   - Deployments: open the latest Production deployment; fix any failed build.
+   - Remove “Deployment Protection” / password protection for production if you need the site public.
+
+5) “No Output Directory named public”: Next.js must not use a static output folder. In Vercel →
    Project → Settings → Build & Development → Output Directory, delete any value (leave blank).
-   Framework Preset should be Next.js. Do not put outputDirectory in vercel.json for these apps.
+   Framework Preset should be Next.js. (Exception: Root Directory . uses root vercel.json output path.)
 
-5) Install / build: leave defaults, or use each app’s vercel.json:
+6) Install / build: leave defaults, or use each app’s vercel.json:
 
    - Install: cd ../.. && npm install
    - Build:     npm run build
 
-6) Domains:
+7) Domains:
    - web    → your apex / www (e.g. lightra.in)
    - wallet → wallet.yourdomain
    - admin  → admin.yourdomain
