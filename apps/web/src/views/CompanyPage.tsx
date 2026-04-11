@@ -55,6 +55,7 @@ export function CompanyPage() {
     <MarketingPageShell
       extraWide
       compactTop
+      allowStickyDescendants
       backTo={isLoggedIn ? "/dashboard" : "/"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >

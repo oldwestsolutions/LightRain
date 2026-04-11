@@ -1,9 +1,12 @@
 /**
  * Operator workflow narrative — infrastructure documentation tone (no commerce / custody claims).
  * Scroll-linked diagram: sticky illustration highlights the step most in view.
+ * Company route passes `allowStickyDescendants` on the shell so horizontal overflow clipping does not suppress
+ * `position: sticky` on the diagram column.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import styles from "./CompanyWorkflowSection.module.css";
 
 const STEP_COUNT = 6;
 
@@ -339,7 +342,7 @@ export function CompanyWorkflowSection() {
 
   return (
     <section
-      className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card"
+      className="rounded-2xl border border-neutral-200/90 bg-white shadow-card"
       aria-labelledby="workflow-heading"
     >
       <div className="border-b border-neutral-200/80 bg-neutral-50/90 px-5 py-6 sm:px-8 sm:py-7">
@@ -351,30 +354,24 @@ export function CompanyWorkflowSection() {
           LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute for
           your licensed counterparties. The sequence below is representative of how federation addressing, policy
           engines, ML-assisted integrity signals, and execution surfaces can fit together when your organization wires
-          them into its own controls. Scroll the steps: the diagram stays in view on wide screens and tracks the active
-          stage.
+          them into its own controls. Scroll the steps: from medium breakpoints upward the schematic stays beside the
+          narrative and tracks the active stage.
+        </p>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
+          Modern CSS supports scroll-linked animations via animation-timeline—covering staged text reveals, synchronized
+          transitions, and scroll-bound motion. The presentation below uses the same intent for legibility: the
+          schematic remains anchored while each stage advances in sequence, mirroring how operators read structured
+          events under review rather than serving as ornament.
         </p>
       </div>
 
       <div className="p-5 sm:p-8">
-        <figure className="mb-8 overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 p-3 sm:p-4 lg:hidden">
-          <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[min(100%,320px)] text-neutral-900" activeStep={activeStep} />
-          <figcaption className="mt-4 text-center text-[11px] leading-relaxed text-muted sm:text-xs">
-            Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked
-            against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee
-            approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails
-            only after explicit confirmation; immutable-style logs, acknowledgements, and export bundles (with ML metadata
-            when enabled) complete the supervisory record. Ordering, branching, and omissions are deployment-specific and
-            should follow counsel and supervisory guidance.
-          </figcaption>
-        </figure>
-
-        <div className="grid gap-10 lg:grid-cols-[minmax(260px,34%)_minmax(0,1fr)] lg:items-start lg:gap-12">
-          <div className="relative hidden lg:block">
-            <div className="sticky top-24 pb-8">
-              <figure className="overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 p-4 shadow-sm">
-                <WorkflowScrollDiagram className="h-auto w-full text-neutral-900" activeStep={activeStep} />
-                <figcaption className="mt-4 text-left text-[11px] leading-relaxed text-muted">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[minmax(240px,38%)_minmax(0,1fr)] md:items-start md:gap-10 xl:gap-12">
+          <div className="relative min-w-0 md:max-h-none">
+            <div className="md:sticky md:top-24 md:pb-8">
+              <figure className="overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 p-3 shadow-sm sm:p-4">
+                <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[320px] text-neutral-900 md:max-w-none" activeStep={activeStep} />
+                <figcaption className="mt-4 text-center text-[11px] leading-relaxed text-muted sm:text-xs md:text-left">
                   Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked
                   against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee
                   approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails
@@ -395,7 +392,9 @@ export function CompanyWorkflowSection() {
                 key={step.n}
                 ref={setRef(index)}
                 data-workflow-step={index}
-                className="scroll-mt-28 border-l-2 border-neutral-300 py-10 pl-5 sm:scroll-mt-32 sm:py-12 sm:pl-7 lg:min-h-[min(72vh,520px)] lg:py-14 lg:pl-8"
+                className={`${styles.stepReveal} scroll-mt-28 border-l-2 py-10 pl-5 transition-[border-color] duration-500 sm:scroll-mt-32 sm:py-12 sm:pl-7 md:min-h-[min(62vh,480px)] md:py-14 md:pl-8 ${
+                  activeStep === index ? "border-accent" : "border-neutral-300"
+                }`}
               >
                 <p className="font-mono text-xs font-bold text-accent">{step.n}</p>
                 <h3 className="mt-1 text-base font-semibold text-neutral-900 sm:text-lg">{step.title}</h3>
@@ -405,7 +404,7 @@ export function CompanyWorkflowSection() {
           </div>
         </div>
 
-        <div className="mt-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 text-sm leading-relaxed text-neutral-700 lg:mt-14">
+        <div className="mt-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 text-sm leading-relaxed text-neutral-700 md:mt-14">
           <p className="font-medium text-neutral-900">Differentiators in this workflow</p>
           <ul className="mt-2 list-disc space-y-1.5 pl-5 text-muted">
             <li>Federation endpoints and labels that remain legible under review</li>

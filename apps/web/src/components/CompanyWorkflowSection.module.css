@@ -1,0 +1,28 @@
+/**
+ * Scroll-linked step presentation (progressive enhancement).
+ * Browsers without view() timeline support keep full opacity via .stepReveal defaults.
+ */
+
+.stepReveal {
+  opacity: 1;
+  transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stepReveal {
+      opacity: 0.42;
+      transform: translateY(10px);
+      animation: workflowStepReveal linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes workflowStepReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

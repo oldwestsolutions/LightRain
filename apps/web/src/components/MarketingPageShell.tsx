@@ -18,9 +18,22 @@ type Props = {
   extraWide?: boolean;
   /** Less top padding — dense pages (e.g. Company) */
   compactTop?: boolean;
+  /**
+   * Omit horizontal overflow clipping so `position: sticky` inside the page can bind to the viewport
+   * (e.g. company workflow diagram). Slightly increases risk of rare horizontal scroll on narrow viewports.
+   */
+  allowStickyDescendants?: boolean;
 };
 
-export function MarketingPageShell({ children, backTo, backLabel, wide, extraWide, compactTop }: Props) {
+export function MarketingPageShell({
+  children,
+  backTo,
+  backLabel,
+  wide,
+  extraWide,
+  compactTop,
+  allowStickyDescendants,
+}: Props) {
   const [resolvedBack, setResolvedBack] = useState(backTo);
   useEffect(() => {
     setResolvedBack(resolveMarketingBackHref(backTo));
@@ -38,7 +51,9 @@ export function MarketingPageShell({ children, backTo, backLabel, wide, extraWid
         className="pointer-events-none fixed inset-0 z-[2] bg-gradient-to-b from-canvas/88 via-canvas/45 to-canvas/82"
         aria-hidden
       />
-      <div className={`relative z-10 flex flex-1 flex-col overflow-x-hidden px-4 pb-10 ${topPad} sm:px-6`}>
+      <div
+        className={`relative z-10 flex flex-1 flex-col px-4 pb-10 ${topPad} sm:px-6 ${allowStickyDescendants ? "" : "overflow-x-hidden"}`}
+      >
         <div className={`mx-auto w-full flex-1 ${maxClass}`}>
           {backExternal ? (
             <a
