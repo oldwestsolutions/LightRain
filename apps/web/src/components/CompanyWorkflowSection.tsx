@@ -230,9 +230,6 @@ function WorkflowScrollDiagram({
   );
 }
 
-const PIPELINE_CAPTION =
-  "Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails only after explicit confirmation; immutable-style logs, acknowledgements, and export bundles (with ML metadata when enabled) complete the supervisory record. Ordering, branching, and omissions are deployment-specific and should follow counsel and supervisory guidance.";
-
 const STEPS = [
   {
     n: "1",
@@ -338,11 +335,9 @@ function WorkflowFigure({
   return (
     <figure
       className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 ${className}`}
+      aria-label="Illustrative workflow schematic"
     >
       <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[260px] text-neutral-900 sm:max-w-[280px]" activeStep={activeStep} />
-      <figcaption className="mt-4 border-t border-neutral-100 pt-4 text-left text-xs leading-relaxed text-neutral-500">
-        {PIPELINE_CAPTION}
-      </figcaption>
     </figure>
   );
 }

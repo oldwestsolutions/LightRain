@@ -12,8 +12,8 @@ const links = [
 
 export function CompanySidebar() {
   return (
-    <aside className="lg:sticky lg:top-[calc(5rem+env(safe-area-inset-top))] lg:self-start">
-      <div className="space-y-6 rounded-2xl border border-neutral-200/90 bg-white/95 p-5 shadow-card sm:p-6">
+    <aside className="w-full lg:sticky lg:top-[calc(5rem+env(safe-area-inset-top))] lg:self-start">
+      <div className="space-y-6 rounded-2xl border border-neutral-200/90 bg-white/95 p-5 shadow-card sm:p-6 lg:max-w-[300px] lg:mx-0">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Quick links</p>
           <nav className="mt-3 flex flex-col gap-1" aria-label="Company sidebar">

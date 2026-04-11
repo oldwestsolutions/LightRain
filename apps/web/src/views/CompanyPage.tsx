@@ -151,17 +151,14 @@ export function CompanyPage() {
           </div>
         </section>
 
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10 xl:gap-12">
-          <div className="min-w-0 space-y-10">
+        <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10 xl:gap-12">
+          <div className="min-w-0">
             <CompanyWorkflowSection />
-
-            <div className="rounded-2xl border border-neutral-200/90 bg-white/92 p-6 text-sm text-muted shadow-card backdrop-blur-md sm:p-8 lg:hidden">
-              <p className="font-medium text-neutral-900">Hated By Many LLC</p>
-              <p className="mt-2 leading-relaxed">© 2026 · Demo product direction only.</p>
-            </div>
           </div>
 
-          <CompanySidebar />
+          <div className="min-w-0 w-full lg:w-auto">
+            <CompanySidebar />
+          </div>
         </div>
       </div>
     </MarketingPageShell>
