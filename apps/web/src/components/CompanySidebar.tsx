@@ -3,8 +3,8 @@ import { ArrowUpRight, FileText, Headphones, Mail, Scale, Shield } from "lucide-
 import { URL_SUPPORT } from "@/lib/site";
 
 const links = [
-  { to: "/governance-risk", label: "Governance & risk posture", icon: Scale, external: false },
-  { to: "/security-model", label: "Security model", icon: Shield, external: false },
+  { to: "/governance", label: "Governance", icon: Scale, external: false },
+  { to: "/whitepaper", label: "Whitepaper", icon: Shield, external: false },
   { to: "/legal", label: "Legal & policies", icon: FileText, external: false },
   { to: URL_SUPPORT, label: "Support", icon: Headphones, external: true },
 ] as const;

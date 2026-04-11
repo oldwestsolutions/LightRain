@@ -27,7 +27,7 @@ const SECTIONS = [
   },
 ] as const;
 
-export function GovernanceRiskPosturePage() {
+export function GovernancePage() {
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   return (
@@ -66,6 +66,10 @@ export function GovernanceRiskPosturePage() {
         <a href="https://support.lightra.in" className="font-medium text-accent underline-offset-2 hover:underline">
           Support
         </a>
+        . For the conceptual security overview, see the{" "}
+        <Link href="/whitepaper" className="font-medium text-accent underline-offset-2 hover:underline">
+          Whitepaper
+        </Link>
         .
       </p>
     </MarketingPageShell>

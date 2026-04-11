@@ -187,30 +187,22 @@ export function CompanyPage() {
                   <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03] sm:col-span-2 lg:col-span-1">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
                     <span className="text-sm leading-snug text-neutral-800">
-                      Governance and security pages spell out posture in plain language before you go live
+                      Governance and whitepaper spell out posture in plain language before you go live
                     </span>
                   </li>
                 </ul>
-                <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-start">
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-start">
                   <Link
-                    href="/governance-risk"
-                    className="flex min-h-[52px] flex-1 flex-col items-center justify-center rounded-2xl border border-neutral-900 bg-neutral-900 px-5 py-4 text-center text-white shadow-md transition-colors hover:bg-neutral-800 sm:max-w-[min(100%,320px)]"
+                    href="/governance"
+                    className="inline-flex min-h-[48px] min-w-[140px] flex-1 items-center justify-center rounded-full border border-neutral-900 bg-neutral-900 px-8 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-none"
                   >
-                    <span className="text-sm font-semibold leading-snug">Governance &amp; risk posture</span>
-                    <span className="mt-2 block max-w-[280px] text-[11px] font-normal leading-snug text-white/75">
-                      How we avoid custody, keep obligations on licensed entities, and design federation for auditability—
-                      without offering legal advice.
-                    </span>
+                    Governance
                   </Link>
                   <Link
-                    href="/security-model"
-                    className="flex min-h-[52px] flex-1 flex-col items-center justify-center rounded-2xl border border-neutral-300/90 bg-white px-5 py-4 text-center text-neutral-900 shadow-sm transition-colors hover:border-neutral-400 hover:bg-neutral-50 sm:max-w-[min(100%,320px)]"
+                    href="/whitepaper"
+                    className="inline-flex min-h-[48px] min-w-[140px] flex-1 items-center justify-center rounded-full border border-neutral-200 bg-white px-8 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-none"
                   >
-                    <span className="text-sm font-semibold leading-snug">Security model</span>
-                    <span className="mt-2 block max-w-[280px] text-[11px] font-normal leading-snug text-muted">
-                      Local-first identity, your keys, hardware-backed recovery—no pooled funds, omnibus accounts, or
-                      hidden delegation story.
-                    </span>
+                    Whitepaper
                   </Link>
                 </div>
               </div>

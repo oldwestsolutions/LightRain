@@ -37,7 +37,7 @@ const POINTS = [
   },
 ] as const;
 
-export function SecurityModelPage() {
+export function WhitepaperPage() {
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   return (
@@ -47,13 +47,14 @@ export function SecurityModelPage() {
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to company"}
     >
       <header className="mb-10 border-b border-neutral-200/80 pb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">Security</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">Whitepaper</p>
         <h1 className="mt-3 font-display text-3xl font-normal tracking-[0.06em] text-neutral-900 sm:text-4xl">
-          Security model
+          LightRain whitepaper
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted sm:text-[15px]">
-          Conceptual overview only—not a substitute for technical documentation, penetration tests, or your own threat
-          modeling. Use this page to understand how we talk about safety and control in plain language.
+          Conceptual security model in plain language—not a substitute for technical documentation, penetration tests, or
+          your own threat modeling. Use this page to understand how we talk about safety and control before you dive into
+          implementation detail.
         </p>
       </header>
 
@@ -70,8 +71,8 @@ export function SecurityModelPage() {
       </ul>
 
       <p className="mt-12 text-center text-sm text-muted">
-        <Link href="/governance-risk" className="font-medium text-accent underline-offset-2 hover:underline">
-          Governance &amp; risk posture
+        <Link href="/governance" className="font-medium text-accent underline-offset-2 hover:underline">
+          Governance
         </Link>
         <span className="mx-2 text-neutral-300" aria-hidden>
           ·
