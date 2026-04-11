@@ -48,7 +48,7 @@ export function CompanySidebar() {
           <ul className="mt-3 space-y-2.5 text-sm leading-snug text-muted">
             <li>Federation-native settlement rails</li>
             <li>Built for regulated & high-risk commerce</li>
-            <li>Hardware catalog is illustrative—checkout demo only</li>
+            <li>Workflow narrative is illustrative—your controls and counsel govern production use</li>
           </ul>
         </div>
 

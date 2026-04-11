@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { resolveMarketingBackHref } from "../lib/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { generateMnemonic } from "bip39";
@@ -31,6 +32,11 @@ export function SecurityOnboardingWizard() {
 
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [homeHref, setHomeHref] = useState("/");
+
+  useEffect(() => {
+    setHomeHref(resolveMarketingBackHref("/"));
+  }, []);
 
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoveryEmailTouched, setRecoveryEmailTouched] = useState(false);
@@ -261,9 +267,15 @@ export function SecurityOnboardingWizard() {
         <div className="relative z-10 flex flex-1 flex-col items-center px-4 pb-10 pt-[5vh] sm:px-6 sm:pt-[8vh]">
           <div className="w-full max-w-2xl">
             <p className="mb-4 text-center">
-              <Link href="/" className="text-sm font-medium text-muted hover:text-accent">
-                ← Back to sign in
-              </Link>
+              {homeHref.startsWith("http") ? (
+                <a href={homeHref} className="text-sm font-medium text-muted hover:text-accent">
+                  ← Back to sign in
+                </a>
+              ) : (
+                <Link href={homeHref} className="text-sm font-medium text-muted hover:text-accent">
+                  ← Back to sign in
+                </Link>
+              )}
             </p>
 
             <header className="mb-6 text-center sm:mb-8">
