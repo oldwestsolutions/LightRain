@@ -1,28 +1,190 @@
 /**
- * Scroll-linked step presentation (progressive enhancement).
- * Browsers without view() timeline support keep full opacity via .stepReveal defaults.
+ * Scroll-driven motion for the workflow schematic + narrative.
+ *
+ * Primary (Chromium / Firefox 115+): named scroll timeline on the steps column
+ * (`scroll-timeline-name` + `timeline-scope`) so the sticky diagram animates while
+ * you scroll the steps list—not the viewport alone (sticky nodes don't advance `view()`).
+ *
+ * Fallback: `scroll(root block)` so document scroll still drives a visible bind where
+ * named timelines are unavailable.
  */
 
+/* Steps column becomes the scroll port on md+ when the engine supports named timelines */
+@supports (timeline-scope: --lr-workflow) {
+  @media (min-width: 768px) {
+    .workflowScrollRoot {
+      timeline-scope: --lr-workflow;
+    }
+
+    .stepsScroller {
+      scroll-timeline-name: --lr-workflow;
+      scroll-timeline-axis: block;
+      max-height: min(82vh, 780px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+    }
+  }
+}
+
+/* Diagram card: depth + border breathe with scroll progress */
+.diagramCard {
+  animation-name: lrDiagramCardKf;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-duration: auto;
+  animation-timeline: scroll(root block);
+  animation-range: 0% 100%;
+}
+
+@supports (timeline-scope: --lr-workflow) {
+  @media (min-width: 768px) {
+    .diagramCard {
+      animation-timeline: --lr-workflow;
+    }
+  }
+}
+
+@keyframes lrDiagramCardKf {
+  0% {
+    border-color: rgba(229, 229, 229, 0.95);
+  }
+  45% {
+    border-color: rgba(190, 190, 190, 0.85);
+  }
+  100% {
+    border-color: rgba(163, 163, 163, 0.65);
+  }
+}
+
+/* SVG: clearer vertical travel tied to the same timeline */
+.diagramSvgMotion {
+  animation-name: lrDiagramSvgKf;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-duration: auto;
+  animation-timeline: scroll(root block);
+  animation-range: 0% 100%;
+}
+
+@supports (timeline-scope: --lr-workflow) {
+  @media (min-width: 768px) {
+    .diagramSvgMotion {
+      animation-timeline: --lr-workflow;
+    }
+  }
+}
+
+@keyframes lrDiagramSvgKf {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: brightness(0.96) saturate(0.92) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.03));
+  }
+  45% {
+    transform: translate3d(0, -10px, 0) scale(1.02);
+    filter: brightness(1.04) saturate(1.02) drop-shadow(0 14px 36px rgba(15, 23, 42, 0.1));
+  }
+  100% {
+    transform: translate3d(0, 6px, 0) scale(1.03);
+    filter: brightness(1.06) saturate(1.04) drop-shadow(0 22px 50px rgba(15, 23, 42, 0.14));
+  }
+}
+
+.diagramCaptionMotion {
+  animation-name: lrCaptionKf;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-duration: auto;
+  animation-timeline: scroll(root block);
+  animation-range: 0% 100%;
+}
+
+@supports (timeline-scope: --lr-workflow) {
+  @media (min-width: 768px) {
+    .diagramCaptionMotion {
+      animation-timeline: --lr-workflow;
+    }
+  }
+}
+
+@keyframes lrCaptionKf {
+  0% {
+    opacity: 0.45;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.activeHintMotion {
+  animation-name: lrActiveHintKf;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-duration: auto;
+  animation-timeline: scroll(root block);
+  animation-range: 0% 100%;
+}
+
+@supports (timeline-scope: --lr-workflow) {
+  @media (min-width: 768px) {
+    .activeHintMotion {
+      animation-timeline: --lr-workflow;
+    }
+  }
+}
+
+@keyframes lrActiveHintKf {
+  0% {
+    opacity: 0.35;
+    letter-spacing: 0.18em;
+  }
+  100% {
+    opacity: 1;
+    letter-spacing: 0.14em;
+  }
+}
+
+/* Step copy: view timeline (element crosses viewport / scrollport) */
 .stepReveal {
   opacity: 1;
   transform: none;
 }
 
-@supports (animation-timeline: view()) {
+@supports (animation-timeline: view(block)) {
   @media (prefers-reduced-motion: no-preference) {
     .stepReveal {
-      opacity: 0.42;
-      transform: translateY(10px);
-      animation: workflowStepReveal linear both;
+      opacity: 0.88;
+      transform: translateY(8px);
+      animation-name: lrStepRevealKf;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-duration: auto;
       animation-timeline: view(block);
-      animation-range: entry 0% entry 45%;
+      animation-range: entry 0% cover 38%;
     }
   }
 }
 
-@keyframes workflowStepReveal {
+@keyframes lrStepRevealKf {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagramCard,
+  .diagramSvgMotion,
+  .diagramCaptionMotion,
+  .activeHintMotion,
+  .stepReveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    letter-spacing: 0.14em !important;
   }
 }

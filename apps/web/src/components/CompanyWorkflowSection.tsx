@@ -5,6 +5,7 @@
  * `position: sticky` on the diagram column.
  */
 
+import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CompanyWorkflowSection.module.css";
 
@@ -281,7 +282,7 @@ const STEPS = [
   },
 ] as const;
 
-function useScrollLinkedStep(stepCount: number) {
+function useScrollLinkedStep(stepCount: number, stepsScrollRef: RefObject<HTMLElement | null>) {
   const [active, setActive] = useState(0);
   const refs = useRef<(HTMLElement | null)[]>([]);
 
@@ -291,6 +292,7 @@ function useScrollLinkedStep(stepCount: number) {
 
   useEffect(() => {
     const elements = refs.current;
+    const stepsScroller = stepsScrollRef.current;
 
     const pickActive = () => {
       let bestIdx = 0;
@@ -326,19 +328,24 @@ function useScrollLinkedStep(stepCount: number) {
 
     const onScroll = () => pickActive();
     window.addEventListener("scroll", onScroll, { passive: true });
+    stepsScroller?.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     pickActive();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      stepsScroller?.removeEventListener("scroll", onScroll);
       observer.disconnect();
     };
-  }, [stepCount]);
+  }, [stepCount, stepsScrollRef]);
 
   return { activeStep: active, setRef };
 }
 
 export function CompanyWorkflowSection() {
-  const { activeStep, setRef } = useScrollLinkedStep(STEP_COUNT);
+  const stepsScrollRef = useRef<HTMLDivElement>(null);
+  const { activeStep, setRef } = useScrollLinkedStep(STEP_COUNT, stepsScrollRef);
 
   return (
     <section
@@ -354,8 +361,9 @@ export function CompanyWorkflowSection() {
           LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute for
           your licensed counterparties. The sequence below is representative of how federation addressing, policy
           engines, ML-assisted integrity signals, and execution surfaces can fit together when your organization wires
-          them into its own controls. Scroll the steps: from medium breakpoints upward the schematic stays beside the
-          narrative and tracks the active stage.
+          them into its own controls. From medium breakpoints up, use the narrative column’s scrollbar: the schematic
+          beside it tracks the active stage, and scroll-bound motion on the diagram is tied to that column’s scroll
+          position where the browser exposes named scroll timelines (otherwise it follows the document scroll).
         </p>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
           Modern CSS supports scroll-linked animations via animation-timeline—covering staged text reveals, synchronized
@@ -366,12 +374,23 @@ export function CompanyWorkflowSection() {
       </div>
 
       <div className="p-5 sm:p-8">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[minmax(240px,38%)_minmax(0,1fr)] md:items-start md:gap-10 xl:gap-12">
-          <div className="relative min-w-0 md:max-h-none">
+        <div
+          className={`grid grid-cols-1 gap-10 md:grid-cols-[minmax(240px,38%)_minmax(0,1fr)] md:items-start md:gap-10 xl:gap-12 ${styles.workflowScrollRoot}`}
+        >
+          <div className="relative min-w-0">
             <div className="md:sticky md:top-24 md:pb-8">
-              <figure className="overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 p-3 shadow-sm sm:p-4">
-                <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[320px] text-neutral-900 md:max-w-none" activeStep={activeStep} />
-                <figcaption className="mt-4 text-center text-[11px] leading-relaxed text-muted sm:text-xs md:text-left">
+              <figure
+                className={`overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 shadow-sm ${styles.diagramCard}`}
+              >
+                <div className={`p-3 sm:p-4 ${styles.diagramSvgMotion}`}>
+                  <WorkflowScrollDiagram
+                    className="mx-auto h-auto w-full max-w-[320px] text-neutral-900 md:max-w-none"
+                    activeStep={activeStep}
+                  />
+                </div>
+                <figcaption
+                  className={`border-t border-neutral-200/60 px-3 pb-3 pt-3 text-center text-[11px] leading-relaxed text-muted sm:px-4 sm:pb-4 sm:pt-3.5 sm:text-xs md:text-left ${styles.diagramCaptionMotion}`}
+                >
                   Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked
                   against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee
                   approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails
@@ -380,13 +399,16 @@ export function CompanyWorkflowSection() {
                   should follow counsel and supervisory guidance.
                 </figcaption>
               </figure>
-              <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted" aria-live="polite">
+              <p
+                className={`mt-3 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted ${styles.activeHintMotion}`}
+                aria-live="polite"
+              >
                 Active stage · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
               </p>
             </div>
           </div>
 
-          <div className="min-w-0 space-y-0">
+          <div ref={stepsScrollRef} className={`min-w-0 space-y-0 ${styles.stepsScroller}`}>
             {STEPS.map((step, index) => (
               <article
                 key={step.n}
