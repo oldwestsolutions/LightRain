@@ -1,231 +1,221 @@
 /**
  * Operator workflow — infrastructure documentation tone (no commerce / custody claims).
- * Five stages in parallel rows: each row is diagram + narrative side-by-side (md+).
- * Scroll-based highlighting: active row accent + diagrams share global activeStep;
- * Framer Motion animates stage opacity, connector strokes, and the active row’s figure.
+ * Each stage row shows one focused illustration; a slim pipeline rail syncs to scroll position.
  */
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const diagramEase = [0.22, 1, 0.36, 1] as const;
-const diagramTransition = { duration: 0.65, ease: diagramEase };
 const rowFigureSpring = { type: "spring" as const, stiffness: 380, damping: 34, mass: 0.85 };
 
 const STEP_COUNT = 5;
 
-/** Full pipeline; indices 0–4 (offline-signing stage omitted). Execution & evidence translated up in SVG. */
-function WorkflowScrollDiagram({
-  className = "",
-  activeStep,
-}: {
-  className?: string;
-  activeStep: number;
-}) {
-  const reduceMotion = useReducedMotion();
-  const segTransition = reduceMotion ? { duration: 0.01 } : diagramTransition;
+const fontSans = "ui-sans-serif, system-ui, sans-serif";
+const fontMono = "ui-monospace, monospace";
 
-  const strokeMain = (i: number) => (activeStep === i ? "#262626" : "#a3a3a3");
-  const strokeSoft = (i: number) => (activeStep === i ? "#525252" : "#d4d4d4");
-  const stageOpacity = (i: number) => (activeStep === i ? 1 : 0.28);
+function WorkflowPipelineRail({ activeStep }: { activeStep: number }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      className="mb-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 sm:px-5"
+      role="group"
+      aria-label="Workflow progress across five stages"
+    >
+      <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-500">Pipeline position</p>
+      <div className="flex items-center gap-1 sm:gap-1.5">
+        {Array.from({ length: STEP_COUNT }, (_, i) => (
+          <div key={i} className="flex flex-1 items-center gap-1 sm:gap-1.5">
+            <motion.div
+              initial={false}
+              animate={{
+                scale: activeStep === i ? 1.12 : 1,
+                backgroundColor: activeStep === i ? "#171717" : activeStep > i ? "#404040" : "#d4d4d4",
+              }}
+              transition={reduceMotion ? { duration: 0.01 } : { type: "spring", stiffness: 420, damping: 32 }}
+              className="relative z-[1] size-2.5 shrink-0 rounded-full sm:size-3"
+            />
+            {i < STEP_COUNT - 1 ? (
+              <div className="relative h-0.5 min-w-0 flex-1 overflow-hidden rounded-full bg-neutral-200">
+                <motion.div
+                  initial={false}
+                  className="absolute inset-y-0 left-0 rounded-full bg-neutral-800"
+                  animate={{
+                    width: activeStep > i ? "100%" : activeStep === i ? "50%" : "0%",
+                  }}
+                  transition={reduceMotion ? { duration: 0.01 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-xs text-neutral-600 sm:text-[13px]">
+        <span className="font-medium text-neutral-800">Now viewing:</span> stage {activeStep + 1} of {STEP_COUNT}
+      </p>
+    </div>
+  );
+}
+
+/** Single-stage schematic only — no full-stack pipeline in each row. */
+function WorkflowStageIllustration({
+  stageIndex,
+  energized,
+  className = "",
+}: {
+  stageIndex: number;
+  energized: boolean;
+  className?: string;
+}) {
+  const main = energized ? "#262626" : "#a8a8a8";
+  const soft = energized ? "#525252" : "#b5b5b5";
+  const label = energized ? "#737373" : "#9ca3af";
+  const caption = energized ? "#525252" : "#9ca3af";
 
   return (
     <svg
       className={className}
-      viewBox="0 0 300 830"
+      viewBox="0 0 300 200"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <rect width="300" height="830" rx="14" className="fill-neutral-100 stroke-neutral-200" strokeWidth="1" />
-      <text x="24" y="34" fill="#737373" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.1em">
-        NEUTRAL SCENARIO · ILLUSTRATIVE ONLY
-      </text>
-      <text x="24" y="52" fill="#a3a3a3" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif">
-        Same controls may run in parallel or batch in your environment.
-      </text>
+      <rect width="300" height="200" rx="12" className="fill-neutral-50 stroke-neutral-200/90" strokeWidth="1" />
 
-      <motion.path
-        d="M150 168v28"
-        initial={false}
-        animate={{
-          stroke: activeStep <= 1 ? strokeMain(Math.max(activeStep, 0)) : "#d4d4d4",
-        }}
-        transition={segTransition}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-      />
+      {stageIndex === 0 ? (
+        <>
+          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
+          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+            OPERATOR SURFACE
+          </text>
+          <rect x="32" y="52" width="96" height="52" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <rect x="40" y="60" width="80" height="30" rx="2" fill="#f5f5f5" stroke={soft} strokeWidth="0.9" />
+          <path d="M46 68h68M46 76h54M46 84h40" stroke={soft} strokeWidth="1.2" strokeLinecap="round" />
+          <rect x="138" y="64" width="32" height="16" rx="2" fill="#f5f5f5" stroke={main} strokeWidth="1" />
+          <text x="154" y="75" textAnchor="middle" fill={caption} fontSize="8" fontFamily={fontMono}>
+            EVT
+          </text>
+          <circle cx="232" cy="72" r="11" fill="#e5e5e5" stroke={soft} strokeWidth="1" />
+          <path d="M212 98h40M220 108h24" stroke={soft} strokeWidth="2" strokeLinecap="round" />
+          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+            1 · Signal received
+          </text>
+        </>
+      ) : null}
 
-      <motion.g initial={false} animate={{ opacity: stageOpacity(0) }} transition={segTransition}>
-        <rect x="24" y="72" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(0)} strokeWidth="1.35" />
-        <text x="36" y="92" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          OPERATOR SURFACE
-        </text>
-        <rect x="44" y="108" width="88" height="48" rx="4" fill="#fafafa" stroke={strokeSoft(0)} strokeWidth="1" />
-        <rect x="52" y="114" width="72" height="28" rx="2" fill="#f5f5f5" stroke={strokeSoft(0)} strokeWidth="0.9" />
-        <path d="M58 122h60M58 128h48M58 134h36" stroke={strokeSoft(0)} strokeWidth="1.2" strokeLinecap="round" />
-        <rect x="118" y="118" width="28" height="14" rx="2" fill="#f5f5f5" stroke={strokeMain(0)} strokeWidth="1" />
-        <text x="132" y="128" textAnchor="middle" fill="#525252" fontSize="7" fontFamily="ui-monospace, monospace">
-          EVT
-        </text>
-        <circle cx="214" cy="124" r="10" fill="#e5e5e5" stroke={strokeSoft(0)} strokeWidth="1" />
-        <path d="M198 148h32M204 156h20" stroke={strokeSoft(0)} strokeWidth="2" strokeLinecap="round" />
-        <text x="150" y="182" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          1 · Signal received
-        </text>
-      </motion.g>
+      {stageIndex === 1 ? (
+        <>
+          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
+          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+            ROUTING &amp; CONTEXT
+          </text>
+          <rect x="28" y="52" width="108" height="64" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <path d="M36 66h92M36 78h76M36 90h92M36 102h64" stroke={soft} strokeWidth="1" strokeLinecap="round" />
+          <text x="36" y="62" fill={label} fontSize="7" fontFamily={fontSans}>
+            Published tables
+          </text>
+          <circle cx="188" cy="70" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
+          <circle cx="218" cy="86" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
+          <circle cx="238" cy="62" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
+          <path d="M188 70l22 12M218 86l14-18M238 62l-32 22" stroke={soft} strokeWidth="1" />
+          <rect x="150" y="98" width="118" height="24" rx="3" fill="#fafafa" stroke={main} strokeWidth="1" />
+          <text x="209" y="114" textAnchor="middle" fill={caption} fontSize="7.5" fontFamily={fontSans}>
+            Validation task queue
+          </text>
+          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+            2 · Address &amp; context
+          </text>
+        </>
+      ) : null}
 
-      <motion.path
-        d="M150 200v32"
-        initial={false}
-        animate={{
-          stroke: activeStep >= 1 && activeStep <= 2 ? strokeMain(1) : "#d4d4d4",
-        }}
-        transition={segTransition}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-      />
+      {stageIndex === 2 ? (
+        <>
+          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
+          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+            POLICY ENGINE · ML ASSIST
+          </text>
+          <rect x="28" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <path d="M38 66h56M38 76h44M38 86h56" stroke={soft} strokeWidth="1" strokeLinecap="round" />
+          <text x="32" y="62" fill={label} fontSize="6.5" fontFamily={fontSans}>
+            Thresholds
+          </text>
+          <rect x="112" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <path d="M122 68h18l-4 8l4 8h-18l4-8-4-8z" stroke={soft} strokeWidth="0.9" fill="none" />
+          <text x="116" y="62" fill={label} fontSize="6.5" fontFamily={fontSans}>
+            Dual control
+          </text>
+          <rect x="196" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={main} strokeWidth="1" />
+          <text x="234" y="74" textAnchor="middle" fill={caption} fontSize="9" fontFamily={fontMono}>
+            ML
+          </text>
+          <text x="234" y="86" textAnchor="middle" fill={label} fontSize="6" fontFamily={fontSans}>
+            assist
+          </text>
+          <rect x="28" y="106" width="244" height="26" rx="4" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
+          <path d="M36 120h228" stroke={soft} strokeWidth="1.1" strokeDasharray="3 3" />
+          <text x="150" y="124" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
+            Policy outcomes — no model override of officer paths
+          </text>
+          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+            3 · Policy checks
+          </text>
+        </>
+      ) : null}
 
-      <motion.g initial={false} animate={{ opacity: stageOpacity(1) }} transition={segTransition}>
-        <rect x="24" y="232" width="252" height="104" rx="10" fill="#fff" stroke={strokeMain(1)} strokeWidth="1.35" />
-        <text x="36" y="252" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          ROUTING &amp; CONTEXT
-        </text>
-        <rect x="40" y="262" width="100" height="62" rx="4" fill="#fafafa" stroke={strokeSoft(1)} strokeWidth="1" />
-        <path d="M48 274h84M48 284h72M48 294h84M48 304h60" stroke={strokeSoft(1)} strokeWidth="1" strokeLinecap="round" />
-        <text x="48" y="272" fill="#a3a3a3" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Published tables
-        </text>
-        <circle cx="188" cy="278" r="6" fill="#f5f5f5" stroke={strokeSoft(1)} strokeWidth="1" />
-        <circle cx="214" cy="292" r="6" fill="#f5f5f5" stroke={strokeSoft(1)} strokeWidth="1" />
-        <circle cx="232" cy="270" r="6" fill="#f5f5f5" stroke={strokeSoft(1)} strokeWidth="1" />
-        <path d="M188 278l18 10M214 292l12-16M232 270l-28 20" stroke={strokeSoft(1)} strokeWidth="1" />
-        <rect x="168" y="300" width="92" height="20" rx="3" fill="#fafafa" stroke={strokeMain(1)} strokeWidth="1" />
-        <text x="214" y="314" textAnchor="middle" fill="#525252" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Validation task queue
-        </text>
-        <text x="150" y="348" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          2 · Address &amp; context
-        </text>
-      </motion.g>
-
-      <motion.path
-        d="M150 352v28"
-        initial={false}
-        animate={{
-          stroke: activeStep >= 2 && activeStep <= 3 ? strokeMain(2) : "#d4d4d4",
-        }}
-        transition={segTransition}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-      />
-
-      <motion.g initial={false} animate={{ opacity: stageOpacity(2) }} transition={segTransition}>
-        <rect x="24" y="380" width="252" height="112" rx="10" fill="#fff" stroke={strokeMain(2)} strokeWidth="1.35" />
-        <text x="36" y="400" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          POLICY ENGINE · ML ASSIST
-        </text>
-        <rect x="40" y="410" width="72" height="40" rx="4" fill="#fafafa" stroke={strokeSoft(2)} strokeWidth="1" />
-        <path d="M50 422h52M50 432h40M50 442h52" stroke={strokeSoft(2)} strokeWidth="1" strokeLinecap="round" />
-        <text x="44" y="418" fill="#a3a3a3" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Thresholds
-        </text>
-        <rect x="122" y="410" width="72" height="40" rx="4" fill="#fafafa" stroke={strokeSoft(2)} strokeWidth="1" />
-        <path d="M132 424h16l-4 8l4 8h-16l4-8-4-8z" stroke={strokeSoft(2)} strokeWidth="0.9" fill="none" />
-        <text x="128" y="418" fill="#a3a3a3" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Dual control
-        </text>
-        <rect x="204" y="410" width="64" height="40" rx="4" fill="#fafafa" stroke={strokeMain(2)} strokeWidth="1" />
-        <text x="236" y="430" textAnchor="middle" fill="#404040" fontSize="8" fontFamily="ui-monospace, monospace">
-          ML
-        </text>
-        <text x="236" y="440" textAnchor="middle" fill="#737373" fontSize="6" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          assist
-        </text>
-        <rect x="40" y="458" width="228" height="24" rx="4" fill="#f5f5f5" stroke={strokeSoft(2)} strokeWidth="1" />
-        <path d="M48 470h200" stroke={strokeSoft(2)} strokeWidth="1.2" strokeDasharray="3 3" />
-        <text x="150" y="474" textAnchor="middle" fill="#737373" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Policy outcomes only — no model override of officer paths
-        </text>
-        <text x="150" y="506" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          3 · Policy checks
-        </text>
-      </motion.g>
-
-      <motion.path
-        d="M150 508v28"
-        initial={false}
-        animate={{
-          stroke: activeStep >= 2 && activeStep <= 3 ? strokeMain(Math.min(Math.max(activeStep, 2), 3)) : "#d4d4d4",
-        }}
-        transition={segTransition}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-      />
-
-      <g transform="translate(0 -152)">
-        <motion.g initial={false} animate={{ opacity: stageOpacity(3) }} transition={segTransition}>
-          <rect x="24" y="688" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(3)} strokeWidth="1.35" />
-          <text x="36" y="708" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
+      {stageIndex === 3 ? (
+        <>
+          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
+          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
             EXECUTION SURFACE
           </text>
-          <rect x="40" y="718" width="220" height="28" rx="4" fill="#fafafa" stroke={strokeSoft(3)} strokeWidth="1" />
-          <path d="M52 732h196" stroke={strokeSoft(3)} strokeWidth="2" strokeLinecap="round" />
-          <motion.polygon
-            points="228,732 238,726 238,738"
-            initial={false}
-            animate={{ fill: activeStep === 3 ? "#404040" : "#d4d4d4" }}
-            transition={segTransition}
+          <rect x="28" y="56" width="244" height="36" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <path d="M40 76h188" stroke={soft} strokeWidth="2.2" strokeLinecap="round" />
+          <polygon
+            points="220,76 234,68 234,84"
+            fill={energized ? "#404040" : "#c4c4c4"}
+            stroke={energized ? "#262626" : "#b5b5b5"}
+            strokeWidth="0.5"
           />
-          <text x="52" y="728" fill="#a3a3a3" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
+          <text x="36" y="72" fill={label} fontSize="7.5" fontFamily={fontSans}>
             Authorized instruction → configured rails
           </text>
-          <rect x="40" y="752" width="220" height="22" rx="3" fill="#f5f5f5" stroke={strokeSoft(3)} strokeWidth="0.9" />
-          <path d="M48 764h24M80 764h160" stroke={strokeSoft(3)} strokeWidth="1" strokeLinecap="round" />
-          <text x="150" y="800" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
+          <rect x="28" y="104" width="244" height="28" rx="3" fill="#f5f5f5" stroke={soft} strokeWidth="0.9" />
+          <path d="M36 118h28M72 118h192" stroke={soft} strokeWidth="1" strokeLinecap="round" />
+          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
             4 · Execution
           </text>
-        </motion.g>
+        </>
+      ) : null}
 
-        <motion.path
-          d="M150 804v28"
-          initial={false}
-          animate={{
-            stroke: activeStep >= 3 ? strokeMain(Math.max(activeStep, 3)) : "#d4d4d4",
-          }}
-          transition={segTransition}
-          strokeWidth="1.5"
-          strokeDasharray="5 4"
-        />
-
-        <motion.g initial={false} animate={{ opacity: stageOpacity(4) }} transition={segTransition}>
-          <rect x="24" y="832" width="252" height="116" rx="10" fill="#fff" stroke={strokeMain(4)} strokeWidth="1.35" />
-          <text x="36" y="852" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
+      {stageIndex === 4 ? (
+        <>
+          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
+          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
             EVIDENCE &amp; SUPERVISORY READOUT
           </text>
-          <rect x="40" y="860" width="56" height="72" rx="3" fill="#fafafa" stroke={strokeSoft(4)} strokeWidth="1" />
-          <path d="M48 872h40M48 882h32M48 892h40M48 902h28M48 912h36" stroke={strokeSoft(4)} strokeWidth="0.9" strokeLinecap="round" />
-          <text x="68" y="942" textAnchor="middle" fill="#a3a3a3" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
+          <rect x="28" y="52" width="58" height="78" rx="3" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <path d="M36 66h42M36 78h34M36 90h42M36 102h28M36 114h38" stroke={soft} strokeWidth="0.9" strokeLinecap="round" />
+          <text x="57" y="142" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
             Log spine
           </text>
-          <rect x="108" y="868" width="72" height="56" rx="4" fill="#f5f5f5" stroke={strokeMain(4)} strokeWidth="1" />
-          <path d="M118 880h52M118 890h40M118 900h52" stroke={strokeSoft(4)} strokeWidth="0.9" strokeLinecap="round" />
-          <text x="144" y="936" textAnchor="middle" fill="#737373" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
+          <rect x="96" y="58" width="78" height="62" rx="4" fill="#f5f5f5" stroke={main} strokeWidth="1" />
+          <path d="M106 72h58M106 84h46M106 96h58" stroke={soft} strokeWidth="0.9" strokeLinecap="round" />
+          <text x="135" y="132" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
             Export bundle
           </text>
-          <rect x="192" y="868" width="68" height="56" rx="4" fill="#fafafa" stroke={strokeSoft(4)} strokeWidth="1" />
-          <rect x="200" y="878" width="52" height="10" rx="1" fill="#e5e5e5" />
-          <text x="226" y="898" textAnchor="middle" fill="#404040" fontSize="7" fontFamily="ui-monospace, monospace">
+          <rect x="184" y="58" width="74" height="62" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
+          <rect x="192" y="68" width="58" height="12" rx="1" fill="#e5e5e5" />
+          <text x="221" y="96" textAnchor="middle" fill={caption} fontSize="7" fontFamily={fontMono}>
             ML meta
           </text>
-          <text x="226" y="910" textAnchor="middle" fill="#737373" fontSize="6" fontFamily="ui-sans-serif, system-ui, sans-serif">
+          <text x="221" y="108" textAnchor="middle" fill={label} fontSize="6" fontFamily={fontSans}>
             id + schema
           </text>
-          <text x="150" y="958" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
+          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
             5 · Evidence &amp; review
           </text>
-        </motion.g>
-      </g>
+        </>
+      ) : null}
     </svg>
   );
 }
@@ -319,12 +309,12 @@ function useActiveWorkflowStep(stepCount: number) {
   return { activeStep, setRef };
 }
 
-function WorkflowFigure({
-  activeStep,
+function WorkflowStageFigure({
+  stageIndex,
   isRowActive,
   className = "",
 }: {
-  activeStep: number;
+  stageIndex: number;
   isRowActive: boolean;
   className?: string;
 }) {
@@ -336,19 +326,32 @@ function WorkflowFigure({
       initial={false}
       animate={{
         scale: isRowActive ? 1 : 0.97,
-        opacity: isRowActive ? 1 : 0.82,
+        opacity: isRowActive ? 1 : 0.78,
         boxShadow: isRowActive
-          ? "0 18px 48px -16px rgba(0,0,0,0.16), 0 0 0 1px rgba(23,23,23,0.12)"
-          : "0 1px 0 rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04)",
+          ? "0 18px 48px -16px rgba(0,0,0,0.14), 0 0 0 1px rgba(23,23,23,0.1)"
+          : "0 1px 0 rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.05)",
       }}
       transition={figTransition}
-      className={`rounded-xl border border-neutral-200/90 bg-white p-3 ring-1 ring-black/[0.03] sm:p-5 ${className}`}
-      aria-label="Illustrative workflow schematic"
+      className={`overflow-hidden rounded-xl border border-neutral-200/90 bg-white p-2 ring-1 ring-black/[0.03] sm:p-4 ${className}`}
+      aria-label={`Illustration for workflow stage ${stageIndex + 1}`}
     >
-      <WorkflowScrollDiagram
-        className="mx-auto h-auto w-full max-w-[min(100%,520px)] text-neutral-900"
-        activeStep={activeStep}
-      />
+      <motion.div
+        initial={false}
+        animate={
+          reduceMotion
+            ? {}
+            : {
+                y: isRowActive ? 0 : 4,
+              }
+        }
+        transition={figTransition}
+      >
+        <WorkflowStageIllustration
+          stageIndex={stageIndex}
+          energized={isRowActive}
+          className="mx-auto h-auto w-full max-w-[min(100%,440px)] text-neutral-900"
+        />
+      </motion.div>
     </motion.figure>
   );
 }
@@ -371,16 +374,17 @@ export function CompanyWorkflowSection() {
             wires them into its own controls.
           </p>
           <p className="text-neutral-500">
-            Each row pairs a full reference schematic with one stage. As you scroll, the row in focus scales slightly and the
-            diagram animates which pipeline segment is active. Deployment order, branching, and omissions remain subject to
-            counsel and supervisory guidance.
+            Figures below show one stage at a time. The pipeline rail tracks your scroll position; the illustration beside
+            each section is only for that step. Diagrams are illustrative—not deployment blueprints.
           </p>
         </div>
       </header>
 
       <div className="w-full px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+        <WorkflowPipelineRail activeStep={activeStep} />
+
         <p className="mb-8 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-500 md:text-left" aria-live="polite">
-          Pipeline highlight · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
+          Stage in view · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
         </p>
 
         <ol className="list-none space-y-0 divide-y divide-neutral-200/80 p-0">
@@ -390,15 +394,15 @@ export function CompanyWorkflowSection() {
                 ref={setRef(index)}
                 id={`workflow-stage-${step.n}`}
                 aria-labelledby={`workflow-stage-title-${step.n}`}
-                className={`scroll-mt-28 py-10 transition-[background-color,box-shadow] duration-300 sm:scroll-mt-32 md:grid md:grid-cols-[minmax(0,1.28fr)_minmax(0,1fr)] md:items-center md:gap-10 md:py-12 lg:gap-12 xl:gap-14 ${
+                className={`scroll-mt-28 py-10 transition-[background-color,box-shadow] duration-300 sm:scroll-mt-32 md:grid md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:items-center md:gap-10 md:py-12 lg:gap-12 xl:gap-14 ${
                   activeStep === index ? "bg-neutral-50/80 md:shadow-[inset_0_0_0_1px_rgba(23,23,23,0.08)]" : "bg-transparent"
                 }`}
               >
                 <div className="flex min-w-0 flex-col justify-center px-1 md:px-2">
                   <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500 md:mb-4">
-                    Reference schematic
+                    Stage illustration
                   </p>
-                  <WorkflowFigure activeStep={activeStep} isRowActive={activeStep === index} className="w-full" />
+                  <WorkflowStageFigure stageIndex={index} isRowActive={activeStep === index} className="w-full" />
                 </div>
 
                 <div className="mt-8 min-w-0 border-t border-neutral-100 pt-8 md:mt-0 md:border-t-0 md:py-2 md:pl-2">
