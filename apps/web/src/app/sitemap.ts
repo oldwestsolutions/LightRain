@@ -5,6 +5,7 @@ const PATHS = [
   "/",
   "/support",
   "/company",
+  "/assurance-layers",
   "/governance",
   "/whitepaper",
   "/shop",

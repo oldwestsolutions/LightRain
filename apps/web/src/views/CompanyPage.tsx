@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Check,
   ChevronDown,
+  FileText,
+  KeyRound,
   Laptop,
   Layers,
   Package,
@@ -47,48 +48,43 @@ const ICON_MAP: Record<StoreCategoryItem["icon"], LucideIcon> = {
 
 const INITIAL_VISIBLE = 2;
 
-/** Gray column with settlement story anchored at the bottom (no SVG illustration). */
+/** Company narrative column: full-height dark panel (no empty gray band above). */
 function CompanyHeroAside() {
   return (
-    <div className="relative flex min-h-[280px] flex-col overflow-hidden bg-[#E8EAEE] lg:min-h-[min(62vh,520px)]">
+    <div className="relative flex min-h-[280px] w-full flex-col justify-center overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 lg:min-h-[min(62vh,520px)]">
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        className="pointer-events-none absolute inset-0 opacity-[0.18]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)",
+            "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
         aria-hidden
       />
-      <div className="relative z-[1] flex flex-1 flex-col">
-        <div className="min-h-12 flex-1" aria-hidden />
-        <div className="relative border-t border-neutral-300/80 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 px-5 py-8 text-white shadow-[0_-16px_48px_-12px_rgba(0,0,0,0.4)] sm:px-6 sm:py-9">
-          <div
-            className="pointer-events-none absolute inset-0 opacity-30"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.12), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.1), transparent 50%)",
-            }}
-            aria-hidden
-          />
-          <div className="relative text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
-            <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-white/80 sm:text-[15px]">
-              LightRain is settlement infrastructure with a Bitcoin mindset: keys stay yours, history stays legible, and
-              policy lives where regulators expect it—not buried in anonymous wallet chrome.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
-              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
-                Federation-native
-              </span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
-                Discretionary rails
-              </span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
-                Operator-grade UX
-              </span>
-            </div>
-          </div>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-25"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.12), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.1), transparent 50%)",
+        }}
+        aria-hidden
+      />
+      <div className="relative px-5 py-10 text-center text-white sm:px-6 sm:py-12">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
+        <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-white/80 sm:text-[15px]">
+          LightRain is settlement infrastructure with a Bitcoin mindset: keys stay yours, history stays legible, and
+          policy lives where regulators expect it—not buried in anonymous wallet chrome.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            Federation-native
+          </span>
+          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            Discretionary rails
+          </span>
+          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            Operator-grade UX
+          </span>
         </div>
       </div>
     </div>
@@ -171,24 +167,24 @@ export function CompanyPage() {
                     when you are ready. Checkout here stays a preview until you connect production payments.
                   </p>
                 </div>
-                <ul className="mt-10 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
-                    <span className="text-sm leading-snug text-neutral-800">
-                      Friendly addresses and activity you can read at a glance
-                    </span>
+                <ul className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
+                  <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03]">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900 text-white shadow-inner">
+                      <KeyRound className="h-7 w-7" aria-hidden />
+                    </div>
+                    <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Key</span>
                   </li>
-                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
-                    <span className="text-sm leading-snug text-neutral-800">
-                      Built for people who care who holds the keys—and who answers regulators
-                    </span>
+                  <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03]">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900 text-white shadow-inner">
+                      <Wallet className="h-7 w-7" aria-hidden />
+                    </div>
+                    <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Wallet</span>
                   </li>
-                  <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03] sm:col-span-2 lg:col-span-1">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
-                    <span className="text-sm leading-snug text-neutral-800">
-                      Governance and whitepaper spell out posture in plain language before you go live
-                    </span>
+                  <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03] sm:col-span-1">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900 text-white shadow-inner">
+                      <FileText className="h-7 w-7" aria-hidden />
+                    </div>
+                    <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Federation</span>
                   </li>
                 </ul>
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-start">
@@ -212,36 +208,30 @@ export function CompanyPage() {
         </article>
 
         <section
-          className="rounded-2xl border border-neutral-200/90 bg-gradient-to-b from-white to-neutral-50/90 px-5 py-10 shadow-inner sm:px-10 sm:py-12"
-          aria-labelledby="company-journey-heading"
+          className="rounded-2xl border border-neutral-200/90 bg-gradient-to-b from-neutral-50/95 to-white px-5 py-8 shadow-inner sm:px-8 sm:py-10"
+          aria-labelledby="assurance-teaser-heading"
         >
-          <h2
-            id="company-journey-heading"
-            className="text-center font-display text-2xl font-normal tracking-[0.06em] text-neutral-900 sm:text-3xl"
-          >
-            From signal to settlement
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-muted sm:text-[15px]">
-            A guided path for teams who cannot afford ambiguous rails—each step is designed to leave an audit trail you
-            can defend.
-          </p>
-          <ol className="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { step: "01", title: "Addressing", body: "Federation labels and endpoints that humans and systems agree on." },
-              { step: "02", title: "Policy", body: "Wire your obligations where counsel expects—not as an afterthought." },
-              { step: "03", title: "Execution", body: "Settlement surfaces that mirror how regulated desks already work." },
-              { step: "04", title: "Evidence", body: "History and exports shaped for review, not just screenshots." },
-            ].map((item) => (
-              <li
-                key={item.step}
-                className="relative rounded-2xl border border-neutral-200/80 bg-white/90 p-5 shadow-sm ring-1 ring-black/[0.02]"
+          <div className="mx-auto flex max-w-4xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+            <div className="min-w-0">
+              <h2
+                id="assurance-teaser-heading"
+                className="font-display text-xl font-normal tracking-[0.06em] text-neutral-900 sm:text-2xl"
               >
-                <span className="font-mono text-xs font-bold text-accent">{item.step}</span>
-                <p className="mt-2 font-semibold text-neutral-900">{item.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
-              </li>
-            ))}
-          </ol>
+                Assurance layers
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted sm:text-[15px]">
+                ML-assisted signals for federation integrity, baselines, device and key anomalies, policy-aligned
+                warnings, execution telemetry, and evidence-grade logging—assistive only; no automated compliance or flow
+                execution.
+              </p>
+            </div>
+            <Link
+              href="/assurance-layers"
+              className="inline-flex shrink-0 items-center justify-center rounded-full border border-neutral-900 bg-neutral-900 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
+            >
+              Read documentation
+            </Link>
+          </div>
         </section>
 
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10 xl:gap-12">

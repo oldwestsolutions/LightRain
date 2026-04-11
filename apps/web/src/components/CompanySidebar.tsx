@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowUpRight, FileText, Headphones, Mail, Scale, Shield } from "lucide-react";
+import { Activity, ArrowUpRight, FileText, Headphones, Mail, Scale, Shield } from "lucide-react";
 import { URL_SUPPORT } from "@/lib/site";
 
 const links = [
+  { to: "/assurance-layers", label: "Assurance layers", icon: Activity, external: false },
   { to: "/governance", label: "Governance", icon: Scale, external: false },
   { to: "/whitepaper", label: "Whitepaper", icon: Shield, external: false },
   { to: "/legal", label: "Legal & policies", icon: FileText, external: false },
