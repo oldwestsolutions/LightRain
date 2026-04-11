@@ -1,10 +1,10 @@
 /**
- * Operator workflow narrative — infrastructure documentation tone (no commerce / custody claims).
- * Each stage is presented as a full-viewport “page” inside a scroll-snap deck so one step
- * (diagram + narrative) dominates the viewport at a time.
+ * Operator workflow — infrastructure documentation tone (no commerce / custody claims).
+ * Document-style layout: one reference schematic (sticky on large viewports) with a clear
+ * editorial list of stages. No embedded viewport or scroll-snap deck.
  */
 
-import styles from "./CompanyWorkflowSection.module.css";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const STEP_COUNT = 6;
 
@@ -16,7 +16,7 @@ function WorkflowScrollDiagram({
   activeStep: number;
 }) {
   const dim = (i: number) =>
-    activeStep === i ? "opacity-100" : "opacity-[0.32] transition-opacity duration-500 ease-out";
+    activeStep === i ? "opacity-100" : "opacity-[0.28] transition-opacity duration-500 ease-out";
   const strokeMain = (i: number) => (activeStep === i ? "#262626" : "#a3a3a3");
   const strokeSoft = (i: number) => (activeStep === i ? "#525252" : "#d4d4d4");
 
@@ -272,91 +272,187 @@ const STEPS = [
   },
 ] as const;
 
-export function CompanyWorkflowSection() {
+function useActiveWorkflowStep(stepCount: number) {
+  const [activeStep, setActiveStep] = useState(0);
+  const refs = useRef<(HTMLElement | null)[]>([]);
+
+  const setRef = useCallback((index: number) => (el: HTMLElement | null) => {
+    refs.current[index] = el;
+  }, []);
+
+  useEffect(() => {
+    const elements = refs.current;
+
+    const pickActive = () => {
+      let bestIdx = 0;
+      let bestRatio = -1;
+      for (let i = 0; i < stepCount; i++) {
+        const el = elements[i];
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight || 0;
+        const top = Math.max(r.top, 0);
+        const bottom = Math.min(r.bottom, vh);
+        const visible = Math.max(0, bottom - top);
+        const ratio = r.height > 0 ? visible / r.height : 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestIdx = i;
+        }
+      }
+      setActiveStep(Math.min(Math.max(bestIdx, 0), stepCount - 1));
+    };
+
+    const observer = new IntersectionObserver(pickActive, {
+      root: null,
+      rootMargin: "-12% 0px -38% 0px",
+      threshold: [0, 0.08, 0.2, 0.35, 0.5, 0.65, 0.85, 1],
+    });
+
+    for (let i = 0; i < stepCount; i++) {
+      const el = elements[i];
+      if (el) observer.observe(el);
+    }
+
+    window.addEventListener("scroll", pickActive, { passive: true });
+    window.addEventListener("resize", pickActive, { passive: true });
+    pickActive();
+
+    return () => {
+      window.removeEventListener("scroll", pickActive);
+      window.removeEventListener("resize", pickActive);
+      observer.disconnect();
+    };
+  }, [stepCount]);
+
+  return { activeStep, setRef };
+}
+
+function WorkflowFigure({
+  activeStep,
+  className = "",
+}: {
+  activeStep: number;
+  className?: string;
+}) {
   return (
-    <section
-      className="rounded-2xl border border-neutral-200/90 bg-white shadow-card"
-      aria-labelledby="workflow-heading"
+    <figure
+      className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 ${className}`}
     >
-      <div className="border-b border-neutral-200/80 bg-neutral-50/90 px-5 py-6 sm:px-8 sm:py-7">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Workflow</p>
-        <h2 id="workflow-heading" className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl">
+      <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[260px] text-neutral-900 sm:max-w-[280px]" activeStep={activeStep} />
+      <figcaption className="mt-4 border-t border-neutral-100 pt-4 text-left text-xs leading-relaxed text-neutral-500">
+        {PIPELINE_CAPTION}
+      </figcaption>
+    </figure>
+  );
+}
+
+export function CompanyWorkflowSection() {
+  const { activeStep, setRef } = useActiveWorkflowStep(STEP_COUNT);
+
+  return (
+    <section className="rounded-2xl border border-neutral-200/90 bg-white shadow-card" aria-labelledby="workflow-heading">
+      <header className="border-b border-neutral-200/80 bg-gradient-to-b from-neutral-50/95 to-neutral-50/60 px-6 py-8 sm:px-10 sm:py-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-500">Workflow</p>
+        <h2 id="workflow-heading" className="mt-2 font-display text-2xl font-normal tracking-[0.04em] text-neutral-900 sm:text-3xl">
           How an operator uses LightRain
         </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
-          LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute for
-          your licensed counterparties. The sequence below is representative of how federation addressing, policy
-          engines, ML-assisted integrity signals, and execution surfaces can fit together when your organization wires
-          them into its own controls. Each numbered stage occupies roughly one full viewport inside the deck; scroll
-          vertically (or swipe) to move stage by stage.
-        </p>
-        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
-          Modern CSS supports scroll-linked animations via animation-timeline—covering staged text reveals, synchronized
-          transitions, and scroll-bound motion. Inside the deck, scroll snapping keeps one stage in focus at a time; where
-          supported, narrative copy uses view timelines for a restrained entry transition—not ornament.
-        </p>
-      </div>
+        <div className="mt-6 max-w-3xl space-y-4 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
+          <p>
+            LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute
+            for your licensed counterparties. The sequence that follows is representative of how federation addressing,
+            policy engines, ML-assisted integrity signals, and execution surfaces can fit together when your organization
+            wires them into its own controls.
+          </p>
+          <p className="text-neutral-500">
+            The schematic highlights the stage that aligns with the narrative in view. Deployment order, branching, and
+            omissions remain subject to counsel and supervisory guidance.
+          </p>
+        </div>
+      </header>
 
-      <div className="p-5 sm:p-8">
-        <p className="mb-3 text-xs text-muted">
-          Scroll inside the frame — {STEP_COUNT} stops · snap aligns each stage to the top of the viewport.
-        </p>
+      <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10 sm:py-12 lg:py-14">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0 xl:gap-x-14">
+          {/* Reference schematic — mobile / small tablet */}
+          <div className="mb-12 lg:hidden">
+            <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
+            <WorkflowFigure activeStep={activeStep} />
+          </div>
 
-        <div
-          className={styles.workflowSnapport}
-          role="region"
-          aria-label="Workflow stages: scroll vertically for each of six steps"
-          tabIndex={0}
-        >
-          {STEPS.map((step, index) => (
-            <article
-              key={step.n}
-              id={`workflow-stage-${step.n}`}
-              className={`${styles.workflowPage} border-b border-neutral-200/80 bg-white last:border-b-0`}
-              aria-labelledby={`workflow-stage-title-${step.n}`}
-            >
-              <div className="flex min-h-full flex-col md:flex-row">
-                <div className="flex flex-col justify-center border-b border-neutral-200/70 bg-neutral-50/90 px-4 py-6 sm:px-5 sm:py-8 md:w-[min(44%,320px)] md:shrink-0 md:border-b-0 md:border-r md:px-6 md:py-10">
-                  <figure className="overflow-hidden rounded-lg border border-neutral-200/80 bg-white p-2 shadow-sm sm:p-3">
-                    <WorkflowScrollDiagram
-                      className="mx-auto h-auto w-full max-w-[280px] text-neutral-900"
-                      activeStep={index}
-                    />
-                    <figcaption className="mt-3 text-[10px] leading-relaxed text-muted sm:text-[11px]">
-                      {PIPELINE_CAPTION}
-                    </figcaption>
-                  </figure>
-                  <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
-                    Active stage · {step.n} — {step.title}
-                  </p>
-                </div>
+          {/* Sticky schematic — desktop */}
+          <aside className="relative hidden lg:col-span-5 lg:block xl:col-span-4">
+            <div className="sticky top-28">
+              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
+              <WorkflowFigure activeStep={activeStep} />
+              <p className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500" aria-live="polite">
+                Highlight · {STEPS[activeStep]?.n} {STEPS[activeStep]?.title}
+              </p>
+            </div>
+          </aside>
 
-                <div
-                  className={`flex flex-1 flex-col justify-center px-4 py-8 sm:px-8 sm:py-10 md:py-12 ${styles.pageStepReveal}`}
-                >
-                  <p className="font-mono text-xs font-bold text-accent">{step.n}</p>
-                  <h3
-                    id={`workflow-stage-title-${step.n}`}
-                    className="mt-1 text-lg font-semibold text-neutral-900 sm:text-xl"
+          {/* Stages */}
+          <div className="min-w-0 lg:col-span-7 xl:col-span-8">
+            <div className="mb-8 border-b border-neutral-200/80 pb-6 lg:mb-10 lg:pb-8">
+              <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
+              <p className="mt-1 text-xs text-neutral-500">Six discrete steps in an illustrative operator path.</p>
+            </div>
+
+            <ol className="list-none space-y-0 p-0">
+              {STEPS.map((step, index) => (
+                <li key={step.n}>
+                  <article
+                    ref={setRef(index)}
+                    id={`workflow-stage-${step.n}`}
+                    aria-labelledby={`workflow-stage-title-${step.n}`}
+                    className={`scroll-mt-28 border-l-2 py-12 pl-6 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-14 sm:pl-8 md:py-16 ${
+                      index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
+                    } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
                   >
-                    {step.title}
-                  </h3>
-                  <p className="mt-4 max-w-prose text-sm leading-relaxed text-neutral-700 sm:text-[15px]">{step.body}</p>
-                </div>
-              </div>
-            </article>
-          ))}
+                    <div className="flex gap-6 sm:gap-8">
+                      <span
+                        className="w-8 shrink-0 pt-0.5 text-right font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-9"
+                        aria-hidden
+                      >
+                        {step.n.padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3
+                          id={`workflow-stage-title-${step.n}`}
+                          className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
+                        >
+                          {step.title}
+                        </h3>
+                        <p className="mt-4 max-w-[40rem] text-[15px] leading-[1.75] text-neutral-600">{step.body}</p>
+                      </div>
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
-        <div className="mt-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 text-sm leading-relaxed text-neutral-700">
-          <p className="font-medium text-neutral-900">Differentiators in this workflow</p>
-          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-muted">
-            <li>Federation endpoints and labels that remain legible under review</li>
-            <li>ML-assisted integrity signals that assist—not replace—operators and counsel</li>
-            <li>Operator-controlled policy and approval boundaries</li>
-            <li>Audit-ready evidence exports with stable identifiers for downstream archives</li>
+        <footer className="mt-16 border-t border-neutral-200/90 pt-10 sm:mt-20 sm:pt-12">
+          <p className="text-sm font-semibold text-neutral-900">Differentiators in this workflow</p>
+          <ul className="mt-4 max-w-2xl space-y-2 text-sm leading-relaxed text-neutral-600">
+            <li className="flex gap-2">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400" aria-hidden />
+              <span>Federation endpoints and labels that remain legible under review</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400" aria-hidden />
+              <span>ML-assisted integrity signals that assist—not replace—operators and counsel</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400" aria-hidden />
+              <span>Operator-controlled policy and approval boundaries</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400" aria-hidden />
+              <span>Audit-ready evidence exports with stable identifiers for downstream archives</span>
+            </li>
           </ul>
-        </div>
+        </footer>
       </div>
     </section>
   );
