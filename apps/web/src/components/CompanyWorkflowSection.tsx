@@ -1,13 +1,14 @@
 /**
  * Operator workflow — infrastructure documentation tone (no commerce / custody claims).
- * Document-style layout: one reference schematic (sticky on large viewports) with a clear
- * editorial list of stages. No embedded viewport or scroll-snap deck.
+ * Five stages in parallel rows: each row is diagram + narrative side-by-side (md+).
+ * Scroll-based highlighting: active row accent + diagrams use global active step for sync.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const STEP_COUNT = 6;
+const STEP_COUNT = 5;
 
+/** Full pipeline; indices 0–4 (offline-signing stage omitted). Execution & evidence translated up in SVG. */
 function WorkflowScrollDiagram({
   className = "",
   activeStep,
@@ -23,12 +24,12 @@ function WorkflowScrollDiagram({
   return (
     <svg
       className={className}
-      viewBox="0 0 300 1120"
+      viewBox="0 0 300 830"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <rect width="300" height="1120" rx="14" className="fill-neutral-100 stroke-neutral-200" strokeWidth="1" />
+      <rect width="300" height="830" rx="14" className="fill-neutral-100 stroke-neutral-200" strokeWidth="1" />
       <text x="24" y="34" fill="#737373" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.1em">
         NEUTRAL SCENARIO · ILLUSTRATIVE ONLY
       </text>
@@ -136,95 +137,66 @@ function WorkflowScrollDiagram({
 
       <path
         d="M150 508v28"
-        stroke={activeStep >= 3 && activeStep <= 4 ? strokeMain(3) : "#d4d4d4"}
+        stroke={activeStep >= 2 && activeStep <= 3 ? strokeMain(Math.min(Math.max(activeStep, 2), 3)) : "#d4d4d4"}
         strokeWidth="1.5"
         strokeDasharray="5 4"
         className="transition-colors duration-500"
       />
 
-      <g className={dim(3)}>
-        <rect x="24" y="536" width="252" height="108" rx="10" fill="#fff" stroke={strokeMain(3)} strokeWidth="1.35" />
-        <rect x="34" y="546" width="232" height="88" rx="8" fill="none" stroke={strokeSoft(3)} strokeWidth="1.2" strokeDasharray="6 5" />
-        <text x="36" y="562" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          OPTIONAL OFFLINE / SEGREGATED SIGNING
-        </text>
-        <rect x="48" y="574" width="76" height="48" rx="4" fill="#fafafa" stroke={strokeSoft(3)} strokeWidth="1" />
-        <rect x="58" y="584" width="56" height="8" rx="1" fill="#e5e5e5" stroke="none" />
-        <rect x="58" y="596" width="40" height="8" rx="1" fill="#e5e5e5" stroke="none" />
-        <rect x="58" y="608" width="48" height="8" rx="1" fill="#e5e5e5" stroke="none" />
-        <path d="M132 598h36" stroke={strokeMain(3)} strokeWidth="1.2" strokeDasharray="4 3" />
-        <rect x="176" y="576" width="84" height="44" rx="4" fill="#f5f5f5" stroke={strokeMain(3)} strokeWidth="1" />
-        <rect x="186" y="586" width="20" height="24" rx="2" fill="#e5e5e5" stroke={strokeSoft(3)} strokeWidth="0.9" />
-        <rect x="212" y="586" width="20" height="24" rx="2" fill="#e5e5e5" stroke={strokeSoft(3)} strokeWidth="0.9" />
-        <rect x="238" y="586" width="14" height="24" rx="2" fill="#e5e5e5" stroke={strokeSoft(3)} strokeWidth="0.9" />
-        <text x="218" y="618" textAnchor="middle" fill="#737373" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Operator devices
-        </text>
-        <text x="150" y="658" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          4 · Sign / confirm
-        </text>
-      </g>
+      <g transform="translate(0 -152)">
+        <g className={dim(3)}>
+          <rect x="24" y="688" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(3)} strokeWidth="1.35" />
+          <text x="36" y="708" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
+            EXECUTION SURFACE
+          </text>
+          <rect x="40" y="718" width="220" height="28" rx="4" fill="#fafafa" stroke={strokeSoft(3)} strokeWidth="1" />
+          <path d="M52 732h196" stroke={strokeSoft(3)} strokeWidth="2" strokeLinecap="round" />
+          <polygon points="228,732 238,726 238,738" fill={activeStep === 3 ? "#404040" : "#d4d4d4"} className="transition-colors duration-500" />
+          <text x="52" y="728" fill="#a3a3a3" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
+            Authorized instruction → configured rails
+          </text>
+          <rect x="40" y="752" width="220" height="22" rx="3" fill="#f5f5f5" stroke={strokeSoft(3)} strokeWidth="0.9" />
+          <path d="M48 764h24M80 764h160" stroke={strokeSoft(3)} strokeWidth="1" strokeLinecap="round" />
+          <text x="150" y="800" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
+            4 · Execution
+          </text>
+        </g>
 
-      <path
-        d="M150 660v28"
-        stroke={activeStep >= 4 && activeStep <= 5 ? strokeMain(4) : "#d4d4d4"}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-        className="transition-colors duration-500"
-      />
+        <path
+          d="M150 804v28"
+          stroke={activeStep >= 3 ? strokeMain(Math.max(activeStep, 3)) : "#d4d4d4"}
+          strokeWidth="1.5"
+          strokeDasharray="5 4"
+          className="transition-colors duration-500"
+        />
 
-      <g className={dim(4)}>
-        <rect x="24" y="688" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(4)} strokeWidth="1.35" />
-        <text x="36" y="708" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          EXECUTION SURFACE
-        </text>
-        <rect x="40" y="718" width="220" height="28" rx="4" fill="#fafafa" stroke={strokeSoft(4)} strokeWidth="1" />
-        <path d="M52 732h196" stroke={strokeSoft(4)} strokeWidth="2" strokeLinecap="round" />
-        <polygon points="228,732 238,726 238,738" fill={activeStep === 4 ? "#404040" : "#d4d4d4"} className="transition-colors duration-500" />
-        <text x="52" y="728" fill="#a3a3a3" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Authorized instruction → configured rails
-        </text>
-        <rect x="40" y="752" width="220" height="22" rx="3" fill="#f5f5f5" stroke={strokeSoft(4)} strokeWidth="0.9" />
-        <path d="M48 764h24M80 764h160" stroke={strokeSoft(4)} strokeWidth="1" strokeLinecap="round" />
-        <text x="150" y="800" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          5 · Execution
-        </text>
-      </g>
-
-      <path
-        d="M150 804v28"
-        stroke={activeStep >= 5 ? strokeMain(5) : "#d4d4d4"}
-        strokeWidth="1.5"
-        strokeDasharray="5 4"
-        className="transition-colors duration-500"
-      />
-
-      <g className={dim(5)}>
-        <rect x="24" y="832" width="252" height="116" rx="10" fill="#fff" stroke={strokeMain(5)} strokeWidth="1.35" />
-        <text x="36" y="852" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
-          EVIDENCE &amp; SUPERVISORY READOUT
-        </text>
-        <rect x="40" y="860" width="56" height="72" rx="3" fill="#fafafa" stroke={strokeSoft(5)} strokeWidth="1" />
-        <path d="M48 872h40M48 882h32M48 892h40M48 902h28M48 912h36" stroke={strokeSoft(5)} strokeWidth="0.9" strokeLinecap="round" />
-        <text x="68" y="942" textAnchor="middle" fill="#a3a3a3" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Log spine
-        </text>
-        <rect x="108" y="868" width="72" height="56" rx="4" fill="#f5f5f5" stroke={strokeMain(5)} strokeWidth="1" />
-        <path d="M118 880h52M118 890h40M118 900h52" stroke={strokeSoft(5)} strokeWidth="0.9" strokeLinecap="round" />
-        <text x="144" y="936" textAnchor="middle" fill="#737373" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          Export bundle
-        </text>
-        <rect x="192" y="868" width="68" height="56" rx="4" fill="#fafafa" stroke={strokeSoft(5)} strokeWidth="1" />
-        <rect x="200" y="878" width="52" height="10" rx="1" fill="#e5e5e5" />
-        <text x="226" y="898" textAnchor="middle" fill="#404040" fontSize="7" fontFamily="ui-monospace, monospace">
-          ML meta
-        </text>
-        <text x="226" y="910" textAnchor="middle" fill="#737373" fontSize="6" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          id + schema
-        </text>
-        <text x="150" y="958" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
-          6 · Evidence &amp; review
-        </text>
+        <g className={dim(4)}>
+          <rect x="24" y="832" width="252" height="116" rx="10" fill="#fff" stroke={strokeMain(4)} strokeWidth="1.35" />
+          <text x="36" y="852" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
+            EVIDENCE &amp; SUPERVISORY READOUT
+          </text>
+          <rect x="40" y="860" width="56" height="72" rx="3" fill="#fafafa" stroke={strokeSoft(4)} strokeWidth="1" />
+          <path d="M48 872h40M48 882h32M48 892h40M48 902h28M48 912h36" stroke={strokeSoft(4)} strokeWidth="0.9" strokeLinecap="round" />
+          <text x="68" y="942" textAnchor="middle" fill="#a3a3a3" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
+            Log spine
+          </text>
+          <rect x="108" y="868" width="72" height="56" rx="4" fill="#f5f5f5" stroke={strokeMain(4)} strokeWidth="1" />
+          <path d="M118 880h52M118 890h40M118 900h52" stroke={strokeSoft(4)} strokeWidth="0.9" strokeLinecap="round" />
+          <text x="144" y="936" textAnchor="middle" fill="#737373" fontSize="6.5" fontFamily="ui-sans-serif, system-ui, sans-serif">
+            Export bundle
+          </text>
+          <rect x="192" y="868" width="68" height="56" rx="4" fill="#fafafa" stroke={strokeSoft(4)} strokeWidth="1" />
+          <rect x="200" y="878" width="52" height="10" rx="1" fill="#e5e5e5" />
+          <text x="226" y="898" textAnchor="middle" fill="#404040" fontSize="7" fontFamily="ui-monospace, monospace">
+            ML meta
+          </text>
+          <text x="226" y="910" textAnchor="middle" fill="#737373" fontSize="6" fontFamily="ui-sans-serif, system-ui, sans-serif">
+            id + schema
+          </text>
+          <text x="150" y="958" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
+            5 · Evidence &amp; review
+          </text>
+        </g>
       </g>
     </svg>
   );
@@ -251,18 +223,12 @@ const STEPS = [
   },
   {
     n: "4",
-    title: "Optional offline signing",
-    body:
-      "Where your program requires it, signing can occur on air-gapped or hardware-assisted workflows outside the primary console. LightRain describes this as an integration posture—operators supply devices and procedures; the platform does not sell or custody hardware.",
-  },
-  {
-    n: "5",
     title: "Execution",
     body:
       "After explicit operator confirmation consistent with policy, execution surfaces record the authorized transition. The system does not perform discretionary trading or rebalance portfolios; it applies the operator-approved instruction set to the configured rails.",
   },
   {
-    n: "6",
+    n: "5",
     title: "Evidence and review",
     body:
       "Immutable-style logs, acknowledgements, and export bundles are assembled for audit and supervisory review. ML-derived annotations, when enabled, are attached with model and schema identifiers so downstream readers can reconstruct what was visible at review time.",
@@ -302,7 +268,7 @@ function useActiveWorkflowStep(stepCount: number) {
 
     const observer = new IntersectionObserver(pickActive, {
       root: null,
-      rootMargin: "-12% 0px -38% 0px",
+      rootMargin: "-10% 0px -35% 0px",
       threshold: [0, 0.08, 0.2, 0.35, 0.5, 0.65, 0.85, 1],
     });
 
@@ -325,20 +291,14 @@ function useActiveWorkflowStep(stepCount: number) {
   return { activeStep, setRef };
 }
 
-function WorkflowFigure({
-  activeStep,
-  className = "",
-}: {
-  activeStep: number;
-  className?: string;
-}) {
+function WorkflowFigure({ activeStep, className = "" }: { activeStep: number; className?: string }) {
   return (
     <figure
-      className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 lg:p-4 ${className}`}
+      className={`rounded-xl border border-neutral-200/90 bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-4 ${className}`}
       aria-label="Illustrative workflow schematic"
     >
       <WorkflowScrollDiagram
-        className="mx-auto h-auto w-full max-w-[min(100%,300px)] text-neutral-900 sm:max-w-[320px] md:mx-0 md:max-w-full"
+        className="mx-auto h-auto w-full max-w-[min(100%,280px)] text-neutral-900 sm:max-w-[300px] md:max-w-[min(100%,260px)] lg:max-w-[280px]"
         activeStep={activeStep}
       />
     </figure>
@@ -363,78 +323,62 @@ export function CompanyWorkflowSection() {
             wires them into its own controls.
           </p>
           <p className="text-neutral-500">
-            The schematic highlights the stage that aligns with the narrative in view. Deployment order, branching, and
-            omissions remain subject to counsel and supervisory guidance.
+            Each row pairs the reference schematic with one stage. The schematic highlights the stage most in view as you
+            scroll. Deployment order, branching, and omissions remain subject to counsel and supervisory guidance.
           </p>
         </div>
       </header>
 
-      <div className="w-full px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
-        <div className="md:grid md:grid-cols-[minmax(220px,32%)_minmax(0,1fr)] md:items-start md:gap-x-8 md:gap-y-0 lg:grid-cols-[minmax(240px,34%)_minmax(0,1fr)] lg:gap-x-10 xl:grid-cols-[minmax(260px,36%)_minmax(0,1fr)] xl:gap-x-14">
-          {/* Reference schematic — side-by-side with stages narrative from md up */}
-          <div className="min-w-0 md:border-r md:border-neutral-200/70 md:pr-6 lg:pr-8 xl:pr-10">
-            <div className="md:sticky md:top-28 md:pb-8 lg:pb-10">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
-              <div className="mt-4 flex flex-col sm:mt-5">
-                <WorkflowFigure activeStep={activeStep} className="w-full" />
-                <p
-                  className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 md:text-left"
-                  aria-live="polite"
-                >
-                  Highlight · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
-                </p>
-              </div>
-            </div>
-          </div>
+      <div className="w-full px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+        <p className="mb-8 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-500 md:text-left" aria-live="polite">
+          Pipeline highlight · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
+        </p>
 
-          {/* Stages narrative */}
-          <div className="min-w-0 mt-12 border-t border-neutral-200/80 pt-10 sm:mt-14 sm:pt-12 md:mt-0 md:border-t-0 md:pt-0 md:pl-4 lg:pl-6 xl:pl-8">
-            <div className="border-b border-neutral-200/80 pb-8 sm:pb-10">
-              <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
-              <p className="mt-1 text-xs leading-relaxed text-neutral-500">
-                Six discrete steps in an illustrative operator path. Scroll the narrative; the schematic tracks the stage
-                in view.
-              </p>
-            </div>
+        <ol className="list-none space-y-0 divide-y divide-neutral-200/80 p-0">
+          {STEPS.map((step, index) => (
+            <li key={step.n}>
+              <article
+                ref={setRef(index)}
+                id={`workflow-stage-${step.n}`}
+                aria-labelledby={`workflow-stage-title-${step.n}`}
+                className={`scroll-mt-28 py-10 transition-[background-color,box-shadow] duration-300 sm:scroll-mt-32 md:grid md:grid-cols-2 md:items-start md:gap-8 md:py-12 lg:gap-10 xl:gap-12 ${
+                  activeStep === index ? "bg-neutral-50/80 md:shadow-[inset_0_0_0_1px_rgba(23,23,23,0.08)]" : "bg-transparent"
+                }`}
+              >
+                <div className="min-w-0 px-1 md:px-2 md:pt-1">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500 md:mb-4">
+                    Reference schematic
+                  </p>
+                  <WorkflowFigure activeStep={activeStep} className="w-full" />
+                </div>
 
-            <ol className="list-none space-y-0 p-0">
-              {STEPS.map((step, index) => (
-                <li key={step.n}>
-                  <article
-                    ref={setRef(index)}
-                    id={`workflow-stage-${step.n}`}
-                    aria-labelledby={`workflow-stage-title-${step.n}`}
-                    className={`scroll-mt-28 border-l-2 py-10 pl-5 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-12 sm:pl-7 md:py-14 lg:py-12 lg:pl-6 xl:pl-8 ${
-                      index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
-                    } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
-                  >
-                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
-                      <span
-                        className="w-9 shrink-0 font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-10 sm:pt-0.5 sm:text-right"
-                        aria-hidden
+                <div className="mt-8 min-w-0 border-t border-neutral-100 pt-8 md:mt-0 md:border-t-0 md:pt-1 md:pl-2">
+                  <div className="flex gap-4 sm:gap-6">
+                    <span
+                      className="w-8 shrink-0 font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-9"
+                      aria-hidden
+                    >
+                      {step.n.padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        id={`workflow-stage-title-${step.n}`}
+                        className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
                       >
-                        {step.n.padStart(2, "0")}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <h3
-                          id={`workflow-stage-title-${step.n}`}
-                          className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
-                        >
-                          {step.title}
-                        </h3>
-                        <p className="mt-3 text-[15px] leading-[1.75] text-neutral-600 sm:mt-4 sm:text-base sm:leading-[1.8]">
-                          {step.body}
-                        </p>
-                      </div>
+                        {step.title}
+                      </h3>
+                      <p className="mt-3 text-[15px] leading-[1.75] text-neutral-600 sm:mt-4 sm:text-base sm:leading-[1.8]">
+                        {step.body}
+                      </p>
                     </div>
-                  </article>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
+                  </div>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
 
-        <footer className="mt-14 border-t border-neutral-200/90 pt-10 sm:mt-16 sm:pt-12 lg:mt-16">
+        <footer className="mt-12 border-t border-neutral-200/90 pt-10 sm:mt-14 sm:pt-12">
           <p className="text-sm font-semibold text-neutral-900">Differentiators in this workflow</p>
           <ul className="mt-4 grid gap-3 text-sm leading-relaxed text-neutral-600 sm:grid-cols-2 sm:gap-x-10 lg:max-w-5xl">
             <li className="flex gap-2">
