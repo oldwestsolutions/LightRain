@@ -271,7 +271,7 @@ export function SecurityOnboardingWizard() {
                 Secure vault onboarding
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-muted sm:text-[15px]">
-                Private Bitcoin payments–grade setup: minimal identity data, strong cryptography, and recovery you control.
+                Private Bitcoin-grade setup: minimal identity data, strong cryptography, and recovery you control.
                 Nothing here is sent to a server in this demo — credentials stay in your browser session.
               </p>
             </header>
@@ -337,7 +337,7 @@ export function SecurityOnboardingWizard() {
                       Password
                       <InfoTooltip
                         label="About master password"
-                        text="Your password protects your private Bitcoin payments vault. Choose a strong one."
+                        text="Your password protects your private Bitcoin vault. Choose a strong one."
                       />
                     </label>
                     <div className="relative">

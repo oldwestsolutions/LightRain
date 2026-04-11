@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   applicationName: "LightRain",
   keywords: [
     "LightRain",
-    "Bitcoin payments",
+    "Bitcoin",
     "Bitcoin",
     "self-custody",
     "ledger",
