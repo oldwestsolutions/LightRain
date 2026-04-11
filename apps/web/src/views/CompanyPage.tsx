@@ -16,7 +16,6 @@ import {
   WifiOff,
   type LucideIcon,
 } from "lucide-react";
-import { URL_SUPPORT } from "@/lib/site";
 import { CompanySidebar } from "../components/CompanySidebar";
 import { MarketingPageShell } from "../components/MarketingPageShell";
 import {
@@ -48,10 +47,10 @@ const ICON_MAP: Record<StoreCategoryItem["icon"], LucideIcon> = {
 
 const INITIAL_VISIBLE = 2;
 
-/** Right column of the hero: same footprint as the old art, no illustrative SVG. */
-function CompanyHeroPanel() {
+/** Gray column with settlement story anchored at the bottom (no SVG illustration). */
+function CompanyHeroAside() {
   return (
-    <div className="relative h-full min-h-[220px] w-full overflow-hidden bg-[#E8EAEE] lg:min-h-full lg:min-h-0">
+    <div className="relative flex min-h-[280px] flex-col overflow-hidden bg-[#E8EAEE] lg:min-h-[min(62vh,520px)]">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
         style={{
@@ -61,6 +60,37 @@ function CompanyHeroPanel() {
         }}
         aria-hidden
       />
+      <div className="relative z-[1] flex flex-1 flex-col">
+        <div className="min-h-12 flex-1" aria-hidden />
+        <div className="relative border-t border-neutral-300/80 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 px-5 py-8 text-white shadow-[0_-16px_48px_-12px_rgba(0,0,0,0.4)] sm:px-6 sm:py-9">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.12), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.1), transparent 50%)",
+            }}
+            aria-hidden
+          />
+          <div className="relative text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
+            <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-white/80 sm:text-[15px]">
+              LightRain is settlement infrastructure with a Bitcoin mindset: keys stay yours, history stays legible, and
+              policy lives where regulators expect it—not buried in anonymous wallet chrome.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+                Federation-native
+              </span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+                Discretionary rails
+              </span>
+              <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+                Operator-grade UX
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -111,106 +141,81 @@ export function CompanyPage() {
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
       <div className="space-y-6 lg:space-y-8">
-        <section
-          className="relative overflow-hidden rounded-2xl border border-neutral-200/80 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 px-5 py-10 text-white shadow-[0_28px_80px_-28px_rgba(0,0,0,0.55)] sm:px-10 sm:py-12"
-          aria-label="Company introduction"
-        >
-          <div
-            className="pointer-events-none absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.14), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.12), transparent 50%)",
-            }}
-            aria-hidden
-          />
-          <div className="relative mx-auto max-w-4xl text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
-            <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-relaxed text-white/80 sm:text-lg">
-              LightRain is settlement infrastructure with a Bitcoin mindset: keys stay yours, history stays
-              legible, and policy lives where regulators expect it—not buried in anonymous wallet chrome.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
-                Federation-native
-              </span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
-                Discretionary rails
-              </span>
-              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
-                Operator-grade UX
-              </span>
-            </div>
-          </div>
-        </section>
-
         <article className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04),0_24px_60px_-12px_rgba(0,0,0,0.08)] ring-1 ring-black/[0.04]">
           <div className="grid lg:min-h-[min(62vh,520px)] lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,44%)] xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,40%)]">
             <div className="flex flex-col justify-center border-b border-neutral-100 bg-gradient-to-br from-neutral-50 via-white to-neutral-50/90 px-6 py-8 sm:px-10 sm:py-10 lg:border-b-0 lg:border-r lg:border-neutral-100 lg:px-12 lg:py-12 xl:px-14 xl:py-14">
               <div className="w-full max-w-none">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-neutral-200/80 pb-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted">Company</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted">LightRain</p>
                   <span className="hidden h-4 w-px bg-neutral-200 sm:block" aria-hidden />
-                  <p className="text-xs font-medium text-neutral-500">Settlement infrastructure</p>
+                  <p className="text-xs font-medium text-neutral-500">Bitcoin wallet for everyone</p>
                 </div>
                 <h1 className="mt-8 font-display text-3xl font-normal tracking-[0.05em] text-neutral-900 sm:text-4xl md:text-[2.75rem] md:leading-[1.1] lg:text-5xl">
                   <span className="text-neutral-900">Light</span>
                   <span className="text-neutral-500">Rain</span>
                 </h1>
                 <p className="mt-6 w-full text-pretty text-base leading-[1.65] text-neutral-800 sm:text-lg lg:text-[1.125rem] lg:leading-[1.7]">
-                  Federation addresses and settlement tooling for high-risk commerce—so operators can move value with
-                  clearer rails while keeping obligations where they belong: on licensed entities, not on naive software
-                  promises.
+                  Your Bitcoin, your keys, your clear history. LightRain is a wallet experience built for everyday
+                  holders who still want grown-up infrastructure: readable addresses, transparent activity, and flows
+                  that feel as serious as the savings they protect.
                 </p>
                 <div className="mt-8 w-full space-y-5 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
                   <p className="text-pretty">
-                    We focus on legible federation endpoints, settlement visibility, and flows that match how regulated
-                    teams actually work: audits, counterparties, and network rules—not just a pretty wallet screen.
-                    LightRain sits in that layer between your brand and the chain: human-readable addresses, history
-                    you can reason about, and room to wire policy as your counsel and regulators require.
+                    Send and receive with human-friendly federation-style labels, see what actually moved on-chain, and
+                    pair optional hardware and backups the way long-term stackers already do—without handing the story
+                    of your money to a black box you cannot explain to a friend or a tax preparer.
                   </p>
                   <p className="text-pretty">
-                    The hardware catalog on this page is illustrative—styled like major commerce platforms so you can
-                    see how a full retail surface could pair with custody and backup categories. Checkout remains a demo
-                    until you connect real inventory and payments.
+                    Curious how it could feel next to real shopping? The hardware grid below is a demo storefront—browse
+                    cold-storage gear and accessories the way you would on a major retailer, then wire real inventory
+                    when you are ready. Checkout here stays a preview until you connect production payments.
                   </p>
                 </div>
                 <ul className="mt-10 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
                   <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
                     <span className="text-sm leading-snug text-neutral-800">
-                      Federation-native addressing and settlement context
+                      Friendly addresses and activity you can read at a glance
                     </span>
                   </li>
                   <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03]">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
                     <span className="text-sm leading-snug text-neutral-800">
-                      Interfaces aimed at compliant, high-friction categories
+                      Built for people who care who holds the keys—and who answers regulators
                     </span>
                   </li>
                   <li className="flex gap-3 rounded-xl border border-neutral-200/90 bg-white/90 px-4 py-3.5 shadow-sm ring-1 ring-black/[0.03] sm:col-span-2 lg:col-span-1">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" strokeWidth={2.5} aria-hidden />
                     <span className="text-sm leading-snug text-neutral-800">
-                      Policies and downloads live under Legal—review before production use
+                      Governance and security pages spell out posture in plain language before you go live
                     </span>
                   </li>
                 </ul>
-                <div className="mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
+                <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-start">
                   <Link
-                    href="/legal"
-                    className="inline-flex min-h-[48px] min-w-[160px] flex-1 items-center justify-center rounded-full border border-neutral-900 bg-neutral-900 px-8 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-neutral-800 sm:flex-none"
+                    href="/governance-risk"
+                    className="flex min-h-[52px] flex-1 flex-col items-center justify-center rounded-2xl border border-neutral-900 bg-neutral-900 px-5 py-4 text-center text-white shadow-md transition-colors hover:bg-neutral-800 sm:max-w-[min(100%,320px)]"
                   >
-                    Legal &amp; policies
+                    <span className="text-sm font-semibold leading-snug">Governance &amp; risk posture</span>
+                    <span className="mt-2 block max-w-[280px] text-[11px] font-normal leading-snug text-white/75">
+                      How we avoid custody, keep obligations on licensed entities, and design federation for auditability—
+                      without offering legal advice.
+                    </span>
                   </Link>
-                  <a
-                    href={URL_SUPPORT}
-                    className="inline-flex min-h-[48px] min-w-[140px] flex-1 items-center justify-center rounded-full border border-neutral-200 bg-white px-8 text-sm font-semibold text-neutral-800 shadow-sm transition-colors hover:bg-neutral-50 sm:flex-none"
+                  <Link
+                    href="/security-model"
+                    className="flex min-h-[52px] flex-1 flex-col items-center justify-center rounded-2xl border border-neutral-300/90 bg-white px-5 py-4 text-center text-neutral-900 shadow-sm transition-colors hover:border-neutral-400 hover:bg-neutral-50 sm:max-w-[min(100%,320px)]"
                   >
-                    Support
-                  </a>
+                    <span className="text-sm font-semibold leading-snug">Security model</span>
+                    <span className="mt-2 block max-w-[280px] text-[11px] font-normal leading-snug text-muted">
+                      Local-first identity, your keys, hardware-backed recovery—no pooled funds, omnibus accounts, or
+                      hidden delegation story.
+                    </span>
+                  </Link>
                 </div>
               </div>
             </div>
-            <CompanyHeroPanel />
+            <CompanyHeroAside />
           </div>
         </article>
 

@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { ArrowUpRight, FileText, Headphones, Mail } from "lucide-react";
+import { ArrowUpRight, FileText, Headphones, Mail, Scale, Shield } from "lucide-react";
 import { URL_SUPPORT } from "@/lib/site";
 
 const links = [
+  { to: "/governance-risk", label: "Governance & risk posture", icon: Scale, external: false },
+  { to: "/security-model", label: "Security model", icon: Shield, external: false },
   { to: "/legal", label: "Legal & policies", icon: FileText, external: false },
   { to: URL_SUPPORT, label: "Support", icon: Headphones, external: true },
 ] as const;

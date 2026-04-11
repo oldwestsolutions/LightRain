@@ -5,6 +5,8 @@ const PATHS = [
   "/",
   "/support",
   "/company",
+  "/governance-risk",
+  "/security-model",
   "/shop",
   "/legal",
   "/marketplace",
