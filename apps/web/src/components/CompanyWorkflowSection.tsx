@@ -1,10 +1,16 @@
 /**
  * Operator workflow — infrastructure documentation tone (no commerce / custody claims).
  * Five stages in parallel rows: each row is diagram + narrative side-by-side (md+).
- * Scroll-based highlighting: active row accent + diagrams use global active step for sync.
+ * Scroll-based highlighting: active row accent + diagrams share global activeStep;
+ * Framer Motion animates stage opacity, connector strokes, and the active row’s figure.
  */
 
+import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+const diagramEase = [0.22, 1, 0.36, 1] as const;
+const diagramTransition = { duration: 0.65, ease: diagramEase };
+const rowFigureSpring = { type: "spring" as const, stiffness: 380, damping: 34, mass: 0.85 };
 
 const STEP_COUNT = 5;
 
@@ -16,10 +22,12 @@ function WorkflowScrollDiagram({
   className?: string;
   activeStep: number;
 }) {
-  const dim = (i: number) =>
-    activeStep === i ? "opacity-100" : "opacity-[0.28] transition-opacity duration-500 ease-out";
+  const reduceMotion = useReducedMotion();
+  const segTransition = reduceMotion ? { duration: 0.01 } : diagramTransition;
+
   const strokeMain = (i: number) => (activeStep === i ? "#262626" : "#a3a3a3");
   const strokeSoft = (i: number) => (activeStep === i ? "#525252" : "#d4d4d4");
+  const stageOpacity = (i: number) => (activeStep === i ? 1 : 0.28);
 
   return (
     <svg
@@ -37,15 +45,18 @@ function WorkflowScrollDiagram({
         Same controls may run in parallel or batch in your environment.
       </text>
 
-      <path
+      <motion.path
         d="M150 168v28"
-        stroke={activeStep <= 1 ? strokeMain(Math.max(activeStep, 0)) : "#d4d4d4"}
+        initial={false}
+        animate={{
+          stroke: activeStep <= 1 ? strokeMain(Math.max(activeStep, 0)) : "#d4d4d4",
+        }}
+        transition={segTransition}
         strokeWidth="1.5"
         strokeDasharray="5 4"
-        className="transition-colors duration-500"
       />
 
-      <g className={dim(0)}>
+      <motion.g initial={false} animate={{ opacity: stageOpacity(0) }} transition={segTransition}>
         <rect x="24" y="72" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(0)} strokeWidth="1.35" />
         <text x="36" y="92" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
           OPERATOR SURFACE
@@ -62,17 +73,20 @@ function WorkflowScrollDiagram({
         <text x="150" y="182" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
           1 · Signal received
         </text>
-      </g>
+      </motion.g>
 
-      <path
+      <motion.path
         d="M150 200v32"
-        stroke={activeStep >= 1 && activeStep <= 2 ? strokeMain(1) : "#d4d4d4"}
+        initial={false}
+        animate={{
+          stroke: activeStep >= 1 && activeStep <= 2 ? strokeMain(1) : "#d4d4d4",
+        }}
+        transition={segTransition}
         strokeWidth="1.5"
         strokeDasharray="5 4"
-        className="transition-colors duration-500"
       />
 
-      <g className={dim(1)}>
+      <motion.g initial={false} animate={{ opacity: stageOpacity(1) }} transition={segTransition}>
         <rect x="24" y="232" width="252" height="104" rx="10" fill="#fff" stroke={strokeMain(1)} strokeWidth="1.35" />
         <text x="36" y="252" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
           ROUTING &amp; CONTEXT
@@ -93,17 +107,20 @@ function WorkflowScrollDiagram({
         <text x="150" y="348" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
           2 · Address &amp; context
         </text>
-      </g>
+      </motion.g>
 
-      <path
+      <motion.path
         d="M150 352v28"
-        stroke={activeStep >= 2 && activeStep <= 3 ? strokeMain(2) : "#d4d4d4"}
+        initial={false}
+        animate={{
+          stroke: activeStep >= 2 && activeStep <= 3 ? strokeMain(2) : "#d4d4d4",
+        }}
+        transition={segTransition}
         strokeWidth="1.5"
         strokeDasharray="5 4"
-        className="transition-colors duration-500"
       />
 
-      <g className={dim(2)}>
+      <motion.g initial={false} animate={{ opacity: stageOpacity(2) }} transition={segTransition}>
         <rect x="24" y="380" width="252" height="112" rx="10" fill="#fff" stroke={strokeMain(2)} strokeWidth="1.35" />
         <text x="36" y="400" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
           POLICY ENGINE · ML ASSIST
@@ -133,25 +150,33 @@ function WorkflowScrollDiagram({
         <text x="150" y="506" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
           3 · Policy checks
         </text>
-      </g>
+      </motion.g>
 
-      <path
+      <motion.path
         d="M150 508v28"
-        stroke={activeStep >= 2 && activeStep <= 3 ? strokeMain(Math.min(Math.max(activeStep, 2), 3)) : "#d4d4d4"}
+        initial={false}
+        animate={{
+          stroke: activeStep >= 2 && activeStep <= 3 ? strokeMain(Math.min(Math.max(activeStep, 2), 3)) : "#d4d4d4",
+        }}
+        transition={segTransition}
         strokeWidth="1.5"
         strokeDasharray="5 4"
-        className="transition-colors duration-500"
       />
 
       <g transform="translate(0 -152)">
-        <g className={dim(3)}>
+        <motion.g initial={false} animate={{ opacity: stageOpacity(3) }} transition={segTransition}>
           <rect x="24" y="688" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(3)} strokeWidth="1.35" />
           <text x="36" y="708" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
             EXECUTION SURFACE
           </text>
           <rect x="40" y="718" width="220" height="28" rx="4" fill="#fafafa" stroke={strokeSoft(3)} strokeWidth="1" />
           <path d="M52 732h196" stroke={strokeSoft(3)} strokeWidth="2" strokeLinecap="round" />
-          <polygon points="228,732 238,726 238,738" fill={activeStep === 3 ? "#404040" : "#d4d4d4"} className="transition-colors duration-500" />
+          <motion.polygon
+            points="228,732 238,726 238,738"
+            initial={false}
+            animate={{ fill: activeStep === 3 ? "#404040" : "#d4d4d4" }}
+            transition={segTransition}
+          />
           <text x="52" y="728" fill="#a3a3a3" fontSize="7" fontFamily="ui-sans-serif, system-ui, sans-serif">
             Authorized instruction → configured rails
           </text>
@@ -160,17 +185,20 @@ function WorkflowScrollDiagram({
           <text x="150" y="800" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
             4 · Execution
           </text>
-        </g>
+        </motion.g>
 
-        <path
+        <motion.path
           d="M150 804v28"
-          stroke={activeStep >= 3 ? strokeMain(Math.max(activeStep, 3)) : "#d4d4d4"}
+          initial={false}
+          animate={{
+            stroke: activeStep >= 3 ? strokeMain(Math.max(activeStep, 3)) : "#d4d4d4",
+          }}
+          transition={segTransition}
           strokeWidth="1.5"
           strokeDasharray="5 4"
-          className="transition-colors duration-500"
         />
 
-        <g className={dim(4)}>
+        <motion.g initial={false} animate={{ opacity: stageOpacity(4) }} transition={segTransition}>
           <rect x="24" y="832" width="252" height="116" rx="10" fill="#fff" stroke={strokeMain(4)} strokeWidth="1.35" />
           <text x="36" y="852" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
             EVIDENCE &amp; SUPERVISORY READOUT
@@ -196,7 +224,7 @@ function WorkflowScrollDiagram({
           <text x="150" y="958" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
             5 · Evidence &amp; review
           </text>
-        </g>
+        </motion.g>
       </g>
     </svg>
   );
@@ -291,17 +319,37 @@ function useActiveWorkflowStep(stepCount: number) {
   return { activeStep, setRef };
 }
 
-function WorkflowFigure({ activeStep, className = "" }: { activeStep: number; className?: string }) {
+function WorkflowFigure({
+  activeStep,
+  isRowActive,
+  className = "",
+}: {
+  activeStep: number;
+  isRowActive: boolean;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+  const figTransition = reduceMotion ? { duration: 0.01 } : rowFigureSpring;
+
   return (
-    <figure
-      className={`rounded-xl border border-neutral-200/90 bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-4 ${className}`}
+    <motion.figure
+      initial={false}
+      animate={{
+        scale: isRowActive ? 1 : 0.97,
+        opacity: isRowActive ? 1 : 0.82,
+        boxShadow: isRowActive
+          ? "0 18px 48px -16px rgba(0,0,0,0.16), 0 0 0 1px rgba(23,23,23,0.12)"
+          : "0 1px 0 rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04)",
+      }}
+      transition={figTransition}
+      className={`rounded-xl border border-neutral-200/90 bg-white p-3 ring-1 ring-black/[0.03] sm:p-5 ${className}`}
       aria-label="Illustrative workflow schematic"
     >
       <WorkflowScrollDiagram
-        className="mx-auto h-auto w-full max-w-[min(100%,280px)] text-neutral-900 sm:max-w-[300px] md:max-w-[min(100%,260px)] lg:max-w-[280px]"
+        className="mx-auto h-auto w-full max-w-[min(100%,520px)] text-neutral-900"
         activeStep={activeStep}
       />
-    </figure>
+    </motion.figure>
   );
 }
 
@@ -323,8 +371,9 @@ export function CompanyWorkflowSection() {
             wires them into its own controls.
           </p>
           <p className="text-neutral-500">
-            Each row pairs the reference schematic with one stage. The schematic highlights the stage most in view as you
-            scroll. Deployment order, branching, and omissions remain subject to counsel and supervisory guidance.
+            Each row pairs a full reference schematic with one stage. As you scroll, the row in focus scales slightly and the
+            diagram animates which pipeline segment is active. Deployment order, branching, and omissions remain subject to
+            counsel and supervisory guidance.
           </p>
         </div>
       </header>
@@ -341,18 +390,18 @@ export function CompanyWorkflowSection() {
                 ref={setRef(index)}
                 id={`workflow-stage-${step.n}`}
                 aria-labelledby={`workflow-stage-title-${step.n}`}
-                className={`scroll-mt-28 py-10 transition-[background-color,box-shadow] duration-300 sm:scroll-mt-32 md:grid md:grid-cols-2 md:items-start md:gap-8 md:py-12 lg:gap-10 xl:gap-12 ${
+                className={`scroll-mt-28 py-10 transition-[background-color,box-shadow] duration-300 sm:scroll-mt-32 md:grid md:grid-cols-[minmax(0,1.28fr)_minmax(0,1fr)] md:items-center md:gap-10 md:py-12 lg:gap-12 xl:gap-14 ${
                   activeStep === index ? "bg-neutral-50/80 md:shadow-[inset_0_0_0_1px_rgba(23,23,23,0.08)]" : "bg-transparent"
                 }`}
               >
-                <div className="min-w-0 px-1 md:px-2 md:pt-1">
+                <div className="flex min-w-0 flex-col justify-center px-1 md:px-2">
                   <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500 md:mb-4">
                     Reference schematic
                   </p>
-                  <WorkflowFigure activeStep={activeStep} className="w-full" />
+                  <WorkflowFigure activeStep={activeStep} isRowActive={activeStep === index} className="w-full" />
                 </div>
 
-                <div className="mt-8 min-w-0 border-t border-neutral-100 pt-8 md:mt-0 md:border-t-0 md:pt-1 md:pl-2">
+                <div className="mt-8 min-w-0 border-t border-neutral-100 pt-8 md:mt-0 md:border-t-0 md:py-2 md:pl-2">
                   <div className="flex gap-4 sm:gap-6">
                     <span
                       className="w-8 shrink-0 font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-9"
