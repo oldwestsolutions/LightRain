@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CompanyHeroThreeBackground } from "../components/CompanyHeroThreeBackground";
 import { CompanySidebar } from "../components/CompanySidebar";
 import { CompanyWorkflowSection } from "../components/CompanyWorkflowSection";
 import {
@@ -14,25 +15,18 @@ import { useAuthStore } from "../store/useAuthStore";
 /** Company narrative column: full-height dark panel (no empty gray band above). */
 function CompanyHeroAside() {
   return (
-    <div className="relative flex min-h-[280px] w-full flex-col justify-center overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-950 lg:min-h-[min(62vh,520px)]">
+    <div className="relative flex min-h-[280px] w-full flex-col justify-center overflow-hidden bg-black lg:min-h-[min(62vh,520px)]">
+      <CompanyHeroThreeBackground />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18]"
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
+            "linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }}
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-25"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 100% 60% at 0% 0%, rgba(255,255,255,0.12), transparent 55%), radial-gradient(ellipse 80% 50% at 100% 100%, rgba(100,180,255,0.1), transparent 50%)",
-        }}
-        aria-hidden
-      />
-      <div className="relative px-5 py-10 text-center text-white sm:px-6 sm:py-12">
+      <div className="relative z-[1] px-5 py-10 text-center text-white sm:px-6 sm:py-12">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/55">company.lightra.in</p>
         <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-white/80 sm:text-[15px]">
           LightRain is settlement infrastructure with a Bitcoin mindset: keys stay yours, history stays legible, and
