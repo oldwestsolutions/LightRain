@@ -92,16 +92,25 @@ export function CompanyPage() {
                 </div>
                 <ul className="mt-10 grid w-full grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-5">
                   <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03]">
-                    <KeyIllustration className="h-20 w-20 sm:h-[5.25rem] sm:w-[5.25rem]" />
+                    <KeyIllustration className="h-[5.25rem] w-[5.25rem] sm:h-28 sm:w-28" />
                     <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Key</span>
+                    <span className="mt-1 max-w-[14rem] text-pretty text-xs leading-snug text-neutral-500">
+                      Hardware, seeds, and signing boundaries you control—not ours.
+                    </span>
                   </li>
                   <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03]">
-                    <WalletIllustration className="h-20 w-20 sm:h-[5.25rem] sm:w-[5.25rem]" />
+                    <WalletIllustration className="h-[5.25rem] w-[5.25rem] sm:h-28 sm:w-28" />
                     <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Wallet</span>
+                    <span className="mt-1 max-w-[14rem] text-pretty text-xs leading-snug text-neutral-500">
+                      Balances and history presented so you can explain every movement.
+                    </span>
                   </li>
                   <li className="flex flex-col items-center justify-center rounded-2xl border border-neutral-200/90 bg-white/90 px-5 py-8 text-center shadow-sm ring-1 ring-black/[0.03]">
-                    <FederationIllustration className="h-20 w-20 sm:h-[5.25rem] sm:w-[5.25rem]" />
+                    <FederationIllustration className="h-[5.25rem] w-[5.25rem] sm:h-28 sm:w-28" />
                     <span className="mt-4 text-sm font-semibold tracking-wide text-neutral-900">Federation</span>
+                    <span className="mt-1 max-w-[14rem] text-pretty text-xs leading-snug text-neutral-500">
+                      Readable names mapped to endpoints your policies and tables define.
+                    </span>
                   </li>
                 </ul>
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-start">

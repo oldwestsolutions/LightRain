@@ -57,7 +57,7 @@ function WorkflowPipelineRail({ activeStep }: { activeStep: number }) {
   );
 }
 
-/** Single-stage schematic only — no full-stack pipeline in each row. */
+/** Single-stage schematic — matches hero key/wallet/fed panel language; accent color per stage. */
 function WorkflowStageIllustration({
   stageIndex,
   energized,
@@ -67,152 +67,194 @@ function WorkflowStageIllustration({
   energized: boolean;
   className?: string;
 }) {
-  const main = energized ? "#262626" : "#a8a8a8";
-  const soft = energized ? "#525252" : "#b5b5b5";
-  const label = energized ? "#737373" : "#9ca3af";
-  const caption = energized ? "#525252" : "#9ca3af";
+  const gid = `wfs${stageIndex}`;
+  const main = energized ? "#262626" : "#a3a3a3";
+  const soft = energized ? "#64748b" : "#b4b4b4";
+  const label = energized ? "#64748b" : "#9ca3af";
+  const caption = energized ? "#404040" : "#94a3b8";
 
   return (
     <svg
       className={className}
-      viewBox="0 0 300 200"
+      viewBox="0 0 300 212"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <rect width="300" height="200" rx="12" className="fill-neutral-50 stroke-neutral-200/90" strokeWidth="1" />
+      <defs>
+        <linearGradient id={`${gid}-outer`} x1="0" y1="0" x2="300" y2="212" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#f8fafc" />
+          <stop offset="1" stopColor="#f1f5f9" />
+        </linearGradient>
+        <linearGradient id={`${gid}-panel`} x1="20" y1="48" x2="260" y2="188" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffffff" />
+          <stop offset="1" stopColor="#fafafa" />
+        </linearGradient>
+      </defs>
+      <rect width="300" height="212" rx="14" fill={`url(#${gid}-outer)`} stroke="#e2e8f0" strokeWidth="1" />
+      <rect x="16" y="16" width="268" height="180" rx="11" fill={`url(#${gid}-panel)`} stroke={main} strokeWidth={energized ? 1.4 : 1.1} />
 
       {stageIndex === 0 ? (
         <>
-          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
-          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
-            OPERATOR SURFACE
+          <circle cx="36" cy="36" r="3" fill="#fca5a5" />
+          <circle cx="48" cy="36" r="3" fill="#fde047" />
+          <circle cx="60" cy="36" r="3" fill="#86efac" />
+          <text x="76" y="40" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.1em">
+            OPERATOR SURFACE · INBOX
           </text>
-          <rect x="32" y="52" width="96" height="52" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <rect x="40" y="60" width="80" height="30" rx="2" fill="#f5f5f5" stroke={soft} strokeWidth="0.9" />
-          <path d="M46 68h68M46 76h54M46 84h40" stroke={soft} strokeWidth="1.2" strokeLinecap="round" />
-          <rect x="138" y="64" width="32" height="16" rx="2" fill="#f5f5f5" stroke={main} strokeWidth="1" />
-          <text x="154" y="75" textAnchor="middle" fill={caption} fontSize="8" fontFamily={fontMono}>
+          <rect x="28" y="52" width="118" height="72" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+          <rect x="38" y="62" width="98" height="34" rx="3" fill="#fff" stroke="#e2e8f0" strokeWidth="0.9" />
+          <path d="M46 72h82M46 80h64M46 88h72" stroke={soft} strokeWidth="1.15" strokeLinecap="round" />
+          <rect x="38" y="102" width="52" height="16" rx="2" fill="#eff6ff" stroke="#93c5fd" strokeWidth="0.9" />
+          <text x="64" y="113" textAnchor="middle" fill="#1d4ed8" fontSize="7" fontFamily={fontMono}>
+            SETTLE
+          </text>
+          <rect x="156" y="58" width="118" height="66" rx="6" fill="#fff" stroke="#bfdbfe" strokeWidth="1.05" />
+          <rect x="168" y="70" width="42" height="20" rx="3" fill="#dbeafe" stroke="#3b82f6" strokeWidth="1" />
+          <text x="189" y="84" textAnchor="middle" fill="#1e40af" fontSize="8.5" fontFamily={fontMono} fontWeight="600">
             EVT
           </text>
-          <circle cx="232" cy="72" r="11" fill="#e5e5e5" stroke={soft} strokeWidth="1" />
-          <path d="M212 98h40M220 108h24" stroke={soft} strokeWidth="2" strokeLinecap="round" />
-          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+          <text x="168" y="104" fill={label} fontSize="6.5" fontFamily={fontSans}>
+            Amount band · counterparty
+          </text>
+          <circle cx="248" cy="88" r="14" fill="#fff7ed" stroke="#fdba74" strokeWidth="1" />
+          <circle cx="248" cy="88" r="5" fill="#fb923c" opacity={energized ? 0.95 : 0.45} />
+          <path d="M200 128h72" stroke="#e2e8f0" strokeWidth="1.5" strokeLinecap="round" />
+          <text x="150" y="178" textAnchor="middle" fill={caption} fontSize="11.5" fontFamily={fontSans} fontWeight="600">
             1 · Signal received
+          </text>
+          <text x="150" y="198" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Structured event lands for human review — nothing auto-executes.
           </text>
         </>
       ) : null}
 
       {stageIndex === 1 ? (
         <>
-          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
-          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+          <rect x="28" y="30" width="244" height="22" rx="4" fill="#eff6ff" stroke="#93c5fd" strokeWidth="0.85" />
+          <text x="38" y="45" fill="#1e40af" fontSize="8" fontFamily={fontMono}>
+            route/v1/endpoints · checksum OK
+          </text>
+          <text x="28" y="68" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.1em">
             ROUTING &amp; CONTEXT
           </text>
-          <rect x="28" y="52" width="108" height="64" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <path d="M36 66h92M36 78h76M36 90h92M36 102h64" stroke={soft} strokeWidth="1" strokeLinecap="round" />
-          <text x="36" y="62" fill={label} fontSize="7" fontFamily={fontSans}>
+          <rect x="28" y="78" width="112" height="78" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+          <path d="M38 92h92M38 104h76M38 116h92M38 128h58" stroke={soft} strokeWidth="1" strokeLinecap="round" />
+          <text x="38" y="88" fill="#94a3b8" fontSize="7" fontFamily={fontSans}>
             Published tables
           </text>
-          <circle cx="188" cy="70" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
-          <circle cx="218" cy="86" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
-          <circle cx="238" cy="62" r="6" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
-          <path d="M188 70l22 12M218 86l14-18M238 62l-32 22" stroke={soft} strokeWidth="1" />
-          <rect x="150" y="98" width="118" height="24" rx="3" fill="#fafafa" stroke={main} strokeWidth="1" />
-          <text x="209" y="114" textAnchor="middle" fill={caption} fontSize="7.5" fontFamily={fontSans}>
-            Validation task queue
+          <circle cx="188" cy="94" r="8" fill="#dbeafe" stroke="#3b82f6" strokeWidth="1" />
+          <circle cx="224" cy="114" r="7" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1" />
+          <circle cx="252" cy="88" r="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1" />
+          <path d="M188 94l28 16M224 114l22-22" stroke="#60a5fa" strokeWidth="1.2" strokeLinecap="round" />
+          <rect x="152" y="124" width="120" height="32" rx="4" fill="#ecfdf5" stroke="#6ee7b7" strokeWidth="1" />
+          <text x="212" y="144" textAnchor="middle" fill="#047857" fontSize="8" fontFamily={fontSans} fontWeight="600">
+            Validation queue
           </text>
-          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+          <text x="150" y="178" textAnchor="middle" fill={caption} fontSize="11.5" fontFamily={fontSans} fontWeight="600">
             2 · Address &amp; context
+          </text>
+          <text x="150" y="198" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Labels resolve to your tables; mismatches become tasks, not silent reroutes.
           </text>
         </>
       ) : null}
 
       {stageIndex === 2 ? (
         <>
-          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
-          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+          <text x="28" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.1em">
             POLICY ENGINE · ML ASSIST
           </text>
-          <rect x="28" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <path d="M38 66h56M38 76h44M38 86h56" stroke={soft} strokeWidth="1" strokeLinecap="round" />
-          <text x="32" y="62" fill={label} fontSize="6.5" fontFamily={fontSans}>
+          <rect x="28" y="52" width="80" height="50" rx="5" fill="#fffbeb" stroke="#fcd34d" strokeWidth="1" />
+          <path d="M38 66h60M38 76h48M38 86h56" stroke="#ca8a04" strokeWidth="1" strokeLinecap="round" opacity="0.65" />
+          <text x="34" y="62" fill="#a16207" fontSize="6.5" fontFamily={fontSans}>
             Thresholds
           </text>
-          <rect x="112" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <path d="M122 68h18l-4 8l4 8h-18l4-8-4-8z" stroke={soft} strokeWidth="0.9" fill="none" />
-          <text x="116" y="62" fill={label} fontSize="6.5" fontFamily={fontSans}>
+          <rect x="118" y="52" width="80" height="50" rx="5" fill="#faf5ff" stroke="#d8b4fe" strokeWidth="1" />
+          <path d="M128 70h20l-5 10l5 10h-20l5-10-5-10z" stroke="#9333ea" strokeWidth="0.9" fill="none" />
+          <text x="124" y="62" fill="#7e22ce" fontSize="6.5" fontFamily={fontSans}>
             Dual control
           </text>
-          <rect x="196" y="52" width="76" height="44" rx="4" fill="#fafafa" stroke={main} strokeWidth="1" />
-          <text x="234" y="74" textAnchor="middle" fill={caption} fontSize="9" fontFamily={fontMono}>
+          <rect x="208" y="52" width="64" height="50" rx="5" fill="#eef2ff" stroke="#a5b4fc" strokeWidth="1" />
+          <text x="240" y="78" textAnchor="middle" fill="#4338ca" fontSize="10" fontFamily={fontMono} fontWeight="700">
             ML
           </text>
-          <text x="234" y="86" textAnchor="middle" fill={label} fontSize="6" fontFamily={fontSans}>
+          <text x="240" y="92" textAnchor="middle" fill="#6366f1" fontSize="6" fontFamily={fontSans}>
             assist
           </text>
-          <rect x="28" y="106" width="244" height="26" rx="4" fill="#f5f5f5" stroke={soft} strokeWidth="1" />
-          <path d="M36 120h228" stroke={soft} strokeWidth="1.1" strokeDasharray="3 3" />
-          <text x="150" y="124" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
-            Policy outcomes — no model override of officer paths
+          <rect x="28" y="112" width="244" height="36" rx="6" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="1" />
+          <path d="M40 130h220" stroke="#94a3b8" strokeWidth="1.1" strokeDasharray="4 3" strokeLinecap="round" />
+          <text x="150" y="134" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Outcomes are policy-bound — models flag; they never override officer paths.
           </text>
-          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+          <text x="150" y="178" textAnchor="middle" fill={caption} fontSize="11.5" fontFamily={fontSans} fontWeight="600">
             3 · Policy checks
+          </text>
+          <text x="150" y="198" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Allow-lists, limits, and approvals run before any execution surface opens.
           </text>
         </>
       ) : null}
 
       {stageIndex === 3 ? (
         <>
-          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
-          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+          <text x="28" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.1em">
             EXECUTION SURFACE
           </text>
-          <rect x="28" y="56" width="244" height="36" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <path d="M40 76h188" stroke={soft} strokeWidth="2.2" strokeLinecap="round" />
+          <rect x="28" y="52" width="244" height="44" rx="6" fill="#fff7ed" stroke="#fdba74" strokeWidth="1" />
+          <path d="M44 76h176" stroke={energized ? "#ea580c" : soft} strokeWidth="2.5" strokeLinecap="round" />
           <polygon
-            points="220,76 234,68 234,84"
-            fill={energized ? "#404040" : "#c4c4c4"}
-            stroke={energized ? "#262626" : "#b5b5b5"}
-            strokeWidth="0.5"
+            points="212,76 232,66 232,86"
+            fill={energized ? "#ea580c" : "#d6d3d1"}
+            stroke={energized ? "#c2410c" : "#a8a29e"}
+            strokeWidth="0.6"
           />
-          <text x="36" y="72" fill={label} fontSize="7.5" fontFamily={fontSans}>
+          <text x="40" y="70" fill="#9a3412" fontSize="7.5" fontFamily={fontSans}>
             Authorized instruction → configured rails
           </text>
-          <rect x="28" y="104" width="244" height="28" rx="3" fill="#f5f5f5" stroke={soft} strokeWidth="0.9" />
-          <path d="M36 118h28M72 118h192" stroke={soft} strokeWidth="1" strokeLinecap="round" />
-          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+          <rect x="28" y="108" width="244" height="40" rx="5" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
+          <path d="M40 128h32M82 128h174" stroke={soft} strokeWidth="1" strokeLinecap="round" />
+          <rect x="40" y="118" width="48" height="12" rx="2" fill="#dcfce7" stroke="#4ade80" strokeWidth="0.75" />
+          <text x="64" y="127" textAnchor="middle" fill="#166534" fontSize="6" fontFamily={fontMono}>
+            ACK
+          </text>
+          <text x="150" y="178" textAnchor="middle" fill={caption} fontSize="11.5" fontFamily={fontSans} fontWeight="600">
             4 · Execution
+          </text>
+          <text x="150" y="198" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Confirmed operator action applied to rails you configured — no hidden discretion.
           </text>
         </>
       ) : null}
 
       {stageIndex === 4 ? (
         <>
-          <rect x="20" y="20" width="260" height="160" rx="10" fill="#fff" stroke={main} strokeWidth="1.35" />
-          <text x="32" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
+          <text x="28" y="42" fill={label} fontSize="9" fontFamily={fontSans} letterSpacing="0.08em">
             EVIDENCE &amp; SUPERVISORY READOUT
           </text>
-          <rect x="28" y="52" width="58" height="78" rx="3" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <path d="M36 66h42M36 78h34M36 90h42M36 102h28M36 114h38" stroke={soft} strokeWidth="0.9" strokeLinecap="round" />
-          <text x="57" y="142" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
+          <rect x="28" y="52" width="62" height="88" rx="4" fill="#f0fdfa" stroke="#5eead4" strokeWidth="1" />
+          <path d="M38 66h42M38 78h34M38 90h42M38 102h28M38 114h38M38 126h32" stroke={soft} strokeWidth="0.95" strokeLinecap="round" />
+          <text x="59" y="148" textAnchor="middle" fill="#0f766e" fontSize="6.5" fontFamily={fontSans}>
             Log spine
           </text>
-          <rect x="96" y="58" width="78" height="62" rx="4" fill="#f5f5f5" stroke={main} strokeWidth="1" />
-          <path d="M106 72h58M106 84h46M106 96h58" stroke={soft} strokeWidth="0.9" strokeLinecap="round" />
-          <text x="135" y="132" textAnchor="middle" fill={label} fontSize="6.5" fontFamily={fontSans}>
-            Export bundle
+          <rect x="100" y="56" width="86" height="80" rx="6" fill="#ecfdf5" stroke="#34d399" strokeWidth="1.05" />
+          <path d="M112 72h62M112 86h50M112 100h62" stroke="#059669" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+          <text x="143" y="128" textAnchor="middle" fill="#047857" fontSize="7" fontFamily={fontSans} fontWeight="600">
+            Export .zip
           </text>
-          <rect x="184" y="58" width="74" height="62" rx="4" fill="#fafafa" stroke={soft} strokeWidth="1" />
-          <rect x="192" y="68" width="58" height="12" rx="1" fill="#e5e5e5" />
-          <text x="221" y="96" textAnchor="middle" fill={caption} fontSize="7" fontFamily={fontMono}>
+          <rect x="196" y="56" width="76" height="80" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+          <rect x="206" y="68" width="56" height="14" rx="2" fill="#e0e7ff" stroke="#818cf8" strokeWidth="0.8" />
+          <text x="234" y="100" textAnchor="middle" fill="#4338ca" fontSize="7" fontFamily={fontMono}>
             ML meta
           </text>
-          <text x="221" y="108" textAnchor="middle" fill={label} fontSize="6" fontFamily={fontSans}>
-            id + schema
+          <text x="234" y="114" textAnchor="middle" fill={label} fontSize="6" fontFamily={fontSans}>
+            model · schema id
           </text>
-          <text x="150" y="168" textAnchor="middle" fill={caption} fontSize="11" fontFamily={fontSans} fontWeight="600">
+          <text x="150" y="178" textAnchor="middle" fill={caption} fontSize="11.5" fontFamily={fontSans} fontWeight="600">
             5 · Evidence &amp; review
+          </text>
+          <text x="150" y="198" textAnchor="middle" fill={label} fontSize="7" fontFamily={fontSans}>
+            Immutable-style trail plus exports auditors can file without re-parsing your UI.
           </text>
         </>
       ) : null}
