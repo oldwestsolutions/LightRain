@@ -30,7 +30,7 @@ export function MarketingPageShell({ children, backTo, backLabel, wide, extraWid
         className="pointer-events-none fixed inset-0 z-[2] bg-gradient-to-b from-canvas/88 via-canvas/45 to-canvas/82"
         aria-hidden
       />
-      <div className={`relative z-10 flex flex-1 flex-col px-4 pb-10 ${topPad} sm:px-6`}>
+      <div className={`relative z-10 flex flex-1 flex-col overflow-x-hidden px-4 pb-10 ${topPad} sm:px-6`}>
         <div className={`mx-auto w-full flex-1 ${maxClass}`}>
           <Link
             href={backTo}

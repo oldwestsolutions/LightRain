@@ -11,7 +11,7 @@ export const URL_COMPANY = "https://company.lightra.in";
 export const URL_SHOP = "https://shop.lightra.in";
 
 /** Browser tab + default document title (fixed for all routes). */
-export const SITE_TAB_TITLE = "LightRain | Bitcoin Server";
+export const SITE_TAB_TITLE = "LightRain | Bitcoin Payments";
 
 export const SITE_SEO_DESCRIPTION =
-  "LightRain is a private Bitcoin-server grade ledger: federation addressing, settlement context, and discretionary rails built for operators who need legible compliance surfaces.";
+  "LightRain is a private Bitcoin payments ledger: federation addressing, settlement context, and discretionary rails built for operators who need legible compliance surfaces.";
