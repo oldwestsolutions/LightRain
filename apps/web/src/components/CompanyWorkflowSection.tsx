@@ -334,11 +334,11 @@ function WorkflowFigure({
 }) {
   return (
     <figure
-      className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 ${className}`}
+      className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 lg:p-4 ${className}`}
       aria-label="Illustrative workflow schematic"
     >
       <WorkflowScrollDiagram
-        className="mx-auto h-auto w-full max-w-[min(100%,340px)] text-neutral-900 sm:max-w-[360px] lg:max-w-[380px]"
+        className="mx-auto h-auto w-full max-w-[min(100%,300px)] text-neutral-900 sm:max-w-[320px] md:mx-0 md:max-w-full"
         activeStep={activeStep}
       />
     </figure>
@@ -370,60 +370,71 @@ export function CompanyWorkflowSection() {
       </header>
 
       <div className="w-full px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
-        <div className="border-b border-neutral-200/80 pb-10 sm:pb-12">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
-          <div className="mt-6 flex flex-col items-center">
-            <WorkflowFigure activeStep={activeStep} className="w-full max-w-xl" />
-            <p
-              className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500"
-              aria-live="polite"
-            >
-              Highlight · {STEPS[activeStep]?.n} {STEPS[activeStep]?.title}
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-10 sm:pt-12">
-          <div className="border-b border-neutral-200/80 pb-8 sm:pb-10">
-            <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
-            <p className="mt-1 text-xs text-neutral-500">Six discrete steps in an illustrative operator path.</p>
-          </div>
-
-          <ol className="list-none space-y-0 p-0">
-            {STEPS.map((step, index) => (
-              <li key={step.n}>
-                <article
-                  ref={setRef(index)}
-                  id={`workflow-stage-${step.n}`}
-                  aria-labelledby={`workflow-stage-title-${step.n}`}
-                  className={`scroll-mt-28 border-l-2 py-12 pl-6 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-14 sm:pl-8 md:py-16 lg:pl-10 ${
-                    index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
-                  } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
+        <div className="md:grid md:grid-cols-[minmax(220px,32%)_minmax(0,1fr)] md:items-start md:gap-x-8 md:gap-y-0 lg:grid-cols-[minmax(240px,34%)_minmax(0,1fr)] lg:gap-x-10 xl:grid-cols-[minmax(260px,36%)_minmax(0,1fr)] xl:gap-x-14">
+          {/* Reference schematic — side-by-side with stages narrative from md up */}
+          <div className="min-w-0 md:border-r md:border-neutral-200/70 md:pr-6 lg:pr-8 xl:pr-10">
+            <div className="md:sticky md:top-28 md:pb-8 lg:pb-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
+              <div className="mt-4 flex flex-col sm:mt-5">
+                <WorkflowFigure activeStep={activeStep} className="w-full" />
+                <p
+                  className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 md:text-left"
+                  aria-live="polite"
                 >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:gap-10 lg:gap-14">
-                    <span
-                      className="w-10 shrink-0 font-mono text-xs font-semibold tabular-nums text-neutral-400 sm:w-12 sm:pt-1 sm:text-right"
-                      aria-hidden
-                    >
-                      {step.n.padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h3
-                        id={`workflow-stage-title-${step.n}`}
-                        className="text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl"
+                  Highlight · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Stages narrative */}
+          <div className="min-w-0 mt-12 border-t border-neutral-200/80 pt-10 sm:mt-14 sm:pt-12 md:mt-0 md:border-t-0 md:pt-0 md:pl-4 lg:pl-6 xl:pl-8">
+            <div className="border-b border-neutral-200/80 pb-8 sm:pb-10">
+              <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
+              <p className="mt-1 text-xs leading-relaxed text-neutral-500">
+                Six discrete steps in an illustrative operator path. Scroll the narrative; the schematic tracks the stage
+                in view.
+              </p>
+            </div>
+
+            <ol className="list-none space-y-0 p-0">
+              {STEPS.map((step, index) => (
+                <li key={step.n}>
+                  <article
+                    ref={setRef(index)}
+                    id={`workflow-stage-${step.n}`}
+                    aria-labelledby={`workflow-stage-title-${step.n}`}
+                    className={`scroll-mt-28 border-l-2 py-10 pl-5 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-12 sm:pl-7 md:py-14 lg:py-12 lg:pl-6 xl:pl-8 ${
+                      index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
+                    } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
+                      <span
+                        className="w-9 shrink-0 font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-10 sm:pt-0.5 sm:text-right"
+                        aria-hidden
                       >
-                        {step.title}
-                      </h3>
-                      <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-600 sm:text-base">{step.body}</p>
+                        {step.n.padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3
+                          id={`workflow-stage-title-${step.n}`}
+                          className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
+                        >
+                          {step.title}
+                        </h3>
+                        <p className="mt-3 text-[15px] leading-[1.75] text-neutral-600 sm:mt-4 sm:text-base sm:leading-[1.8]">
+                          {step.body}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              </li>
-            ))}
-          </ol>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
-        <footer className="mt-16 border-t border-neutral-200/90 pt-10 sm:mt-20 sm:pt-12">
+        <footer className="mt-14 border-t border-neutral-200/90 pt-10 sm:mt-16 sm:pt-12 lg:mt-16">
           <p className="text-sm font-semibold text-neutral-900">Differentiators in this workflow</p>
           <ul className="mt-4 grid gap-3 text-sm leading-relaxed text-neutral-600 sm:grid-cols-2 sm:gap-x-10 lg:max-w-5xl">
             <li className="flex gap-2">
