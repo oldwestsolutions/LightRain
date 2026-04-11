@@ -1,12 +1,9 @@
 /**
  * Operator workflow narrative — infrastructure documentation tone (no commerce / custody claims).
- * Scroll-linked diagram: sticky illustration highlights the step most in view.
- * Company route passes `allowStickyDescendants` on the shell so horizontal overflow clipping does not suppress
- * `position: sticky` on the diagram column.
+ * Each stage is presented as a full-viewport “page” inside a scroll-snap deck so one step
+ * (diagram + narrative) dominates the viewport at a time.
  */
 
-import type { RefObject } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./CompanyWorkflowSection.module.css";
 
 const STEP_COUNT = 6;
@@ -39,7 +36,6 @@ function WorkflowScrollDiagram({
         Same controls may run in parallel or batch in your environment.
       </text>
 
-      {/* Connector 0–1 */}
       <path
         d="M150 168v28"
         stroke={activeStep <= 1 ? strokeMain(Math.max(activeStep, 0)) : "#d4d4d4"}
@@ -48,22 +44,18 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 1 — Operator console / signal inbox */}
       <g className={dim(0)}>
         <rect x="24" y="72" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(0)} strokeWidth="1.35" />
         <text x="36" y="92" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
           OPERATOR SURFACE
         </text>
-        {/* Desk */}
         <rect x="44" y="108" width="88" height="48" rx="4" fill="#fafafa" stroke={strokeSoft(0)} strokeWidth="1" />
         <rect x="52" y="114" width="72" height="28" rx="2" fill="#f5f5f5" stroke={strokeSoft(0)} strokeWidth="0.9" />
-        {/* “Inbox” lines on monitor */}
         <path d="M58 122h60M58 128h48M58 134h36" stroke={strokeSoft(0)} strokeWidth="1.2" strokeLinecap="round" />
         <rect x="118" y="118" width="28" height="14" rx="2" fill="#f5f5f5" stroke={strokeMain(0)} strokeWidth="1" />
         <text x="132" y="128" textAnchor="middle" fill="#525252" fontSize="7" fontFamily="ui-monospace, monospace">
           EVT
         </text>
-        {/* Operator silhouette */}
         <circle cx="214" cy="124" r="10" fill="#e5e5e5" stroke={strokeSoft(0)} strokeWidth="1" />
         <path d="M198 148h32M204 156h20" stroke={strokeSoft(0)} strokeWidth="2" strokeLinecap="round" />
         <text x="150" y="182" textAnchor="middle" fill="#525252" fontSize="10" fontFamily="ui-sans-serif, system-ui, sans-serif" fontWeight="600">
@@ -79,7 +71,6 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 2 — Federation / routing tables */}
       <g className={dim(1)}>
         <rect x="24" y="232" width="252" height="104" rx="10" fill="#fff" stroke={strokeMain(1)} strokeWidth="1.35" />
         <text x="36" y="252" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
@@ -111,7 +102,6 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 3 — Policy + ML assist */}
       <g className={dim(2)}>
         <rect x="24" y="380" width="252" height="112" rx="10" fill="#fff" stroke={strokeMain(2)} strokeWidth="1.35" />
         <text x="36" y="400" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
@@ -152,7 +142,6 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 4 — Offline / HSM posture */}
       <g className={dim(3)}>
         <rect x="24" y="536" width="252" height="108" rx="10" fill="#fff" stroke={strokeMain(3)} strokeWidth="1.35" />
         <rect x="34" y="546" width="232" height="88" rx="8" fill="none" stroke={strokeSoft(3)} strokeWidth="1.2" strokeDasharray="6 5" />
@@ -184,7 +173,6 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 5 — Execution rail */}
       <g className={dim(4)}>
         <rect x="24" y="688" width="252" height="96" rx="10" fill="#fff" stroke={strokeMain(4)} strokeWidth="1.35" />
         <text x="36" y="708" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
@@ -211,7 +199,6 @@ function WorkflowScrollDiagram({
         className="transition-colors duration-500"
       />
 
-      {/* 6 — Evidence / audit */}
       <g className={dim(5)}>
         <rect x="24" y="832" width="252" height="116" rx="10" fill="#fff" stroke={strokeMain(5)} strokeWidth="1.35" />
         <text x="36" y="852" fill="#737373" fontSize="9" fontFamily="ui-sans-serif, system-ui, sans-serif" letterSpacing="0.06em">
@@ -242,6 +229,9 @@ function WorkflowScrollDiagram({
     </svg>
   );
 }
+
+const PIPELINE_CAPTION =
+  "Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails only after explicit confirmation; immutable-style logs, acknowledgements, and export bundles (with ML metadata when enabled) complete the supervisory record. Ordering, branching, and omissions are deployment-specific and should follow counsel and supervisory guidance.";
 
 const STEPS = [
   {
@@ -282,71 +272,7 @@ const STEPS = [
   },
 ] as const;
 
-function useScrollLinkedStep(stepCount: number, stepsScrollRef: RefObject<HTMLElement | null>) {
-  const [active, setActive] = useState(0);
-  const refs = useRef<(HTMLElement | null)[]>([]);
-
-  const setRef = useCallback((index: number) => (el: HTMLElement | null) => {
-    refs.current[index] = el;
-  }, []);
-
-  useEffect(() => {
-    const elements = refs.current;
-    const stepsScroller = stepsScrollRef.current;
-
-    const pickActive = () => {
-      let bestIdx = 0;
-      let bestRatio = -1;
-      for (let i = 0; i < stepCount; i++) {
-        const el = elements[i];
-        if (!el) continue;
-        const r = el.getBoundingClientRect();
-        const vh = window.innerHeight || 0;
-        const top = Math.max(r.top, 0);
-        const bottom = Math.min(r.bottom, vh);
-        const visible = Math.max(0, bottom - top);
-        const ratio = r.height > 0 ? visible / r.height : 0;
-        if (ratio > bestRatio) {
-          bestRatio = ratio;
-          bestIdx = i;
-        }
-      }
-      setActive(Math.min(Math.max(bestIdx, 0), stepCount - 1));
-    };
-
-    const observer = new IntersectionObserver(
-      () => {
-        pickActive();
-      },
-      { root: null, rootMargin: "-22% 0px -42% 0px", threshold: [0, 0.05, 0.12, 0.2, 0.35, 0.5, 0.65, 0.85, 1] }
-    );
-
-    for (let i = 0; i < stepCount; i++) {
-      const el = elements[i];
-      if (el) observer.observe(el);
-    }
-
-    const onScroll = () => pickActive();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    stepsScroller?.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    pickActive();
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      stepsScroller?.removeEventListener("scroll", onScroll);
-      observer.disconnect();
-    };
-  }, [stepCount, stepsScrollRef]);
-
-  return { activeStep: active, setRef };
-}
-
 export function CompanyWorkflowSection() {
-  const stepsScrollRef = useRef<HTMLDivElement>(null);
-  const { activeStep, setRef } = useScrollLinkedStep(STEP_COUNT, stepsScrollRef);
-
   return (
     <section
       className="rounded-2xl border border-neutral-200/90 bg-white shadow-card"
@@ -361,72 +287,68 @@ export function CompanyWorkflowSection() {
           LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute for
           your licensed counterparties. The sequence below is representative of how federation addressing, policy
           engines, ML-assisted integrity signals, and execution surfaces can fit together when your organization wires
-          them into its own controls. From medium breakpoints up, use the narrative column’s scrollbar: the schematic
-          beside it tracks the active stage, and scroll-bound motion on the diagram is tied to that column’s scroll
-          position where the browser exposes named scroll timelines (otherwise it follows the document scroll).
+          them into its own controls. Each numbered stage occupies roughly one full viewport inside the deck; scroll
+          vertically (or swipe) to move stage by stage.
         </p>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
           Modern CSS supports scroll-linked animations via animation-timeline—covering staged text reveals, synchronized
-          transitions, and scroll-bound motion. The presentation below uses the same intent for legibility: the
-          schematic remains anchored while each stage advances in sequence, mirroring how operators read structured
-          events under review rather than serving as ornament.
+          transitions, and scroll-bound motion. Inside the deck, scroll snapping keeps one stage in focus at a time; where
+          supported, narrative copy uses view timelines for a restrained entry transition—not ornament.
         </p>
       </div>
 
       <div className="p-5 sm:p-8">
-        <div
-          className={`grid grid-cols-1 gap-10 md:grid-cols-[minmax(240px,38%)_minmax(0,1fr)] md:items-start md:gap-10 xl:gap-12 ${styles.workflowScrollRoot}`}
-        >
-          <div className="relative min-w-0">
-            <div className="md:sticky md:top-24 md:pb-8">
-              <figure
-                className={`overflow-hidden rounded-xl border border-neutral-200/80 bg-neutral-50/50 shadow-sm ${styles.diagramCard}`}
-              >
-                <div className={`p-3 sm:p-4 ${styles.diagramSvgMotion}`}>
-                  <WorkflowScrollDiagram
-                    className="mx-auto h-auto w-full max-w-[320px] text-neutral-900 md:max-w-none"
-                    activeStep={activeStep}
-                  />
-                </div>
-                <figcaption
-                  className={`border-t border-neutral-200/60 px-3 pb-3 pt-3 text-center text-[11px] leading-relaxed text-muted sm:px-4 sm:pb-4 sm:pt-3.5 sm:text-xs md:text-left ${styles.diagramCaptionMotion}`}
-                >
-                  Illustrative pipeline: structured events enter the operator surface; routing and federation labels are checked
-                  against tables you publish; policy and ML-assist layers produce auditable outcomes without displacing committee
-                  approvals; optional segregated signing reflects your hardware posture; execution writes to configured rails
-                  only after explicit confirmation; immutable-style logs, acknowledgements, and export bundles (with ML metadata
-                  when enabled) complete the supervisory record. Ordering, branching, and omissions are deployment-specific and
-                  should follow counsel and supervisory guidance.
-                </figcaption>
-              </figure>
-              <p
-                className={`mt-3 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted ${styles.activeHintMotion}`}
-                aria-live="polite"
-              >
-                Active stage · {STEPS[activeStep]?.n} — {STEPS[activeStep]?.title}
-              </p>
-            </div>
-          </div>
+        <p className="mb-3 text-xs text-muted">
+          Scroll inside the frame — {STEP_COUNT} stops · snap aligns each stage to the top of the viewport.
+        </p>
 
-          <div ref={stepsScrollRef} className={`min-w-0 space-y-0 ${styles.stepsScroller}`}>
-            {STEPS.map((step, index) => (
-              <article
-                key={step.n}
-                ref={setRef(index)}
-                data-workflow-step={index}
-                className={`${styles.stepReveal} scroll-mt-28 border-l-2 py-10 pl-5 transition-[border-color] duration-500 sm:scroll-mt-32 sm:py-12 sm:pl-7 md:min-h-[min(62vh,480px)] md:py-14 md:pl-8 ${
-                  activeStep === index ? "border-accent" : "border-neutral-300"
-                }`}
-              >
-                <p className="font-mono text-xs font-bold text-accent">{step.n}</p>
-                <h3 className="mt-1 text-base font-semibold text-neutral-900 sm:text-lg">{step.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-neutral-700 sm:text-[15px]">{step.body}</p>
-              </article>
-            ))}
-          </div>
+        <div
+          className={styles.workflowSnapport}
+          role="region"
+          aria-label="Workflow stages: scroll vertically for each of six steps"
+          tabIndex={0}
+        >
+          {STEPS.map((step, index) => (
+            <article
+              key={step.n}
+              id={`workflow-stage-${step.n}`}
+              className={`${styles.workflowPage} border-b border-neutral-200/80 bg-white last:border-b-0`}
+              aria-labelledby={`workflow-stage-title-${step.n}`}
+            >
+              <div className="flex min-h-full flex-col md:flex-row">
+                <div className="flex flex-col justify-center border-b border-neutral-200/70 bg-neutral-50/90 px-4 py-6 sm:px-5 sm:py-8 md:w-[min(44%,320px)] md:shrink-0 md:border-b-0 md:border-r md:px-6 md:py-10">
+                  <figure className="overflow-hidden rounded-lg border border-neutral-200/80 bg-white p-2 shadow-sm sm:p-3">
+                    <WorkflowScrollDiagram
+                      className="mx-auto h-auto w-full max-w-[280px] text-neutral-900"
+                      activeStep={index}
+                    />
+                    <figcaption className="mt-3 text-[10px] leading-relaxed text-muted sm:text-[11px]">
+                      {PIPELINE_CAPTION}
+                    </figcaption>
+                  </figure>
+                  <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
+                    Active stage · {step.n} — {step.title}
+                  </p>
+                </div>
+
+                <div
+                  className={`flex flex-1 flex-col justify-center px-4 py-8 sm:px-8 sm:py-10 md:py-12 ${styles.pageStepReveal}`}
+                >
+                  <p className="font-mono text-xs font-bold text-accent">{step.n}</p>
+                  <h3
+                    id={`workflow-stage-title-${step.n}`}
+                    className="mt-1 text-lg font-semibold text-neutral-900 sm:text-xl"
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 max-w-prose text-sm leading-relaxed text-neutral-700 sm:text-[15px]">{step.body}</p>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
 
-        <div className="mt-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 text-sm leading-relaxed text-neutral-700 md:mt-14">
+        <div className="mt-10 rounded-xl border border-neutral-200/80 bg-neutral-50/80 px-4 py-4 text-sm leading-relaxed text-neutral-700">
           <p className="font-medium text-neutral-900">Differentiators in this workflow</p>
           <ul className="mt-2 list-disc space-y-1.5 pl-5 text-muted">
             <li>Federation endpoints and labels that remain legible under review</li>
