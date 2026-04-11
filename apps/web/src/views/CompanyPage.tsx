@@ -151,14 +151,9 @@ export function CompanyPage() {
           </div>
         </section>
 
-        <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-10 xl:gap-12">
-          <div className="min-w-0">
-            <CompanyWorkflowSection />
-          </div>
-
-          <div className="min-w-0 w-full lg:w-auto">
-            <CompanySidebar />
-          </div>
+        <div className="flex flex-col gap-10">
+          <CompanyWorkflowSection />
+          <CompanySidebar />
         </div>
       </div>
     </MarketingPageShell>

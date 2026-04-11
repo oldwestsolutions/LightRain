@@ -337,7 +337,10 @@ function WorkflowFigure({
       className={`rounded-xl border border-neutral-200/90 bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] sm:p-5 ${className}`}
       aria-label="Illustrative workflow schematic"
     >
-      <WorkflowScrollDiagram className="mx-auto h-auto w-full max-w-[260px] text-neutral-900 sm:max-w-[280px]" activeStep={activeStep} />
+      <WorkflowScrollDiagram
+        className="mx-auto h-auto w-full max-w-[min(100%,340px)] text-neutral-900 sm:max-w-[360px] lg:max-w-[380px]"
+        activeStep={activeStep}
+      />
     </figure>
   );
 }
@@ -352,7 +355,7 @@ export function CompanyWorkflowSection() {
         <h2 id="workflow-heading" className="mt-2 font-display text-2xl font-normal tracking-[0.04em] text-neutral-900 sm:text-3xl">
           How an operator uses LightRain
         </h2>
-        <div className="mt-6 max-w-3xl space-y-4 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
+        <div className="mt-6 max-w-4xl space-y-4 text-sm leading-[1.7] text-neutral-600 sm:text-[15px]">
           <p>
             LightRain is infrastructure for settlement discipline—not a storefront, not a custodian, and not a substitute
             for your licensed counterparties. The sequence that follows is representative of how federation addressing,
@@ -366,70 +369,63 @@ export function CompanyWorkflowSection() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-10 sm:px-10 sm:py-12 lg:py-14">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0 xl:gap-x-14">
-          {/* Reference schematic — mobile / small tablet */}
-          <div className="mb-12 lg:hidden">
-            <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
-            <WorkflowFigure activeStep={activeStep} />
+      <div className="w-full px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
+        <div className="border-b border-neutral-200/80 pb-10 sm:pb-12">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
+          <div className="mt-6 flex flex-col items-center">
+            <WorkflowFigure activeStep={activeStep} className="w-full max-w-xl" />
+            <p
+              className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500"
+              aria-live="polite"
+            >
+              Highlight · {STEPS[activeStep]?.n} {STEPS[activeStep]?.title}
+            </p>
+          </div>
+        </div>
+
+        <div className="pt-10 sm:pt-12">
+          <div className="border-b border-neutral-200/80 pb-8 sm:pb-10">
+            <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
+            <p className="mt-1 text-xs text-neutral-500">Six discrete steps in an illustrative operator path.</p>
           </div>
 
-          {/* Sticky schematic — desktop */}
-          <aside className="relative hidden lg:col-span-5 lg:block xl:col-span-4">
-            <div className="sticky top-28">
-              <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-neutral-500">Reference schematic</p>
-              <WorkflowFigure activeStep={activeStep} />
-              <p className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500" aria-live="polite">
-                Highlight · {STEPS[activeStep]?.n} {STEPS[activeStep]?.title}
-              </p>
-            </div>
-          </aside>
-
-          {/* Stages */}
-          <div className="min-w-0 lg:col-span-7 xl:col-span-8">
-            <div className="mb-8 border-b border-neutral-200/80 pb-6 lg:mb-10 lg:pb-8">
-              <h3 className="text-sm font-semibold text-neutral-900">Stages</h3>
-              <p className="mt-1 text-xs text-neutral-500">Six discrete steps in an illustrative operator path.</p>
-            </div>
-
-            <ol className="list-none space-y-0 p-0">
-              {STEPS.map((step, index) => (
-                <li key={step.n}>
-                  <article
-                    ref={setRef(index)}
-                    id={`workflow-stage-${step.n}`}
-                    aria-labelledby={`workflow-stage-title-${step.n}`}
-                    className={`scroll-mt-28 border-l-2 py-12 pl-6 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-14 sm:pl-8 md:py-16 ${
-                      index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
-                    } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
-                  >
-                    <div className="flex gap-6 sm:gap-8">
-                      <span
-                        className="w-8 shrink-0 pt-0.5 text-right font-mono text-[11px] font-semibold tabular-nums text-neutral-400 sm:w-9"
-                        aria-hidden
+          <ol className="list-none space-y-0 p-0">
+            {STEPS.map((step, index) => (
+              <li key={step.n}>
+                <article
+                  ref={setRef(index)}
+                  id={`workflow-stage-${step.n}`}
+                  aria-labelledby={`workflow-stage-title-${step.n}`}
+                  className={`scroll-mt-28 border-l-2 py-12 pl-6 transition-[border-color] duration-300 sm:scroll-mt-32 sm:py-14 sm:pl-8 md:py-16 lg:pl-10 ${
+                    index < STEPS.length - 1 ? "border-b border-neutral-100" : ""
+                  } ${activeStep === index ? "border-l-neutral-900" : "border-l-neutral-200"}`}
+                >
+                  <div className="flex flex-col gap-4 sm:flex-row sm:gap-10 lg:gap-14">
+                    <span
+                      className="w-10 shrink-0 font-mono text-xs font-semibold tabular-nums text-neutral-400 sm:w-12 sm:pt-1 sm:text-right"
+                      aria-hidden
+                    >
+                      {step.n.padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        id={`workflow-stage-title-${step.n}`}
+                        className="text-xl font-semibold tracking-tight text-neutral-900 sm:text-2xl"
                       >
-                        {step.n.padStart(2, "0")}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <h3
-                          id={`workflow-stage-title-${step.n}`}
-                          className="text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
-                        >
-                          {step.title}
-                        </h3>
-                        <p className="mt-4 max-w-[40rem] text-[15px] leading-[1.75] text-neutral-600">{step.body}</p>
-                      </div>
+                        {step.title}
+                      </h3>
+                      <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-600 sm:text-base">{step.body}</p>
                     </div>
-                  </article>
-                </li>
-              ))}
-            </ol>
-          </div>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ol>
         </div>
 
         <footer className="mt-16 border-t border-neutral-200/90 pt-10 sm:mt-20 sm:pt-12">
           <p className="text-sm font-semibold text-neutral-900">Differentiators in this workflow</p>
-          <ul className="mt-4 max-w-2xl space-y-2 text-sm leading-relaxed text-neutral-600">
+          <ul className="mt-4 grid gap-3 text-sm leading-relaxed text-neutral-600 sm:grid-cols-2 sm:gap-x-10 lg:max-w-5xl">
             <li className="flex gap-2">
               <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-400" aria-hidden />
               <span>Federation endpoints and labels that remain legible under review</span>
