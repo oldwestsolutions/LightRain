@@ -138,7 +138,7 @@ export function ShopCatalogControls({
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted">Category</span>
-        {SHOP_CATEGORIES.map((c) => {
+        {SHOP_CATEGORIES.filter((c) => c.id !== "limited").map((c) => {
           const on = filters.categories.includes(c.id);
           return (
             <button

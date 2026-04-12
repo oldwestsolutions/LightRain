@@ -16,10 +16,15 @@ export function ShopProductImage({
   product,
   className = "",
   aspectClass = "aspect-[3/4]",
+  slugChars = 24,
+  slugTextClass = "",
 }: {
   product: ShopProduct;
   className?: string;
   aspectClass?: string;
+  /** Max slug characters before ellipsis (default 24). */
+  slugChars?: number;
+  slugTextClass?: string;
 }) {
   const t = toneMap[product.imageTone];
   return (
@@ -40,9 +45,11 @@ export function ShopProductImage({
         }}
       />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/35 to-transparent" />
-      <p className="absolute bottom-3 left-3 right-3 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white/55">
-        {product.slug.slice(0, 24)}
-        {product.slug.length > 24 ? "…" : ""}
+      <p
+        className={`absolute bottom-3 left-3 right-3 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-white/55 ${slugTextClass}`}
+      >
+        {product.slug.slice(0, slugChars)}
+        {product.slug.length > slugChars ? "…" : ""}
       </p>
     </div>
   );
