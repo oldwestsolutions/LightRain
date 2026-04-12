@@ -45,7 +45,7 @@ export function ShopCheckoutPage() {
   const shippingCents = method.priceCents;
   const totalCents = subtotal + shippingCents;
 
-  const onPay = async () => {
+  const onCompleteOrder = () => {
     setApiError(null);
     const v = validateShippingAddress(shippingAddress);
     setErrors(v);
@@ -57,64 +57,27 @@ export function ShopCheckoutPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/shop/invoice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          lines: resolvedLines,
-          shippingMethod: method.id,
-          shippingAddress,
-          subtotalCents: subtotal,
-          shippingCents,
-          totalCents,
-        }),
-      });
-      const data = (await res.json()) as {
-        checkoutUrl?: string | null;
-        orderId?: string;
-        mock?: boolean;
-        error?: string;
-        message?: string;
-      };
-
-      if (!res.ok) {
-        setApiError(data.error ?? "Checkout failed");
-        setLoading(false);
-        return;
-      }
-
-      const orderId = data.orderId ?? `LR-${Date.now()}`;
+      const orderId = `LR-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
       sessionStorage.setItem(
         "lr-shop-last-order",
         JSON.stringify({
           orderId,
-          mock: data.mock === true,
-          message: data.message,
           totalCents,
           shippingCents,
           method: method.id,
           shipWindow: shippingWindowLabel(method),
-          address: shippingAddress,
+          address: shippingAddress as Record<string, string>,
         })
       );
-
-      if (data.checkoutUrl) {
-        clearCart();
-        window.location.href = data.checkoutUrl;
-        return;
-      }
-
       clearCart();
-      router.push(`/shop/order/confirm?orderId=${encodeURIComponent(orderId)}&mock=1`);
-    } catch {
-      setApiError("Network error. Try again.");
+      router.push(`/shop/order/confirm?orderId=${encodeURIComponent(orderId)}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <MarketingPageShell backTo="/shop/cart" backLabel="Back to cart" extraWide>
+    <MarketingPageShell backTo="/shop/cart" backLabel="Back to cart" extraWide compactTop>
       <ShopCartDrawer />
       <ShopHeader />
 
@@ -273,16 +236,16 @@ export function ShopCheckoutPage() {
                 <span>Total</span>
                 <span className="tabular-nums">{formatShopPrice(totalCents)}</span>
               </div>
-              <p className="mt-2 text-xs text-muted">Charged in USD via BTCPay. On-chain or Lightning per your server.</p>
+              <p className="mt-2 text-xs text-muted">Totals in USD. Payment collection is not enabled on this preview.</p>
             </div>
             {apiError ? <p className="text-sm text-red-700">{apiError}</p> : null}
             <button
               type="button"
               disabled={loading}
-              onClick={onPay}
+              onClick={onCompleteOrder}
               className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-neutral-900 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
             >
-              {loading ? "Creating invoice…" : "Pay with Bitcoin (BTCPay)"}
+              {loading ? "Submitting…" : "Place order"}
             </button>
           </aside>
         </div>

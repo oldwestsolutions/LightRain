@@ -25,7 +25,7 @@ export function ShopCartPage() {
     .filter(Boolean) as { line: (typeof lines)[0]; p: (typeof SHOP_PRODUCTS)[0]; color: string }[];
 
   return (
-    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide>
+    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide compactTop>
       <ShopCartDrawer />
       <ShopHeader />
 

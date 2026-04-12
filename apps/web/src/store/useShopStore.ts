@@ -84,6 +84,21 @@ export const useShopStore = create<ShopState>()(
         shippingAddress: s.shippingAddress,
         shippingMethod: s.shippingMethod,
       }),
+      merge: (persisted, current) => {
+        const p = persisted as Partial<Pick<ShopState, "lines" | "shippingAddress" | "shippingMethod">> | undefined;
+        return {
+          ...current,
+          lines: Array.isArray(p?.lines) ? p.lines : current.lines,
+          shippingAddress:
+            p?.shippingAddress && typeof p.shippingAddress === "object"
+              ? { ...emptyShippingAddress(), ...p.shippingAddress }
+              : current.shippingAddress,
+          shippingMethod:
+            p?.shippingMethod === "standard" || p?.shippingMethod === "expedited"
+              ? p.shippingMethod
+              : current.shippingMethod,
+        };
+      },
     }
   )
 );

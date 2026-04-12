@@ -13,7 +13,7 @@ export function ShopHeader() {
   const n = cartLineCount(lines);
 
   return (
-    <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200/90 pb-6">
+    <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200/90 pb-4">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">{SHOP_HOST}</p>
         <Link

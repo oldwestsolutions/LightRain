@@ -25,7 +25,7 @@ export function ShopProductPage({ product }: { product: ShopProduct }) {
   };
 
   return (
-    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide>
+    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide compactTop>
       <ShopCartDrawer />
       <ShopHeader />
 
@@ -111,12 +111,10 @@ export function ShopProductPage({ product }: { product: ShopProduct }) {
               onClick={() => handleAdd(true)}
               className="inline-flex min-h-[52px] flex-1 items-center justify-center rounded-xl bg-neutral-900 px-6 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Buy now · BTCPay
+              Buy now
             </button>
           </div>
-          <p className="mt-3 text-xs text-muted">
-            Checkout opens a BTCPay Server invoice when configured; otherwise you&apos;ll see a confirmation with next steps.
-          </p>
+          <p className="mt-3 text-xs text-muted">Buy now sends you to checkout with shipping and order summary.</p>
 
           <div className="mt-12 space-y-6 text-sm leading-relaxed text-neutral-700">
             <div>

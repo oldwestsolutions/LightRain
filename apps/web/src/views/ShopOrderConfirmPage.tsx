@@ -10,8 +10,6 @@ import { formatShopPrice } from "@/data/shopProducts";
 
 type Stored = {
   orderId: string;
-  mock?: boolean;
-  message?: string;
   totalCents?: number;
   shippingCents?: number;
   method?: string;
@@ -22,7 +20,6 @@ type Stored = {
 export function ShopOrderConfirmPage() {
   const search = useSearchParams();
   const orderIdParam = search.get("orderId") ?? "";
-  const mockParam = search.get("mock") === "1";
   const [stored, setStored] = useState<Stored | null>(null);
 
   useEffect(() => {
@@ -35,25 +32,20 @@ export function ShopOrderConfirmPage() {
   }, []);
 
   const orderId = orderIdParam || stored?.orderId || "—";
-  const isMock = mockParam || stored?.mock === true;
 
   return (
-    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide>
+    <MarketingPageShell backTo="/shop" backLabel="Back to collection" extraWide compactTop>
       <ShopCartDrawer />
       <ShopHeader />
 
-      <div className="mx-auto max-w-xl text-center">
+      <div className="mx-auto max-w-xl text-center text-neutral-900">
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">Order</p>
-        <h1 className="mt-3 font-display text-2xl font-normal tracking-[0.06em] text-neutral-900 sm:text-3xl">
-          {isMock ? "Confirmation (demo)" : "Thank you"}
-        </h1>
-        <p className="mt-2 font-mono text-sm text-neutral-700">Order ID · {orderId}</p>
-
-        {isMock && stored?.message ? (
-          <p className="mt-6 rounded-xl border border-amber-200/80 bg-amber-50/90 p-4 text-left text-sm text-amber-950">
-            {stored.message}
-          </p>
-        ) : null}
+        <h1 className="mt-3 font-display text-2xl font-normal tracking-[0.06em] sm:text-3xl">Thank you</h1>
+        <p className="mt-2 font-mono text-sm text-neutral-700">Reference · {orderId}</p>
+        <p className="mt-6 text-sm leading-relaxed text-muted">
+          Your shipping details and cart were captured for this preview. Fulfillment and payment will connect here when the
+          operator stack goes live.
+        </p>
 
         {stored?.totalCents != null ? (
           <div className="mt-8 rounded-2xl border border-neutral-200/90 bg-white p-6 text-left shadow-sm">
@@ -87,12 +79,6 @@ export function ShopOrderConfirmPage() {
             ) : null}
           </div>
         ) : null}
-
-        <p className="mt-8 text-sm leading-relaxed text-muted">
-          {isMock
-            ? "Configure BTCPAY_URL, BTCPAY_API_KEY, and BTCPAY_STORE_ID to redirect buyers to a live invoice after payment setup."
-            : "If you completed payment on BTCPay, watch your email for receipt and fulfillment updates from your operator desk."}
-        </p>
 
         <Link
           href="/shop"
