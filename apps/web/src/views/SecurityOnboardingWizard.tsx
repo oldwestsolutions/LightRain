@@ -228,7 +228,7 @@ export function SecurityOnboardingWizard() {
     setLoading(true);
     try {
       await login(recoveryEmail.trim(), password);
-      router.push("/dashboard");
+      router.push("/wallet");
     } finally {
       setLoading(false);
     }

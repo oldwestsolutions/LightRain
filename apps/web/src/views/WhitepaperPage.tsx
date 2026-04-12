@@ -43,7 +43,7 @@ export function WhitepaperPage() {
   return (
     <MarketingPageShell
       wide
-      backTo={isLoggedIn ? "/dashboard" : "/company"}
+      backTo={isLoggedIn ? "/wallet" : "/company"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to company"}
     >
       <header className="mb-10 border-b border-neutral-200/80 pb-8">

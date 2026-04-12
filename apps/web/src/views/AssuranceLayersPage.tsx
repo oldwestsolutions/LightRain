@@ -34,7 +34,7 @@ export function AssuranceLayersPage() {
   return (
     <MarketingPageShell
       extraWide
-      backTo={isLoggedIn ? "/dashboard" : "/company"}
+      backTo={isLoggedIn ? "/wallet" : "/company"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to company"}
     >
       <header className="mb-10 max-w-3xl border-b border-neutral-200/80 pb-8">

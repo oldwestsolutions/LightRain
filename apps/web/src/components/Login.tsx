@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useIdleStore } from "../store/useIdleStore";
 import { LoginFooter } from "./LoginFooter";
 import { RainBackground } from "./RainBackground";
 
@@ -30,7 +31,8 @@ export function Login() {
     setLoading(true);
     try {
       await login(email.trim(), password);
-      router.push("/dashboard");
+      useIdleStore.getState().touchActivity();
+      router.push("/wallet");
     } finally {
       setLoading(false);
     }

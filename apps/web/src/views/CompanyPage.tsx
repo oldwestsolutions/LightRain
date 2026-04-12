@@ -56,7 +56,7 @@ export function CompanyPage() {
       extraWide
       compactTop
       allowStickyDescendants
-      backTo={isLoggedIn ? "/dashboard" : "/"}
+      backTo={isLoggedIn ? "/wallet" : "/"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
       <div className="space-y-6 lg:space-y-8">

@@ -87,7 +87,7 @@ export function SupportPage() {
     <MarketingPageShell
       extraWide
       compactTop
-      backTo={isLoggedIn ? "/dashboard" : "/"}
+      backTo={isLoggedIn ? "/wallet" : "/"}
       backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}
     >
       <section

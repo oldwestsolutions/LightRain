@@ -13,7 +13,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    router.replace("/dashboard");
+    router.replace("/wallet");
   }, [isLoggedIn, router]);
 
   if (isLoggedIn) {
@@ -26,7 +26,7 @@ export default function HomePage() {
         />
         <div className="relative z-10 flex flex-col items-center gap-3 px-4">
           <Loader2 className="h-10 w-10 animate-spin text-accent" aria-hidden />
-          <p className="text-sm text-muted">Opening your dashboard…</p>
+          <p className="text-sm text-muted">Opening your wallet…</p>
         </div>
       </div>
     );

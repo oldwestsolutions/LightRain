@@ -12,7 +12,7 @@ const PATHS = [
   "/legal",
   "/marketplace",
   "/create-account",
-  "/dashboard",
+  "/wallet",
   "/account/profile",
   "/account/security",
   "/account/statements",

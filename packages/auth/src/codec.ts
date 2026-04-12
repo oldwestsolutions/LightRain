@@ -30,8 +30,3 @@ export function decodeSessionHandoff(b64: string): AuthSession | null {
   }
 }
 
-/** Cross-origin dev handoff when cookies cannot be shared (e.g. different localhost ports). */
-export function buildWalletLoginRedirect(walletOrigin: string, session: AuthSession): string {
-  const token = encodeURIComponent(encodeSessionHandoff(session));
-  return `${walletOrigin.replace(/\/$/, "")}/?lr_handoff=${token}`;
-}

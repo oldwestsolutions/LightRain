@@ -8,6 +8,8 @@ const SUBDOMAIN_HOME: Record<string, string> = {
   support: "/support",
   company: "/company",
   shop: "/shop",
+  /** Wallet UX lives on the main app; serve it here if the hostname still points at this deployment. */
+  wallet: "/wallet",
 };
 
 function subdomain(hostname: string): string | null {

@@ -1,25 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Store, Wallet } from "lucide-react";
-import { MERCHANTS } from "../data/merchants";
-import { SendPaymentModal } from "../components/SendPaymentModal";
-import { WalletModal } from "../components/WalletModal";
 import { staggerItem, staggerParent } from "../motion/stagger";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatUsdFromCents, useWalletStore } from "../store/useWalletStore";
-
-const FEDERATION_ADDRESS = "dispensary01*lightrain.in";
 
 export function AccountProfilePage() {
   const user = useAuthStore((s) => s.user);
   const cashBalanceCents = useWalletStore((s) => s.cashBalanceCents);
   const reduceMotion = useReducedMotion();
   const item = staggerItem(!!reduceMotion);
-  const [walletOpen, setWalletOpen] = useState(false);
-  const [sendOpen, setSendOpen] = useState(false);
 
   return (
     <motion.main variants={staggerParent} initial="hidden" animate="show">
@@ -41,14 +33,13 @@ export function AccountProfilePage() {
           <Store className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
           Marketplace
         </Link>
-        <button
-          type="button"
-          onClick={() => setWalletOpen(true)}
+        <Link
+          href="/wallet/manage"
           className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 text-sm font-semibold text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50"
         >
           <Wallet className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
           Wallet
-        </button>
+        </Link>
       </motion.div>
 
       <motion.section variants={item} className="overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-card sm:rounded-[24px]">
@@ -65,14 +56,6 @@ export function AccountProfilePage() {
       <motion.p variants={item} className="mt-6 text-center text-xs text-neutral-500">
         Contact support to change legal name or email on a live account.
       </motion.p>
-
-      <WalletModal
-        open={walletOpen}
-        onClose={() => setWalletOpen(false)}
-        federationAddress={FEDERATION_ADDRESS}
-        onOpenSend={() => setSendOpen(true)}
-      />
-      <SendPaymentModal open={sendOpen} onClose={() => setSendOpen(false)} merchants={MERCHANTS} />
     </motion.main>
   );
 }

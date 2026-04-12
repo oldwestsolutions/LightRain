@@ -63,7 +63,7 @@ export function LegalPage() {
   };
 
   return (
-    <MarketingPageShell backTo={isLoggedIn ? "/dashboard" : "/"} backLabel={isLoggedIn ? "Back to dashboard" : "Back to sign in"}>
+    <MarketingPageShell backTo={isLoggedIn ? "/wallet" : "/"} backLabel={isLoggedIn ? "Back to wallet" : "Back to sign in"}>
       <article className="rounded-2xl border border-neutral-200/90 bg-white/92 p-6 shadow-card backdrop-blur-md sm:p-8">
         <h1 className="font-display text-2xl font-normal tracking-[0.08em] text-neutral-900 sm:text-3xl">Legal</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
