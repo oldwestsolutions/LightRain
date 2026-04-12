@@ -4,7 +4,7 @@ import { routeMeta } from "@/lib/routeMeta";
 export const metadata = routeMeta({
   path: "/shop",
   description:
-    "LightRain shop: cold wallets, air-gapped signers, physical security, and Bitcoin merch—curated for self-custody operators.",
+    "LightRain Collection: operator-grade apparel, hardware, tech accessories, and limited drops—curated in the Lightra.in design language.",
 });
 
 export default function ShopLayout({ children }: { children: ReactNode }) {
